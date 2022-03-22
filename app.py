@@ -26,9 +26,7 @@ def main_page():
     myUser2.addGenre(Genre.MEDITATION)
     myUser2.addGenre(Genre.FUNK)
 
-    print("DEBUGGING - myUser's ID = "+str(myUser.id))
-    print("DEBUGGING - myUser2's ID = "+str(myUser2.id))
-    # myUser2.deleteGenre(Genre.MEDITATION)
+    myUser2.deleteGenre(Genre.MEDITATION)
 
     return render_template("home.html", userCount=getUserCount())
 
