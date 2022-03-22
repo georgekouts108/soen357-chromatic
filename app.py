@@ -18,12 +18,18 @@ def main_page():
     myUser2 = User('Mike', 'Manou', 25, 'roc',
                    None, 'miko', 'myPwd3', False)
 
-    myUser.writeGeneralInfoData()
-    myUser.writeCredentialsData()
-    myUser2.writeGeneralInfoData()
-    myUser2.writeCredentialsData()
+    myUser.addGenre(Genre.CLASSICAL)
+    myUser.addGenre(Genre.JAZZ)
+    myUser.addGenre(Genre.ELECTRONIC)
 
-    myUser2.changePassword("MICHAELLLLLLLLL")
+    myUser2.addGenre(Genre.HIPHOP)
+    myUser2.addGenre(Genre.MEDITATION)
+    myUser2.addGenre(Genre.FUNK)
+
+    print("DEBUGGING - myUser's ID = "+str(myUser.id))
+    print("DEBUGGING - myUser2's ID = "+str(myUser2.id))
+    # myUser2.deleteGenre(Genre.MEDITATION)
+
     return render_template("home.html", userCount=getUserCount())
 
 

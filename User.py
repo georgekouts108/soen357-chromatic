@@ -1,6 +1,6 @@
 from Genre import Genre
 from csv import reader, writer
-from csvEditing import updatePassword
+from csvEditing import updatePassword, updateGenres
 import csv
 import os
 
@@ -59,11 +59,19 @@ class User:
         self.loggedOn = isLoggedOn
 
         # later, implement friends and chats
+
+        self.writeGeneralInfoData()
+        self.writeCredentialsData()
+        self.writeFavGenresData()
         updateNumOfActiveUsers()
 
     # READING FROM CSVs
 
     # EDITING CSVs
+    def updateGenreList(self):
+        # this method assumes that self.favGenres has been updated
+        updateGenres(self.id, self.favGenres)
+
     def changePassword(self, newPassword):
         self.password = newPassword
         updatePassword(self.id, newPassword)
@@ -81,14 +89,12 @@ class User:
     def writeFavGenresData(self):
         with open(r"databases/userFavGenres.csv", 'a') as user_records:
             csv_writer = writer(user_records)
-            try:
-                if (self.favGenres is not None):
-                    csv_writer.writerow(
-                        [self.id, ','.join(str(genre) for genre in self.favGenres)])
-                else:
-                    raise Exception()
-            except Exception:
-                print("no genres")
+
+            if (self.favGenres is not None):
+                csv_writer.writerow(
+                    [self.id, ','.join(str(genre) for genre in self.favGenres)])
+            else:
+                csv_writer.writerow([self.id, ''])
         return True
 
     def writeCredentialsData(self):
@@ -101,7 +107,7 @@ class User:
             else:
                 count = 0
                 for row in credential_rows:
-                    if (count is not 0):
+                    if (count != 0):
                         if (row[1] == self.username):
                             username_found = True
                             break
@@ -123,7 +129,8 @@ class User:
                     break
             if not alreadyExists:
                 self.favGenres.append(newGenre)
-        # TODO: update the CSV file for this user
+                self.updateGenreList()
+
         return True
 
     def deleteGenre(self, delGenre):
@@ -135,10 +142,10 @@ class User:
                 for g in self.favGenres:
                     if (self.favGenres[g] is delGenre):
                         self.favGenres.pop(poppedIndex)
-                        # TODO: update the CSV file for this user
+                        self.updateGenreList()
                         break
                     else:
                         poppedIndex = poppedIndex + 1
-                # TODO: update the CSV file for this user
+
         except Exception:
             print("No genres to delete")
