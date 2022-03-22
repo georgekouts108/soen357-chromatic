@@ -19,13 +19,13 @@ class User:
 
         # later, implement friends and chats
 
+    def editFavGenresData(self):
+        return -1
+
     def writeGeneralInfoData(self):
         return -1
 
     def writeFavGenresData(self):
-        return -1
-
-    def editFavGenresData(self):
         return -1
 
     def writeCredentialsData(self):
@@ -36,10 +36,13 @@ class User:
             if len(credential_rows) == 0:
                 username_found = False
             else:
+                count = 0
                 for row in credential_rows:
-                    if (row[1] == self.username):
-                        username_found = True
-                        break
+                    if (count is not 0):
+                        if (row[1] == self.username):
+                            username_found = True
+                            break
+                    count = count + 1
         if not username_found:
             with open("databases/userCredentials.csv", 'a') as user_records:
                 csv_writer = writer(user_records)
