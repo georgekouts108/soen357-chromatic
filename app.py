@@ -1,7 +1,8 @@
 from flask import Flask, render_template
-import csv
+from csv import reader, writer
 import sys
 import os
+from User import User
 
 app = Flask(__name__)
 
