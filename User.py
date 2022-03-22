@@ -26,7 +26,11 @@ class User:
         return -1
 
     def writeFavGenresData(self):
-        return -1
+        with open("databases/userFavGenres.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+            csv_writer.writerow([self.id, ','.join(str(genre)
+                                for genre in self.favGenres)])
+        return True
 
     def writeCredentialsData(self):
         username_found = False
@@ -54,7 +58,7 @@ class User:
             self.favGenres = [newGenre]
         else:
             alreadyExists = False
-            for g in self.favGenres:
+            for g in range(len(self.favGenres)):
                 if (self.favGenres[g] is newGenre):
                     alreadyExists = True
                     break

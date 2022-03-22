@@ -3,6 +3,7 @@ from csv import reader, writer
 import sys
 import os
 from User import User
+from Genre import Genre
 
 app = Flask(__name__)
 
