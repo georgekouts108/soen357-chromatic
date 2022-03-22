@@ -61,7 +61,6 @@ class User:
         # later, implement friends and chats
 
         self.writeGeneralInfoData()
-        self.writeCredentialsData()
         self.writeFavGenresData()
         updateNumOfActiveUsers()
 
@@ -82,7 +81,7 @@ class User:
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
             csv_writer = writer(user_records)
             newRow = [self.id, self.firstname, self.lastname, self.age,
-                      self.location, self.loggedOn]
+                      self.location, self.loggedOn, self.username, self.password]
             csv_writer.writerow(newRow)
         return True
 
@@ -95,27 +94,6 @@ class User:
                     [self.id, ','.join(str(genre) for genre in self.favGenres)])
             else:
                 csv_writer.writerow([self.id, ''])
-        return True
-
-    def writeCredentialsData(self):
-        username_found = False
-        with open("databases/userCredentials.csv", 'r') as csvr:
-            csv_reader = reader(csvr)
-            credential_rows = list(csv_reader)
-            if len(credential_rows) == 0:
-                username_found = False
-            else:
-                count = 0
-                for row in credential_rows:
-                    if (count != 0):
-                        if (row[1] == self.username):
-                            username_found = True
-                            break
-                    count = count + 1
-        if not username_found:
-            with open(r"databases/userCredentials.csv", 'a') as user_records:
-                csv_writer = writer(user_records)
-                csv_writer.writerow([self.id, self.username, self.password])
         return True
 
     def addGenre(self, newGenre):
