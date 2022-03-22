@@ -7,9 +7,11 @@ import os
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, id, name, age, location, favGenres, username, password, isLoggedOn):
+    def __init__(self, id, firstname, lastname, age, location, favGenres, username, password, isLoggedOn):
         self.id = id
-        self.name = name
+        self.firstname = firstname
+        self.lastname = lastname
+        self.fullname = self.firstname + " " + self.lastname
         self.age = age
         self.location = location
         self.favGenres = favGenres
@@ -23,13 +25,24 @@ class User:
         return -1
 
     def writeGeneralInfoData(self):
-        return -1
+        with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+            newRow = [self.id, self.firstname, self.lastname, self.age,
+                      self.location, self.loggedOn]
+            csv_writer.writerow(newRow)
+        return True
 
     def writeFavGenresData(self):
-        with open("databases/userFavGenres.csv", 'a') as user_records:
+        with open(r"databases/userFavGenres.csv", 'a') as user_records:
             csv_writer = writer(user_records)
-            csv_writer.writerow([self.id, ','.join(str(genre)
-                                for genre in self.favGenres)])
+            try:
+                if (self.favGenres is not None):
+                    csv_writer.writerow(
+                        [self.id, ','.join(str(genre) for genre in self.favGenres)])
+                else:
+                    raise Exception()
+            except Exception:
+                print("no genres")
         return True
 
     def writeCredentialsData(self):
@@ -48,7 +61,7 @@ class User:
                             break
                     count = count + 1
         if not username_found:
-            with open("databases/userCredentials.csv", 'a') as user_records:
+            with open(r"databases/userCredentials.csv", 'a') as user_records:
                 csv_writer = writer(user_records)
                 csv_writer.writerow([self.id, self.username, self.password])
         return True
@@ -64,6 +77,8 @@ class User:
                     break
             if not alreadyExists:
                 self.favGenres.append(newGenre)
+        # TODO: update the CSV file for this user
+        return True
 
     def deleteGenre(self, delGenre):
         try:
@@ -74,9 +89,10 @@ class User:
                 for g in self.favGenres:
                     if (self.favGenres[g] is delGenre):
                         self.favGenres.pop(poppedIndex)
+                        # TODO: update the CSV file for this user
                         break
                     else:
                         poppedIndex = poppedIndex + 1
-
+                # TODO: update the CSV file for this user
         except Exception:
             print("No genres to delete")
