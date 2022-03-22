@@ -1,10 +1,25 @@
 from Genre import Genre
 from csv import reader, writer
+from csvEditing import updatePassword
 import csv
 import os
 
+
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
+
+
+def setLatestNumberOfUsers():
+    file = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(file)
+    credential_rows = list(csv_reader)
+    file.close()
+
+    global NUM_OF_ACTIVE_USERS
+    NUM_OF_ACTIVE_USERS = len(credential_rows) - 1
+
+    global NEXT_USER_ID
+    NEXT_USER_ID = len(credential_rows)
 
 
 def updateNextUserID():
@@ -38,8 +53,14 @@ class User:
         # later, implement friends and chats
         updateNumOfActiveUsers()
 
-    def editFavGenresData(self):
-        return -1
+    # READING FROM CSVs
+
+    # EDITING CSVs
+    # def changePassword(self, newPassword):
+
+    #     updatePassword(self.id, newPassword)
+
+    # WRITING TO CSVs
 
     def writeGeneralInfoData(self):
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
