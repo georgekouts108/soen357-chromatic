@@ -2,16 +2,16 @@ from flask import Flask, render_template
 from csv import reader, writer
 import sys
 import os
-from User import User, setLatestNumberOfUsers
+from User import User, setLatestNumberOfUsersAndIDs, getNextUserID, getUserCount
 from Genre import Genre
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def main_page():
 
-    setLatestNumberOfUsers()
+    setLatestNumberOfUsersAndIDs()
 
     myUser = User('George', 'Koutsaris', 23, 'mtl',
                   None, 'georgey', 'myPwd', False)
@@ -24,7 +24,7 @@ def main_page():
     myUser2.writeCredentialsData()
 
     myUser2.changePassword("MICHAELLLLLLLLL")
-    return render_template("home.html")
+    return render_template("home.html", userCount=getUserCount())
 
 
 if __name__ == '__main__':

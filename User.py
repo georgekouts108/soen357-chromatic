@@ -9,7 +9,15 @@ NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
 
-def setLatestNumberOfUsers():
+def getUserCount():
+    return NUM_OF_ACTIVE_USERS
+
+
+def getNextUserID():
+    return NEXT_USER_ID
+
+
+def setLatestNumberOfUsersAndIDs():
     file = open('databases/userGeneralInfo.csv', 'r')
     csv_reader = reader(file)
     credential_rows = list(csv_reader)
@@ -56,9 +64,9 @@ class User:
     # READING FROM CSVs
 
     # EDITING CSVs
-    # def changePassword(self, newPassword):
-
-    #     updatePassword(self.id, newPassword)
+    def changePassword(self, newPassword):
+        self.password = newPassword
+        updatePassword(self.id, newPassword)
 
     # WRITING TO CSVs
 
