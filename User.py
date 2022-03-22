@@ -1,4 +1,7 @@
 from Genre import Genre
+from csv import reader, writer
+import csv
+import os
 
 
 class User:
@@ -15,6 +18,33 @@ class User:
         self.loggedOn = isLoggedOn
 
         # later, implement friends and chats
+
+    def writeGeneralInfoData(self):
+        return -1
+
+    def writeFavGenresData(self):
+        return -1
+
+    def editFavGenresData(self):
+        return -1
+
+    def writeCredentialsData(self):
+        username_found = False
+        with open("databases/userCredentials.csv", 'r') as csvr:
+            csv_reader = reader(csvr)
+            credential_rows = list(csv_reader)
+            if len(credential_rows) == 0:
+                username_found = False
+            else:
+                for row in credential_rows:
+                    if (row[1] == self.username):
+                        username_found = True
+                        break
+        if not username_found:
+            with open("databases/userCredentials.csv", 'a') as user_records:
+                csv_writer = writer(user_records)
+                csv_writer.writerow([self.id, self.username, self.password])
+        return True
 
     def addGenre(self, newGenre):
         if (self.favGenres is None):
