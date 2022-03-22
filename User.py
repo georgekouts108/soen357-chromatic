@@ -3,12 +3,28 @@ from csv import reader, writer
 import csv
 import os
 
+NUM_OF_ACTIVE_USERS = 0
+NEXT_USER_ID = 1
+
+
+def updateNextUserID():
+    global NEXT_USER_ID
+    NEXT_USER_ID = NEXT_USER_ID + 1
+
+
+def updateNumOfActiveUsers():
+    global NUM_OF_ACTIVE_USERS
+    NUM_OF_ACTIVE_USERS = NUM_OF_ACTIVE_USERS + 1
+
 
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, id, firstname, lastname, age, location, favGenres, username, password, isLoggedOn):
-        self.id = id
+    def __init__(self, firstname, lastname, age, location, favGenres, username, password, isLoggedOn):
+
+        self.id = NEXT_USER_ID
+        updateNextUserID()
+
         self.firstname = firstname
         self.lastname = lastname
         self.fullname = self.firstname + " " + self.lastname
@@ -20,6 +36,7 @@ class User:
         self.loggedOn = isLoggedOn
 
         # later, implement friends and chats
+        updateNumOfActiveUsers()
 
     def editFavGenresData(self):
         return -1

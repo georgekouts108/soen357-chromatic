@@ -10,14 +10,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    myUser = User(15, 'George', 'Koutsaris', 23, 'mtl',
-                  None, 'myUserName12', 'myPwd', False)
-    myUser.addGenre(Genre.JAZZ)
-    myUser.addGenre(Genre.CLASSICAL)
-    myUser.writeFavGenresData()
-
-    myUser.writeGeneralInfoData()
-    myUser.writeCredentialsData()
 
     return render_template("home.html")
 
