@@ -3,7 +3,7 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-
+from datetime import date
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
@@ -42,7 +42,7 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, age, location, favGenres, username, password, manualUserID, newUserID=True):
+    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True):
 
         # all parameters are assumed to be valid
 
@@ -53,7 +53,7 @@ class User:
         self.birthmonth = birthMonth
         self.birthday = birthDay
         self.birthyear = birthYear
-        self.age = age  # a fake value for now; must be dynamically changed
+        self.age = 21  # EDIT THIS ONE
         self.location = location
         self.favGenres = favGenres
         self.username = username  # must check outside a constructor call if 'username' exists

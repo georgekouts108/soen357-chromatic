@@ -33,13 +33,13 @@ def loadAllUsers():
         birthMonth = nextGeneralInfoArray[4]
         birthDay = nextGeneralInfoArray[5]
         birthYear = nextGeneralInfoArray[6]
-        age = nextGeneralInfoArray[7]
+        # age = nextGeneralInfoArray[7]#######
         location = nextGeneralInfoArray[8]
         username = nextGeneralInfoArray[10]
         password = nextGeneralInfoArray[11]
 
         nextUser = User(firstname, lastname, email, birthMonth, birthDay, birthYear,
-                        age, location, nextFavGenresArray, username, password, id, False)
+                        location, nextFavGenresArray, username, password, id, False)
 
         all_users.append(nextUser)
 

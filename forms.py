@@ -30,7 +30,7 @@ class RegisterForm(FlaskForm):
         'Your Location', validators=[DataRequired()])
 
     favoriteGenres = SelectMultipleField(
-        'Your Favorite Genres', choices=genres)
+        'Your Top Favorite Genre (you can add more later)', choices=genres)
 
     username = StringField('Username', validators=[
                            DataRequired(), Length(min=8, max=15)])

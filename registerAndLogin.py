@@ -14,7 +14,22 @@ def usernameIsOK(username):  # REGISTER -- check if a username is okay
     user_rows = list(csv_reader)
     f.close()
     for row in user_rows:
-        if (row[10] is username):
+        if (row[10] == username):
+            yes = False
+            break
+    return yes
+
+
+def emailIsOK(email):  # REGISTER -- check if a username is okay
+    yes = True
+    if (email == 'Email'):
+        return False
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+    for row in user_rows:
+        if (row[3] == email):
             yes = False
             break
     return yes
