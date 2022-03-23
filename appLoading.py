@@ -29,22 +29,23 @@ def loadAllUsers():
         id = nextGeneralInfoArray[0]
         firstname = nextGeneralInfoArray[1]
         lastname = nextGeneralInfoArray[2]
-        birthMonth = nextGeneralInfoArray[3]
-        birthDay = nextGeneralInfoArray[4]
-        birthYear = nextGeneralInfoArray[5]
-        age = nextGeneralInfoArray[6]
-        location = nextGeneralInfoArray[7]
-        username = nextGeneralInfoArray[9]
-        password = nextGeneralInfoArray[10]
+        email = nextGeneralInfoArray[3]
+        birthMonth = nextGeneralInfoArray[4]
+        birthDay = nextGeneralInfoArray[5]
+        birthYear = nextGeneralInfoArray[6]
+        age = nextGeneralInfoArray[7]
+        location = nextGeneralInfoArray[8]
+        username = nextGeneralInfoArray[10]
+        password = nextGeneralInfoArray[11]
 
-        nextUser = User(firstname, lastname, birthMonth, birthDay, birthYear,
+        nextUser = User(firstname, lastname, email, birthMonth, birthDay, birthYear,
                         age, location, nextFavGenresArray, username, password, id, False)
 
         all_users.append(nextUser)
 
         with open(r"test_databases/TESTallUserLoad_GeneralInfo.csv", 'a') as user_records:
             csv_writer = writer(user_records)
-            newRow = [nextUser.id, nextUser.firstname, nextUser.lastname, nextUser.birthmonth, nextUser.birthday,
+            newRow = [nextUser.id, nextUser.firstname, nextUser.lastname, nextUser.email, nextUser.birthmonth, nextUser.birthday,
                       nextUser.birthyear, nextUser.age, nextUser.location, nextUser.loggedOn, nextUser.username, nextUser.password]
             csv_writer.writerow(newRow)
 

@@ -29,7 +29,7 @@ def updatePassword(userID, newPassword):
     csv_reader = reader(f)
     user_rows = list(csv_reader)
     f.close()
-    user_rows[userID][10] = newPassword
+    user_rows[userID][11] = newPassword
     newList = open('databases/userGeneralInfo.csv', 'w', newline='')
     csv_writer = writer(newList)
     csv_writer.writerows(user_rows)

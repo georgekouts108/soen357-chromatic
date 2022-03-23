@@ -51,7 +51,7 @@ def createNewUser():
     form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit:
-            registeredUser = User(form.firstName.data, form.lastName.data, 0, 0, 0, 0, form.location.data,
+            registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, 0, 0, 0, 0, form.location.data,
                                   form.favoriteGenres.data, form.username.data, form.password.data, 0, True)
     return redirect(url_for('login'))
 

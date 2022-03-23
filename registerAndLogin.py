@@ -14,7 +14,7 @@ def usernameIsOK(username):  # REGISTER -- check if a username is okay
     user_rows = list(csv_reader)
     f.close()
     for row in user_rows:
-        if (row[9] is username):
+        if (row[10] is username):
             yes = False
             break
     return yes
@@ -28,7 +28,7 @@ def verifyCredentials(username, password):
     user_rows = list(csv_reader)
     f.close()
     for row in user_rows:
-        if (row[9] == username and row[10] == password):
+        if (row[10] == username and row[11] == password):
             okay = True
             break
     return okay

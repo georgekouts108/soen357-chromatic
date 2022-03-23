@@ -42,13 +42,14 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, birthMonth, birthDay, birthYear, age, location, favGenres, username, password, manualUserID, newUserID=True):
+    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, age, location, favGenres, username, password, manualUserID, newUserID=True):
 
         # all parameters are assumed to be valid
 
         self.firstname = firstname
         self.lastname = lastname
         self.fullname = self.firstname + " " + self.lastname
+        self.email = email
         self.birthmonth = birthMonth
         self.birthday = birthDay
         self.birthyear = birthYear
@@ -90,7 +91,7 @@ class User:
     def writeGeneralInfoData(self):
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
             csv_writer = writer(user_records)
-            newRow = [self.id, self.firstname, self.lastname, self.birthmonth, self.birthday,
+            newRow = [self.id, self.firstname, self.lastname, self.email, self.birthmonth, self.birthday,
                       self.birthyear, self.age, self.location, self.loggedOn, self.username, self.password]
             csv_writer.writerow(newRow)
         return True
