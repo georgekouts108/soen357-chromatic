@@ -5,8 +5,8 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
-from forms import LoginForm
-from registerAndLogin import verifyCredentials
+from forms import LoginForm, RegisterForm, LogoutButton, LoginButton, RegisterButton
+from registerAndLogin import verifyCredentials, usernameIsOK
 
 
 app = Flask(__name__)
@@ -25,7 +25,48 @@ def updateHPACount():
     global HOMEPAGE_ACCESS_COUNT
     HOMEPAGE_ACCESS_COUNT = HOMEPAGE_ACCESS_COUNT + 1
 
-####################################################################
+
+CURRENT_USER = None  # no one is logged in yet
+
+
+def getCURRENT_USER():
+    return CURRENT_USER
+
+
+def setCURRENT_USER(new_current_user):
+    global CURRENT_USER
+    CURRENT_USER = new_current_user
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    form = RegisterForm()
+    form2 = LoginButton()
+    return render_template("register.html", form=form, form2=form2)
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    USERNAME = None
+    if getCURRENT_USER() is not None:
+        USERNAME = CURRENT_USER
+        return render_template("home.html", USERNAME=USERNAME, form2=LogoutButton())
+
+    form = LoginForm()
+    form2 = RegisterButton()
+
+    if request.method == 'POST':
+        if verifyCredentials(form.username.data, form.password.data):
+            setCURRENT_USER(form.username.data)
+            return redirect(url_for('main_page'))
+    return render_template("login.html", form=form, form2=form2)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if getCURRENT_USER() is not None:
+        setCURRENT_USER(None)
+    return redirect(url_for('login'))
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -34,22 +75,13 @@ def main_page():
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         updateAllUserObjects()
-
     setLatestNumberOfUsersAndIDs()
-
-    return render_template("home.html", userCount=getUserCount())
-
-
-####################################################################
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login_page():
-
-    return render_template("login.html")
+    form2 = LogoutButton()
+    if getCURRENT_USER() is not None:
+        return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2)
+    return redirect(url_for('login'))
 
 
-####################################################################
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

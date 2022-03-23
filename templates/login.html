@@ -10,17 +10,26 @@
 
 <body>
     LOGIN PAGE
-    <form method='POST' action='/'>
+    <form method='POST' action='/login'>
 
-        <h1>Sign in below</h1>
+        <legend>Log In</legend>
+        <div class="form-group">
 
-        {{form.username.label}}:<br>
-        {{form.username}}
-        <br /><br>
-        {{form.password.label}}:<br>
-        {{form.password}}
-        <br /><br>
-        {{form.log_in}}
+            {{form.username.label(class='form-control-label')}}<br>
+            {{form.username}}<br><br>
+
+            {{form.password.label(class='form-control-label')}}<br>
+            {{form.password}}<br><br>
+
+            {{form.login}}<br><br>
+
+
+        </div>
+    </form>
+    <form method='POST' action='/register'>
+        <div class="form-group">
+            {{form2.register}}<br><br>
+        </div>
     </form>
 </body>
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromatic - Register</title>
+</head>
+
+<body>
+    <div class="container w-50">
+        <form method="POST" action="/login">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend>Sign Up Today!</legend>
+                <div class="form-group">
+
+                    {{form.firstName.label(class='form-control-label')}}<br>
+                    {{form.firstName}}<br><br>
+
+                    {{form.lastName.label(class='form-control-label')}}<br>
+                    {{form.lastName}}<br><br>
+
+                    {{form.email.label(class='form-control-label')}}<br>
+                    {{form.email}}<br><br>
+
+                    {{form.dateOfBirth.label(class='form-control-label')}}<br>
+                    <input type="date" id="birth_day" name="birth_day"><br><br>
+
+
+                    {{form.location.label(class='form-control-label')}}<br>
+                    {{form.location}}<br><br>
+
+                    {{form.favoriteGenres.label(class='form-control-label')}}<br>
+                    {{form.favoriteGenres}}<br><br>
+
+                    {{form.username.label(class='form-control-label')}}<br>
+                    {{form.username}}<br><br>
+
+                    {{form.password.label(class='form-control-label')}}<br>
+                    {{form.password}}<br><br>
+
+                    {{form.confirm_pwd.label(class='form-control-label')}}<br>
+                    {{form.confirm_pwd}}<br><br>
+
+                    {{form.submit}}
+                </div>
+            </fieldset>
+        </form>
+        <br><br>
+        <form method='POST' action='/login'>
+            <div class="form-group">
+                {{form2.login}}<br><br>
+            </div>
+        </form>
+
+    </div>
+</body>
+
+</html>
