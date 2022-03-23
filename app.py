@@ -45,6 +45,17 @@ def register():
     return render_template("register.html", form=form, form2=form2)
 
 
+@app.route('/createuser', methods=['POST', 'GET'])
+def createNewUser():
+    # args of User() need to be tweaked later...
+    form = RegisterForm()
+    if request.method == 'POST':
+        if form.validate_on_submit:
+            registeredUser = User(form.firstName.data, form.lastName.data, 0, 0, 0, 0, form.location.data,
+                                  form.favoriteGenres.data, form.username.data, form.password.data, 0, True)
+    return redirect(url_for('login'))
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     USERNAME = None
