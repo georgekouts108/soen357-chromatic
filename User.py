@@ -44,6 +44,8 @@ class User:
     # initially, users have no friends and are not logged in once they create an account
     def __init__(self, firstname, lastname, birthMonth, birthDay, birthYear, age, location, favGenres, username, password):
 
+        # all parameters are assumed to be valid
+
         self.id = NEXT_USER_ID
         updateNextUserID()
 
