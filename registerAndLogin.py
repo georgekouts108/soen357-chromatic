@@ -3,12 +3,11 @@ import csv
 from operator import index
 import sys
 import os
-from app import ALL_USER_OBJECTS
 
 
 def usernameIsOK(username):  # REGISTER -- check if a username is okay
     yes = True
-    if (username is 'Username'):
+    if (username == 'Username'):
         return False
     f = open('databases/userGeneralInfo.csv', 'r')
     csv_reader = reader(f)
