@@ -4,16 +4,12 @@ from operator import index
 import sys
 import os
 
-# credentials edits
-
 
 def updateGenres(userID, newGenreArray):
     f = open('databases/userFavGenres.csv', 'r')
     csv_reader = reader(f)
     favorite_genres_rows = list(csv_reader)
     f.close()
-
-    #favorite_genres_rows[userID][1] = ','.join( str(genre) for genre in newGenreArray)
 
     editedEntry = [userID]
     for genre in newGenreArray:

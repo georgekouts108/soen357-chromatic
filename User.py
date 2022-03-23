@@ -3,7 +3,7 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-
+from datetime import date
 
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -43,7 +43,7 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, age, location, favGenres, username, password, isLoggedOn):
+    def __init__(self, firstname, lastname, birthMonth, birthDay, birthYear, age, location, favGenres, username, password):
 
         self.id = NEXT_USER_ID
         updateNextUserID()
@@ -51,22 +51,29 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.fullname = self.firstname + " " + self.lastname
-        self.age = age
+        self.birthmonth = birthMonth
+        self.birthday = birthDay
+        self.birthyear = birthYear
+        self.age = age  # a fake value for now; must be dynamically changed
         self.location = location
         self.favGenres = favGenres
         self.username = username
         self.password = password
-        self.loggedOn = isLoggedOn
+        self.loggedOn = False
 
         # later, implement friends and chats
 
         self.writeGeneralInfoData()
         self.writeFavGenresData()
+
         updateNumOfActiveUsers()
 
     # READING FROM CSVs
 
     # EDITING CSVs
+    # def updateCurrentAge(self):
+    #     updateAge(self.id, self.getCurrentAge())
+
     def updateGenreList(self):
         # this method assumes that self.favGenres has been updated
         updateGenres(self.id, self.favGenres)
@@ -80,8 +87,8 @@ class User:
     def writeGeneralInfoData(self):
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
             csv_writer = writer(user_records)
-            newRow = [self.id, self.firstname, self.lastname, self.age,
-                      self.location, self.loggedOn, self.username, self.password]
+            newRow = [self.id, self.firstname, self.lastname, self.birthmonth, self.birthday,
+                      self.birthyear, self.age, self.location, self.loggedOn, self.username, self.password]
             csv_writer.writerow(newRow)
         return True
 

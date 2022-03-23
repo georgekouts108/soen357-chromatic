@@ -13,10 +13,10 @@ def main_page():
 
     setLatestNumberOfUsersAndIDs()
 
-    myUser = User('George', 'Koutsaris', 23, 'mtl',
-                  None, 'georgey', 'myPwd', False)
-    myUser2 = User('Mike', 'Manou', 25, 'roc',
-                   None, 'miko', 'myPwd3', False)
+    myUser = User('George', 'Koutsaris', 5, 9, 1998,
+                  23, 'mtl', None, 'georgey', 'myPwd')
+    myUser2 = User('Mike', 'Manou', 4, 3, 1996, 25,
+                   'roc', None, 'miko', 'myPwd3')
 
     # myUser.addGenre(Genre.CLASSICAL)
     # myUser.addGenre(Genre.JAZZ)
