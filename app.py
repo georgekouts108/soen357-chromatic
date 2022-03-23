@@ -2,36 +2,33 @@ from flask import Flask, render_template
 from csv import reader, writer
 import sys
 import os
-from User import User, setLatestNumberOfUsersAndIDs, getNextUserID, getUserCount
+from User import User, setLatestNumberOfUsersAndIDs, getNextUserID, getUserCount, NUM_OF_ACTIVE_USERS
 from Genre import Genre
-
+from appLoading import loadAllUsers
 app = Flask(__name__)
+
+HOMEPAGE_ACCESS_COUNT = 0
+ALL_USER_OBJECTS = []
+
+
+def initAllUserObjects():
+    global ALL_USER_OBJECTS
+    ALL_USER_OBJECTS = loadAllUsers()
+
+
+def updateHPACount():
+    global HOMEPAGE_ACCESS_COUNT
+    HOMEPAGE_ACCESS_COUNT = HOMEPAGE_ACCESS_COUNT + 1
 
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
+    updateHPACount()
+    if (HOMEPAGE_ACCESS_COUNT == 1):
+        initAllUserObjects()
+
     setLatestNumberOfUsersAndIDs()
-
-    myUser = User('George', 'Koutsaris', 5, 9, 1998,
-                  23, 'mtl', None, 'georgey', 'myPwd')
-    myUser2 = User('Mike', 'Manou', 4, 3, 1996, 25,
-                   'roc', None, 'miko', 'myPwd3')
-
-    myUser.addGenre(Genre.CLASSICAL)
-    myUser.addGenre(Genre.JAZZ)
-    myUser.addGenre(Genre.ELECTRONIC)
-
-    myUser2.addGenre(Genre.HIPHOP)
-    myUser2.addGenre(Genre.MEDITATION)
-    myUser2.addGenre(Genre.FUNK)
-
-    myUser2.deleteGenre(Genre.MEDITATION)
-    myUser.deleteGenre(Genre.BALLAD)
-    myUser.deleteGenre(Genre.CLASSICAL)
-
-    myUser.deleteGenre(Genre.BROADWAY)
-    myUser.deleteGenre(Genre.JAZZ)
 
     return render_template("home.html", userCount=getUserCount())
 

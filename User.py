@@ -42,12 +42,9 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, birthMonth, birthDay, birthYear, age, location, favGenres, username, password):
+    def __init__(self, firstname, lastname, birthMonth, birthDay, birthYear, age, location, favGenres, username, password, manualUserID, newUserID=True):
 
         # all parameters are assumed to be valid
-
-        self.id = NEXT_USER_ID
-        updateNextUserID()
 
         self.firstname = firstname
         self.lastname = lastname
@@ -64,16 +61,21 @@ class User:
 
         # later, implement friends and chats
 
-        self.writeGeneralInfoData()
-        self.writeFavGenresData()
+        if(newUserID is True):  # is a new user coming in?
+            self.id = getNextUserID()
+            updateNextUserID()
+            self.writeGeneralInfoData()
+            self.writeFavGenresData()
 
-        updateNumOfActiveUsers()
+            updateNumOfActiveUsers()
+            setLatestNumberOfUsersAndIDs()
+
+        else:  # or is an existing user coming in?
+            self.id = manualUserID
 
     # READING FROM CSVs
 
     # EDITING CSVs
-    # def updateCurrentAge(self):
-    #     updateAge(self.id, self.getCurrentAge())
 
     def updateGenreList(self):
         # this method assumes that self.favGenres has been updated
