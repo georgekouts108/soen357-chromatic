@@ -3,7 +3,6 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-from datetime import date
 
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -97,8 +96,10 @@ class User:
             csv_writer = writer(user_records)
 
             if (self.favGenres is not None):
-                csv_writer.writerow(
-                    [self.id, ','.join(str(genre) for genre in self.favGenres)])
+                genres = [self.id]
+                for genre in self.favGenres:
+                    genres.append(genre)
+                csv_writer.writerow(genres)
             else:
                 csv_writer.writerow([self.id, ''])
         return True
@@ -125,7 +126,7 @@ class User:
             else:
                 poppedIndex = 0
                 for g in self.favGenres:
-                    if (self.favGenres[g] is delGenre):
+                    if (g == delGenre):
                         self.favGenres.pop(poppedIndex)
                         self.updateGenreList()
                         break

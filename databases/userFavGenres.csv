@@ -1,9 +1,9 @@
 UserID,FavGenres
-1,
-2,
-3,
-4,
-5,
-6,
-7,
-8,
+1,Genre.JAZZ,Genre.ELECTRONIC
+2,Genre.HIPHOP,Genre.FUNK
+3,Genre.JAZZ,Genre.ELECTRONIC
+4,Genre.HIPHOP,Genre.FUNK
+5,Genre.JAZZ,Genre.ELECTRONIC
+6,Genre.HIPHOP,Genre.FUNK
+7,Genre.ELECTRONIC
+8,Genre.HIPHOP,Genre.FUNK

@@ -18,15 +18,20 @@ def main_page():
     myUser2 = User('Mike', 'Manou', 4, 3, 1996, 25,
                    'roc', None, 'miko', 'myPwd3')
 
-    # myUser.addGenre(Genre.CLASSICAL)
-    # myUser.addGenre(Genre.JAZZ)
-    # myUser.addGenre(Genre.ELECTRONIC)
+    myUser.addGenre(Genre.CLASSICAL)
+    myUser.addGenre(Genre.JAZZ)
+    myUser.addGenre(Genre.ELECTRONIC)
 
-    # myUser2.addGenre(Genre.HIPHOP)
-    # myUser2.addGenre(Genre.MEDITATION)
-    # myUser2.addGenre(Genre.FUNK)
+    myUser2.addGenre(Genre.HIPHOP)
+    myUser2.addGenre(Genre.MEDITATION)
+    myUser2.addGenre(Genre.FUNK)
 
-    # myUser2.deleteGenre(Genre.MEDITATION)
+    myUser2.deleteGenre(Genre.MEDITATION)
+    myUser.deleteGenre(Genre.BALLAD)
+    myUser.deleteGenre(Genre.CLASSICAL)
+
+    myUser.deleteGenre(Genre.BROADWAY)
+    myUser.deleteGenre(Genre.JAZZ)
 
     return render_template("home.html", userCount=getUserCount())
 
