@@ -3,6 +3,7 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
+from app import updateAllUserObjects
 
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -55,7 +56,7 @@ class User:
         self.age = age  # a fake value for now; must be dynamically changed
         self.location = location
         self.favGenres = favGenres
-        self.username = username
+        self.username = username  # must check outside a constructor call if 'username' exists
         self.password = password
         self.loggedOn = False
 
@@ -69,6 +70,7 @@ class User:
 
             updateNumOfActiveUsers()
             setLatestNumberOfUsersAndIDs()
+            updateAllUserObjects()
 
         else:  # or is an existing user coming in?
             self.id = manualUserID
