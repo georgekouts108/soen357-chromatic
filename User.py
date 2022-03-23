@@ -3,7 +3,6 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-#from app import updateAllUserObjects
 
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -70,7 +69,6 @@ class User:
 
             updateNumOfActiveUsers()
             setLatestNumberOfUsersAndIDs()
-            # updateAllUserObjects()
 
         else:  # or is an existing user coming in?
             self.id = manualUserID
