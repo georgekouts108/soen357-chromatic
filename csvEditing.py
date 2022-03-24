@@ -34,3 +34,23 @@ def updatePassword(userID, newPassword):
     csv_writer = writer(newList)
     csv_writer.writerows(user_rows)
     newList.close()
+
+
+def toggleUserLoginState(username, state):
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+
+    indexToToggle = 0
+    for row in user_rows:
+        if (row[10] == username):
+            break
+        else:
+            indexToToggle = indexToToggle + 1
+
+    user_rows[indexToToggle][9] = state
+    newList = open('databases/userGeneralInfo.csv', 'w', newline='')
+    csv_writer = writer(newList)
+    csv_writer.writerows(user_rows)
+    newList.close()

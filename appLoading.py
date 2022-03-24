@@ -4,7 +4,6 @@ from operator import index
 import sys
 import os
 from User import User
-# load all users
 
 
 def loadAllUsers():
@@ -33,13 +32,13 @@ def loadAllUsers():
         birthMonth = nextGeneralInfoArray[4]
         birthDay = nextGeneralInfoArray[5]
         birthYear = nextGeneralInfoArray[6]
-        # age = nextGeneralInfoArray[7]#######
         location = nextGeneralInfoArray[8]
+        loggedIn = nextGeneralInfoArray[9]
         username = nextGeneralInfoArray[10]
         password = nextGeneralInfoArray[11]
 
         nextUser = User(firstname, lastname, email, birthMonth, birthDay, birthYear,
-                        location, nextFavGenresArray, username, password, id, False)
+                        location, nextFavGenresArray, username, password, id, False, loggedIn)
 
         all_users.append(nextUser)
 

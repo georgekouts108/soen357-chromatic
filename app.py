@@ -2,11 +2,12 @@ from flask import Flask, render_template, url_for, request, redirect
 from csv import reader, writer
 import sys
 import os
-from User import NUM_OF_ACTIVE_USERS, User, setLatestNumberOfUsersAndIDs, getUserCount
+from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
 from forms import LoginForm, RegisterForm, LogoutButton, LoginButton, RegisterButton
-from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK
+from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
+from csvEditing import toggleUserLoginState
 
 
 app = Flask(__name__)
@@ -38,13 +39,6 @@ def setCURRENT_USER(new_current_user):
     CURRENT_USER = new_current_user
 
 
-# @app.route('/loadusers', methods=['POST', 'GET'])
-# def loadExistingUsers():
-#     updateAllUserObjects()
-#     setLatestNumberOfUsersAndIDs()
-#     return redirect(url_for('main_page'))
-
-
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     form = RegisterForm()
@@ -70,7 +64,7 @@ def createNewUser():
                 email_is_ok = emailIsOK(form.email.data)
                 if (email_is_ok and usernameIsNew and passwordsMatch):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day, birth_year, form.location.data,
-                                          form.favoriteGenres.data, form.username.data, form.password.data, 0, True)
+                                          form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False)
                 else:
                     raise Exception()
             except Exception:
@@ -82,9 +76,14 @@ def createNewUser():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     USERNAME = None
+
+    activeUser = findActiveUser()
+    if activeUser is not None:
+        setCURRENT_USER(activeUser)
+
     if getCURRENT_USER() is not None:
         USERNAME = CURRENT_USER
-        return render_template("home.html", USERNAME=USERNAME, form2=LogoutButton())
+        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=LogoutButton())
 
     form = LoginForm()
     form2 = RegisterButton()
@@ -99,6 +98,7 @@ def login():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if getCURRENT_USER() is not None:
+        toggleUserLoginState(CURRENT_USER, False)
         setCURRENT_USER(None)
     return redirect(url_for('login'))
 
@@ -106,16 +106,15 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
-    # all pre-existing users get loaded here
-    updateHPACount()
-    if (HOMEPAGE_ACCESS_COUNT == 1):
-        # if (NUM_OF_ACTIVE_USERS >= 1):
-        updateAllUserObjects()
+    updateAllUserObjects()
     setLatestNumberOfUsersAndIDs()
 
     form2 = LogoutButton()
+
     if getCURRENT_USER() is not None:
+        toggleUserLoginState(CURRENT_USER, True)
         return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2)
+
     return redirect(url_for('login'))
 
 

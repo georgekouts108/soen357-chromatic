@@ -42,7 +42,7 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True):
+    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True, loggedOn=False):
 
         # all parameters are assumed to be valid
 
@@ -58,7 +58,7 @@ class User:
         self.favGenres = favGenres
         self.username = username
         self.password = password
-        self.loggedOn = False
+        self.loggedOn = loggedOn
 
         # later, implement friends and chats
 
