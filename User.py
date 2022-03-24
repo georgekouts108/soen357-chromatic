@@ -3,7 +3,7 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-from datetime import date
+from datetime import date, datetime
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
@@ -53,10 +53,10 @@ class User:
         self.birthmonth = birthMonth
         self.birthday = birthDay
         self.birthyear = birthYear
-        self.age = 21  # EDIT THIS ONE
+        self.age = self.getCurrentAge()
         self.location = location
         self.favGenres = favGenres
-        self.username = username  # must check outside a constructor call if 'username' exists
+        self.username = username
         self.password = password
         self.loggedOn = False
 
@@ -140,3 +140,31 @@ class User:
 
         except Exception:
             print("No genres to delete")
+
+    def getCurrentAge(self):
+        presentTime = datetime.now()
+        presentDay = presentTime.strftime("%d")
+        presentMonth = presentTime.strftime("%m")
+        presentYear = presentTime.strftime("%Y")
+
+        if (presentDay[0] == '0'):  # single digit day? 01-09?
+            presentDay = presentDay[1]
+        if (presentMonth[0] == '0'):  # single digit month? 01-09?
+            presentMonth = presentMonth[1]
+
+        birth_day = 0
+        birth_month = 0
+
+        if (self.birthday[0] == '0'):  # single digit birth day? 01-09?
+            birth_day = int(self.birthday[1])
+
+        if (self.birthmonth[0] == '0'):  # single digit birth month? 01-09?
+            birth_month = int(self.birthmonth[1])
+
+        isBirthdayToday = ((birth_month == int(presentMonth))
+                           and (birth_day == int(presentDay)))
+
+        if (isBirthdayToday):
+            return (int(presentYear) - int(self.birthyear))
+
+        return (int(presentYear) - int(self.birthyear) - 1)
