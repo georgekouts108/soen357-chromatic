@@ -5,13 +5,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chromatic - Home</title>
+    <title>Home - {{USERNAME}}</title>
 </head>
 
 <body>
     HOME PAGE<br><br>
     Hello, {{USERNAME}} !<br><br>current number of users == {{userCount}}<br><br><br>
 
+    <form action='/manage_genres'>
+        <div class="form-group">
+            {{form2.genreManage}}<br><br>
+        </div>
+    </form>
+    <br><br>
     <form method='POST' action='/logout'>
         <div class="form-group">
             {{form2.logout}}<br><br>

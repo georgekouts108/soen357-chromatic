@@ -5,7 +5,7 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
-from forms import LoginForm, RegisterForm, LogoutButton, LoginButton, RegisterButton
+from forms import HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, HomeButton
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState
 
@@ -83,7 +83,7 @@ def login():
 
     if getCURRENT_USER() is not None:
         USERNAME = CURRENT_USER
-        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=LogoutButton())
+        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=HomePageButtons())
 
     form = LoginForm()
     form2 = RegisterButton()
@@ -109,13 +109,18 @@ def main_page():
     updateAllUserObjects()
     setLatestNumberOfUsersAndIDs()
 
-    form2 = LogoutButton()
+    form2 = HomePageButtons()
 
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, True)
         return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2)
 
     return redirect(url_for('login'))
+
+
+@app.route('/manage_genres')
+def manageGenres():
+    return render_template("genreManage.html", USERNAME=CURRENT_USER, form2=HomeButton())
 
 
 if __name__ == '__main__':

@@ -51,7 +51,8 @@ class LoginForm(FlaskForm):
                         verifyCredentials(username, password)])
 
 
-class LogoutButton(FlaskForm):
+class HomePageButtons(FlaskForm):
+    genreManage = SubmitField('Manage Favorite Genres')
     logout = SubmitField('Logout')
 
 
@@ -61,3 +62,7 @@ class RegisterButton(FlaskForm):
 
 class LoginButton(FlaskForm):
     login = SubmitField('Login to Existing Account')
+
+
+class HomeButton(FlaskForm):
+    home = SubmitField('Home')
