@@ -6,7 +6,7 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
-from forms import GenreManageControls, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls
+from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState, retrieveFavGenres
 
@@ -167,12 +167,12 @@ def add_or_del_genre():
 @app.route('/connections', methods=['POST', 'GET'])
 def connections():
     currentUserID = int(findUserID(CURRENT_USER))
-    # call a method that will reture friend recommendations for a user
+
     recommendations = ALL_USER_OBJECTS[currentUserID -
                                        1].getFriendRecommendations()
     myGenres = ALL_USER_OBJECTS[currentUserID -
                                 1].favGenres
-    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres)
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton())
 
 
 if __name__ == '__main__':

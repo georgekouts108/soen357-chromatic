@@ -53,6 +53,7 @@ class LoginForm(FlaskForm):
 
 class HomePageButtons(FlaskForm):
     genreManage = SubmitField('Manage Favorite Genres')
+    connections = SubmitField('Your Connections')
     logout = SubmitField('Logout')
 
 
@@ -67,4 +68,8 @@ class LoginButton(FlaskForm):
 class GenreManageControls(FlaskForm):
     favoriteGenres = SelectMultipleField(
         'Select one or more genres, click on \"Add Genre(s)\" or \"Delete Genre(s)\", and then Confirm', choices=genres)
+    home = SubmitField('Home')
+
+
+class HomeButton(FlaskForm):
     home = SubmitField('Home')
