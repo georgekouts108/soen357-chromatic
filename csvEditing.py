@@ -5,6 +5,44 @@ import sys
 import os
 
 
+# def retrieveUserID(username):
+#     id = 0
+#     g = open('databases/userGeneralInfo.csv', 'r')
+#     csv_reader1 = reader(g)
+#     general_info_rows = list(csv_reader1)
+#     g.close()
+#     for general in general_info_rows:
+#         if (general[10] == username):
+#             id = general[0]
+#             break
+#     return id
+
+
+def retrieveFavGenres(username):
+    currentUserID = 0
+    my_genres = []
+    g = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader1 = reader(g)
+    general_info_rows = list(csv_reader1)
+    g.close()
+    for general in general_info_rows:
+        if (general[10] == username):
+            currentUserID = general[0]
+            break
+
+    f = open('databases/userFavGenres.csv', 'r')
+    csv_reader2 = reader(f)
+    favorite_genres_rows = list(csv_reader2)
+    f.close()
+
+    for genre in favorite_genres_rows:
+        if genre[0] == currentUserID:
+            my_genres = genre[1::]
+            break
+
+    return my_genres
+
+
 def updateGenres(userID, newGenreArray):
     f = open('databases/userFavGenres.csv', 'r')
     csv_reader = reader(f)
@@ -15,7 +53,7 @@ def updateGenres(userID, newGenreArray):
     for genre in newGenreArray:
         editedEntry.append(genre)
 
-    favorite_genres_rows[userID] = editedEntry
+    favorite_genres_rows[int(userID)] = editedEntry
 
     newList = open('databases/userFavGenres.csv', 'w', newline='')
     csv_writer = writer(newList)

@@ -11,6 +11,26 @@
 <body>
     Genre Management for {{USERNAME}}
     <br><br>
+
+    <label>Your Favorite Genres</label>
+    <ul>
+        {% for genre in GENRES%}
+        <li>{{genre}}</li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <br>
+
+    <form name="genre" method="POST" action="/addordelgenre">
+        {{form2.favoriteGenres.label(class='form-control-label')}}<br>
+        {{form2.favoriteGenres}}<br><br>
+
+        <input type="radio" name="addordel" id="add" value="add"> Add Selected Genre <br>
+        <input type="radio" name="addordel" id="del" value="del"> Delete Selected Genre <br>
+
+        <input type="submit" value="Confirm">
+    </form>
+
     <form action='/'>
         <div class="form-group">
             {{form2.home}}<br><br>

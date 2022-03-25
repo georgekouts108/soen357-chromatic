@@ -1,3 +1,4 @@
+from tkinter import CURRENT
 from flask import Flask, render_template, url_for, request, redirect
 from csv import reader, writer
 import sys
@@ -5,9 +6,9 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
-from forms import HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, HomeButton
+from forms import GenreManageControls, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
-from csvEditing import toggleUserLoginState
+from csvEditing import toggleUserLoginState, retrieveFavGenres
 
 
 app = Flask(__name__)
@@ -20,6 +21,16 @@ ALL_USER_OBJECTS = []
 def updateAllUserObjects():
     global ALL_USER_OBJECTS
     ALL_USER_OBJECTS = loadAllUsers()
+
+
+def findUserID(username):
+    id = 0
+    global ALL_USER_OBJECTS
+    for a in ALL_USER_OBJECTS:
+        if a.username == username:
+            id = a.id
+            break
+    return id
 
 
 def updateHPACount():
@@ -65,6 +76,10 @@ def createNewUser():
                 if (email_is_ok and usernameIsNew and passwordsMatch):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day, birth_year, form.location.data,
                                           form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False)
+                    # may not need this
+                    global ALL_USER_OBJECTS
+                    ALL_USER_OBJECTS.append(registeredUser)
+                    # may not need this
                 else:
                     raise Exception()
             except Exception:
@@ -120,7 +135,36 @@ def main_page():
 
 @app.route('/manage_genres')
 def manageGenres():
-    return render_template("genreManage.html", USERNAME=CURRENT_USER, form2=HomeButton())
+    my_genres = retrieveFavGenres(CURRENT_USER)
+    return render_template("genreManage.html", USERNAME=CURRENT_USER, GENRES=my_genres, form2=GenreManageControls())
+
+
+@app.route('/addordelgenre', methods=['POST', 'GET'])
+def add_or_del_genre():
+
+    form2 = GenreManageControls()
+    currentUserID = int(findUserID(CURRENT_USER))
+
+    if request.method == 'POST':
+        addOrDel = request.form['addordel']
+        print("addOrDel == "+str(addOrDel))
+        try:
+            if (str(addOrDel) == 'add'):
+                if form2.favoriteGenres.data is not None:
+                    for i in form2.favoriteGenres.data:
+                        ALL_USER_OBJECTS[currentUserID - 1].addGenre(i)
+
+            elif (str(addOrDel) == 'del'):
+                if form2.favoriteGenres.data is not None:
+                    print("DEBUGGING 1 -- new_genre == " +
+                          str(form2.favoriteGenres.data))
+                    for i in form2.favoriteGenres.data:
+                        ALL_USER_OBJECTS[currentUserID - 1].deleteGenre(i)
+            else:
+                raise Exception()
+        except Exception():
+            return redirect(url_for('manageGenres'))
+    return redirect(url_for('manageGenres'))
 
 
 if __name__ == '__main__':

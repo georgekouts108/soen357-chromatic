@@ -5,18 +5,18 @@ from wtforms.validators import Email, DataRequired, EqualTo, Length
 from Genre import Genre
 from registerAndLogin import usernameIsOK, verifyCredentials
 genres = [
-    ('pop', Genre.POP), ('electronic',
-                         Genre.ELECTRONIC), ('dance', Genre.DANCE), ('rap', Genre.RAP),
-    ('hiphop', Genre.HIPHOP), ('rock', Genre.ROCK), ('metal',
-                                                     Genre.METAL), ('soul', Genre.SOUL),
-    ('jazz', Genre.JAZZ), ('disco', Genre.DISCO), ('funk',
-                                                   Genre.FUNK), ('classical', Genre.CLASSICAL),
-    ('soundtrack', Genre.SOUNDTRACK), ('world',
-                                       Genre.WORLD), ('folk', Genre.FOLK), ('indie', Genre.INDIE),
-    ('broadway', Genre.BROADWAY), ('theater', Genre.BROADWAY), ('musical',
-                                                                Genre.MUSICAL), ('vintage', Genre.VINTAGE),
-    ('ballad', Genre.BALLAD), ('meditation',
-                               Genre.MEDITATION), ('faith', Genre.FAITH)
+    ('POP', Genre.POP), ('ELECTRONIC',
+                         Genre.ELECTRONIC), ('DANCE', Genre.DANCE), ('RAP', Genre.RAP),
+    ('HIPHOP', Genre.HIPHOP), ('ROCK', Genre.ROCK), ('METAL',
+                                                     Genre.METAL), ('SOUL', Genre.SOUL),
+    ('JAZZ', Genre.JAZZ), ('DISCO', Genre.DISCO), ('FUNK',
+                                                   Genre.FUNK), ('CLASSICAL', Genre.CLASSICAL),
+    ('SOUNDTRACK', Genre.SOUNDTRACK), ('WORLD',
+                                       Genre.WORLD), ('FOLK', Genre.FOLK), ('INDIE', Genre.INDIE),
+    ('BROADWAY', Genre.BROADWAY), ('THEATER', Genre.BROADWAY), ('MUSICAL',
+                                                                Genre.MUSICAL), ('VINTAGE', Genre.VINTAGE),
+    ('BALLAD', Genre.BALLAD), ('MEDITATION',
+                               Genre.MEDITATION), ('FAITH', Genre.FAITH)
 ]
 
 
@@ -64,5 +64,7 @@ class LoginButton(FlaskForm):
     login = SubmitField('Login to Existing Account')
 
 
-class HomeButton(FlaskForm):
+class GenreManageControls(FlaskForm):
+    favoriteGenres = SelectMultipleField(
+        'Select one or more genres, click on \"Add Genre(s)\" or \"Delete Genre(s)\", and then Confirm', choices=genres)
     home = SubmitField('Home')

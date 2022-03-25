@@ -3,7 +3,7 @@ from csv import reader, writer
 from csvEditing import updatePassword, updateGenres
 import csv
 import os
-from datetime import date, datetime
+from datetime import datetime
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
@@ -74,10 +74,6 @@ class User:
         else:  # or is an existing user coming in?
             self.id = manualUserID
 
-    # READING FROM CSVs
-
-    # EDITING CSVs
-
     def updateGenreList(self):
         # this method assumes that self.favGenres has been updated
         updateGenres(self.id, self.favGenres)
@@ -85,8 +81,6 @@ class User:
     def changePassword(self, newPassword):
         self.password = newPassword
         updatePassword(self.id, newPassword)
-
-    # WRITING TO CSVs
 
     def writeGeneralInfoData(self):
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
@@ -115,7 +109,7 @@ class User:
         else:
             alreadyExists = False
             for g in range(len(self.favGenres)):
-                if (self.favGenres[g] is newGenre):
+                if (self.favGenres[g] == newGenre):
                     alreadyExists = True
                     break
             if not alreadyExists:
