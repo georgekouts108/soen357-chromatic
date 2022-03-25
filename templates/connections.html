@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections - {{USERNAME}}</title>
+</head>
+
+<body>
+    Friend recommentations for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>
+    <br><br>
+    <label>Your Favorite Genres</label>
+    <ul>
+
+        {% for genre in GENRES%}
+        <li><span style="color: green; font-weight:bold">{{genre}}</span></li>
+        {% endfor %}
+    </ul>
+    <hr><br>
+
+    <label style="font-weight:bold">Users with 1 common genre:</label>
+    <ul>
+        {% for user in RECOMMENDATIONS[0] %}
+        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
+
+            {% for g in range(user[1]|length) %}
+
+
+            {%if g == 0 %}
+            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+
+            {%else%}
+            , <span style="color: green; font-weight:bold"> {{user[1][g]}}</span>
+
+            {%endif%}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </ul><br>
+    <label style="font-weight:bold">Users with 2 common genres:</label>
+    <ul>
+        {% for user in RECOMMENDATIONS[1] %}
+        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
+
+            {% for g in range(user[1]|length) %}
+
+            {%if g == 0 %}
+            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+
+            {%else%}
+            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+
+            {%endif%}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </ul><br>
+    <label style="font-weight:bold">Users with 3 common genres:</label>
+    <ul>
+        {% for user in RECOMMENDATIONS[2] %}
+        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
+
+            {% for g in range(user[1]|length) %}
+
+            {%if g == 0 %}
+            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+            {%else%}
+            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+
+            {%endif%}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </ul><br>
+    <label style="font-weight:bold">Users with 4 common genres:</label>
+    <ul>
+        {% for user in RECOMMENDATIONS[3] %}
+        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
+
+            {% for g in range(user[1]|length) %}
+
+            {%if g == 0 %}
+            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+            {%else%}
+            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+            {%endif%}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </ul><br>
+    <label style="font-weight:bold">Users with 5 common genres or more:</label>
+    <ul>
+        {% for user in RECOMMENDATIONS[4] %}
+        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
+
+            {% for g in range(user[1]|length) %}
+
+            {%if g == 0 %}
+            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+            {%else%}
+            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
+            {%endif%}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </ul><br>
+    <hr>
+    <br>
+</body>
+
+</html>

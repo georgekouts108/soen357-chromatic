@@ -153,11 +153,8 @@ def add_or_del_genre():
                 if form2.favoriteGenres.data is not None:
                     for i in form2.favoriteGenres.data:
                         ALL_USER_OBJECTS[currentUserID - 1].addGenre(i)
-
             elif (str(addOrDel) == 'del'):
                 if form2.favoriteGenres.data is not None:
-                    print("DEBUGGING 1 -- new_genre == " +
-                          str(form2.favoriteGenres.data))
                     for i in form2.favoriteGenres.data:
                         ALL_USER_OBJECTS[currentUserID - 1].deleteGenre(i)
             else:
@@ -165,6 +162,17 @@ def add_or_del_genre():
         except Exception():
             return redirect(url_for('manageGenres'))
     return redirect(url_for('manageGenres'))
+
+
+@app.route('/connections', methods=['POST', 'GET'])
+def connections():
+    currentUserID = int(findUserID(CURRENT_USER))
+    # call a method that will reture friend recommendations for a user
+    recommendations = ALL_USER_OBJECTS[currentUserID -
+                                       1].getFriendRecommendations()
+    myGenres = ALL_USER_OBJECTS[currentUserID -
+                                1].favGenres
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres)
 
 
 if __name__ == '__main__':

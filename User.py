@@ -1,6 +1,7 @@
 from Genre import Genre
 from csv import reader, writer
-from csvEditing import updatePassword, updateGenres
+# from app import ALL_USER_OBJECTS
+from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoDB
 import csv
 import os
 from datetime import datetime
@@ -134,6 +135,49 @@ class User:
 
         except Exception:
             print("No genres to delete")
+
+    def isGenreInList(self, genre, array):
+        yes = False
+        for a in array:
+            if a == genre:
+                yes = True
+                break
+        return yes
+
+    def getFriendRecommendations(self):
+
+        oneGenreMatches = []
+        twoGenreMatches = []
+        threeGenreMatches = []
+        fourGenreMatches = []
+        fivePlusGenreMatches = []
+
+        for row in getGenreDB()[1::]:
+            if row[0] != self.id:
+                matchCount = 0
+                genresInCommon = []
+                theirUsername = getGeneralInfoDB()[int(row[0])][10]
+                theirGenres = row[1::]
+
+                # how many genres are matched?
+                for myGenre in self.favGenres:
+                    if self.isGenreInList(myGenre, theirGenres):
+                        matchCount = matchCount + 1
+                        genresInCommon.append(myGenre)
+
+                if (matchCount == 1):
+                    oneGenreMatches.append([theirUsername, genresInCommon])
+                elif (matchCount == 2):
+                    twoGenreMatches.append([theirUsername, genresInCommon])
+                elif (matchCount == 3):
+                    threeGenreMatches.append([theirUsername, genresInCommon])
+                elif (matchCount == 4):
+                    fourGenreMatches.append([theirUsername, genresInCommon])
+                elif (matchCount >= 5):
+                    fivePlusGenreMatches.append(
+                        [theirUsername, genresInCommon])
+
+        return [oneGenreMatches, twoGenreMatches, threeGenreMatches, fourGenreMatches, fivePlusGenreMatches]
 
     def getCurrentAge(self):
         presentTime = datetime.now()

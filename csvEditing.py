@@ -5,17 +5,20 @@ import sys
 import os
 
 
-# def retrieveUserID(username):
-#     id = 0
-#     g = open('databases/userGeneralInfo.csv', 'r')
-#     csv_reader1 = reader(g)
-#     general_info_rows = list(csv_reader1)
-#     g.close()
-#     for general in general_info_rows:
-#         if (general[10] == username):
-#             id = general[0]
-#             break
-#     return id
+def getGeneralInfoDB():
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader2 = reader(f)
+    general_info_rows = list(csv_reader2)
+    f.close()
+    return general_info_rows
+
+
+def getGenreDB():
+    f = open('databases/userFavGenres.csv', 'r')
+    csv_reader2 = reader(f)
+    favorite_genres_rows = list(csv_reader2)
+    f.close()
+    return favorite_genres_rows  # including the header
 
 
 def retrieveFavGenres(username):
