@@ -66,17 +66,4 @@ def loadAllUsers():
 
         all_users.append(nextUser)
 
-        with open(r"test_databases/TESTallUserLoad_GeneralInfo.csv", 'a') as user_records:
-            csv_writer = writer(user_records)
-            newRow = [nextUser.id, nextUser.firstname, nextUser.lastname, nextUser.email, nextUser.birthmonth, nextUser.birthday,
-                      nextUser.birthyear, nextUser.age, nextUser.location, nextUser.loggedOn, nextUser.username, nextUser.password]
-            csv_writer.writerow(newRow)
-
-        with open(r"test_databases/TESTallUserLoad_GenreInfo.csv", 'a') as user_records2:
-            csv_writer2 = writer(user_records2)
-            newRow2 = [nextUser.id]
-            for g in nextUser.favGenres:
-                newRow2.append(g)
-            csv_writer2.writerow(newRow2)
-
     return all_users

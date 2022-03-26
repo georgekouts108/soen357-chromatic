@@ -209,7 +209,8 @@ def friend():
             ALL_USER_OBJECTS[currentUserID -
                              1].acceptFriendRequest(triggeredUsername)
         if (actionToDo == 'Unfriend'):
-            # to be implemented soon...
+            ALL_USER_OBJECTS[currentUserID -
+                             1].unfriendUser(triggeredUsername)
             return redirect(url_for('connections'))
 
     return redirect(url_for('connections'))

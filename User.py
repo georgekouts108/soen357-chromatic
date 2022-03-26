@@ -359,6 +359,8 @@ class User:
         # when you accept a friend request:
         # 1) the acceptee's username will be appended to your own list of friends
         # 2) your own username will be appended to the acceptee's list of friends
+        # 3) your own username gets removed from the acceptee's SENT list
+        # 4) the acceptee's username gets removed from the accepter's RECEIVED list
 
         # (1)
         g = open('databases/userFriends.csv', 'r')
@@ -381,6 +383,86 @@ class User:
                 break
 
         friendsLists[accepteeID].append(self.username)
+
+        newList2 = open(
+            'databases/userFriends.csv', 'w', newline='')
+        csv_writer2 = writer(newList2)
+        csv_writer2.writerows(friendsLists)
+        newList2.close()
+
+        # (3)
+        f = open('databases/userSentFriendRequests.csv', 'r')
+        csv_reader1 = reader(f)
+        sendFriendRequestRows = list(csv_reader1)
+        f.close()
+
+        poppedIndex = 1
+        for accepted_uname in sendFriendRequestRows[int(accepteeID)][1::]:
+            if (accepted_uname == self.username):
+                sendFriendRequestRows[int(accepteeID)].pop(poppedIndex)
+                break
+            else:
+                poppedIndex = poppedIndex + 1
+
+        newList1 = open('databases/userSentFriendRequests.csv',
+                        'w', newline='')
+        csv_writer1 = writer(newList1)
+        csv_writer1.writerows(sendFriendRequestRows)
+        newList1.close()
+
+        # (4)
+        g = open('databases/userReceivedFriendRequests.csv', 'r')
+        csv_reader3 = reader(g)
+        receivedFriendRequestRows = list(csv_reader3)
+        g.close()
+
+        poppedIndex = 1
+        for acceptee_uname in receivedFriendRequestRows[int(self.id)][1::]:
+            if (acceptee_uname == acceptee):
+                receivedFriendRequestRows[int(self.id)].pop(poppedIndex)
+                break
+            else:
+                poppedIndex = poppedIndex + 1
+
+        newList3 = open(
+            'databases/userReceivedFriendRequests.csv', 'w', newline='')
+        csv_writer3 = writer(newList3)
+        csv_writer3.writerows(receivedFriendRequestRows)
+        newList3.close()
+
+    def unfriendUser(self, unfriendee):
+
+        g = open('databases/userFriends.csv', 'r')
+        csv_reader = reader(g)
+        friendsLists = list(csv_reader)
+        g.close()
+
+        h = open('databases/userGeneralInfo.csv', 'r')
+        csv_reader3 = reader(h)
+        user_rows = list(csv_reader3)
+        h.close()
+
+        unfriendeeID = 1
+        for row in user_rows[1::]:
+            if (row[10] == unfriendee):
+                unfriendeeID = int(row[0])
+                break
+
+        poppedIndex = 1
+        for uname in friendsLists[unfriendeeID][1::]:
+            if (uname == self.username):
+                friendsLists[unfriendeeID].pop(poppedIndex)
+                break
+            else:
+                poppedIndex = poppedIndex + 1
+
+        poppedIndex2 = 1
+        for uname in friendsLists[int(self.id)][1::]:
+            if (uname == unfriendee):
+                friendsLists[int(self.id)].pop(poppedIndex2)
+                break
+            else:
+                poppedIndex2 = poppedIndex2 + 1
 
         newList2 = open(
             'databases/userFriends.csv', 'w', newline='')
