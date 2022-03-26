@@ -6,9 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connections - {{USERNAME}}</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
+
+
     Friend recommentations for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>
     <br><br>
     <label>Your Favorite Genres</label>
@@ -112,6 +121,46 @@
         <div class="form-group">
             {{homeButton.home}}<br><br>
         </div>
+    </form>
+    <br>
+    <hr>
+    <br>
+    <form method="POST" , action="/friend">
+        <table style="width:40%; border:1px solid black;">
+            {% for i in range(userCount) %}
+            {% if usernames[i] != USERNAME %}
+            <input type="hidden" value={{usernames[i]}} name="my_uname" id="my_uname">
+            <tr>
+                <th>{{fullnames[i]}}</th>
+                <th>{{usernames[i]}}</th>
+                <th>Age: {{ages[i]}}</th>
+                <th>{{locations[i]}}</th>
+            </tr>
+            <tr>
+                <th><input type="submit" value="Add Friend" name="friend" id="add"></th>
+                <th rowspan="4" colspan="4">
+                    genres
+                </th>
+            </tr>
+            <tr>
+                <th><input type="submit" value="Cancel Friend Request" name="friend" id="cancel"></th>
+            </tr>
+            <tr>
+                <th><input type="submit" value="Accept Friend Request" name="friend" id="accept"></th>
+            </tr>
+            <tr>
+                <th><input type="submit" value="Unfriend" name="friend" id="unfriend"></th>
+            </tr>
+            <tr>
+                <td colspan="5" style="background-color: aquamarine;">
+                    <p> </p>
+                </td>
+            </tr>
+            {%else%}
+            {%endif%}
+            {% endfor %}
+        </table>
+
     </form>
 </body>
 

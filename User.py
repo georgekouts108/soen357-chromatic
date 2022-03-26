@@ -43,7 +43,8 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True, loggedOn=False):
+    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True, loggedOn=False,
+                 friends=None, sentFriendReqs=None, receivedFriendRequests=None):
 
         # all parameters are assumed to be valid
 
@@ -62,12 +63,18 @@ class User:
         self.loggedOn = loggedOn
 
         # later, implement friends and chats
+        self.friends = friends
+        self.sent_friend_requests = sentFriendReqs
+        self.received_friend_requests = receivedFriendRequests
 
         if(newUserID is True):  # is a new user coming in?
             self.id = getNextUserID()
             updateNextUserID()
             self.writeGeneralInfoData()
             self.writeFavGenresData()
+            self.writeFriendsData()
+            self.writeSentFriendRequestsData()
+            self.writeRecievedFriendRequestsData()
 
             updateNumOfActiveUsers()
             setLatestNumberOfUsersAndIDs()
@@ -82,6 +89,45 @@ class User:
     def changePassword(self, newPassword):
         self.password = newPassword
         updatePassword(self.id, newPassword)
+
+    def writeFriendsData(self):
+        with open(r"databases/userFriends.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+
+            if (self.friends is not None):
+                FRIENDS = [self.id]
+                for req in self.friends:
+                    FRIENDS.append(req)
+                csv_writer.writerow(FRIENDS)
+            else:
+                csv_writer.writerow([self.id])
+        return True
+
+    def writeSentFriendRequestsData(self):
+        with open(r"databases/userSentFriendRequests.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+
+            if (self.sent_friend_requests is not None):
+                sentRequests = [self.id]
+                for req in self.sent_friend_requests:
+                    sentRequests.append(req)
+                csv_writer.writerow(sentRequests)
+            else:
+                csv_writer.writerow([self.id])
+        return True
+
+    def writeRecievedFriendRequestsData(self):
+        with open(r"databases/userReceivedFriendRequests.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+
+            if (self.received_friend_requests is not None):
+                receivedRequests = [self.id]
+                for req in self.received_friend_requests:
+                    receivedRequests.append(req)
+                csv_writer.writerow(receivedRequests)
+            else:
+                csv_writer.writerow([self.id])
+        return True
 
     def writeGeneralInfoData(self):
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:

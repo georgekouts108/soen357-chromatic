@@ -3,6 +3,8 @@ from flask import Flask, render_template, url_for, request, redirect
 from csv import reader, writer
 import sys
 import os
+
+from numpy import full
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
@@ -75,7 +77,7 @@ def createNewUser():
                 email_is_ok = emailIsOK(form.email.data)
                 if (email_is_ok and usernameIsNew and passwordsMatch):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day, birth_year, form.location.data,
-                                          form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False)
+                                          form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False, None, None, None)
                     # may not need this
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
@@ -167,12 +169,50 @@ def add_or_del_genre():
 @app.route('/connections', methods=['POST', 'GET'])
 def connections():
     currentUserID = int(findUserID(CURRENT_USER))
-
+    print("CURRENT_USER ID == "+str(currentUserID))
     recommendations = ALL_USER_OBJECTS[currentUserID -
                                        1].getFriendRecommendations()
     myGenres = ALL_USER_OBJECTS[currentUserID -
                                 1].favGenres
-    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton())
+
+    # for listing all users besides the current user
+    fullNames = []
+    usernames = []
+    ages = []
+    locations = []
+
+    for auo in ALL_USER_OBJECTS:
+        if (auo.username is not CURRENT_USER):
+            fullNames.append(auo.firstname + " " + auo.lastname)
+            usernames.append(auo.username)
+            ages.append(auo.age)
+            locations.append(auo.location)
+    print("user count == "+str(getUserCount()))
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=getUserCount(), currentUserID=currentUserID)
+
+
+@app.route('/friend', methods=['POST', 'GET'])
+def friend():
+    currentUserID = int(findUserID(CURRENT_USER))
+    if request.method == 'POST':
+        triggeredUsername = request.form['my_uname']
+        actionToDo = request.form['friend']
+        print("DEBUGGG 1 -- triggered uname = "+triggeredUsername)
+        print("DEBUGGG 2 -- action to do = "+actionToDo)
+        if (actionToDo == 'Add Friend'):
+            ALL_USER_OBJECTS[currentUserID -
+                             1].sendFriendRequest(triggeredUsername)
+        if (actionToDo == 'Cancel Friend Request'):
+            ALL_USER_OBJECTS[currentUserID -
+                             1].cancelFriendRequest(triggeredUsername)
+        if (actionToDo == 'Accept Friend Request'):
+            ALL_USER_OBJECTS[currentUserID -
+                             1].acceptFriendRequest(triggeredUsername)
+        if (actionToDo == 'Unfriend'):
+            # to be implemented soon...
+            return redirect(url_for('connections'))
+
+    return redirect(url_for('connections'))
 
 
 if __name__ == '__main__':
