@@ -125,11 +125,14 @@
     <br>
     <hr>
     <br>
-    <form method="POST" , action="/friend">
-        <table style="width:40%; border:1px solid black;">
-            {% for i in range(userCount) %}
-            {% if usernames[i] != USERNAME %}
-            <input type="hidden" value={{usernames[i]}} name="my_uname" id="my_uname">
+    <table style="width:40%; border:1px solid black;">
+        {% for i in range(userCount) %}
+        {% if usernames[i] != USERNAME %}
+        <p>usernames[{{i}}] is {{usernames[i]}}, index is {{ loop.index - 1 }}</p>
+
+        <form method="POST" , action="/friend">
+            <input type="hidden" value="{{ usernames[i] }}" name="my_uname" id="uname">
+
             <tr>
                 <th>{{fullnames[i]}}</th>
                 <th>{{usernames[i]}}</th>
@@ -156,12 +159,10 @@
                     <p> </p>
                 </td>
             </tr>
-            {%else%}
-            {%endif%}
-            {% endfor %}
-        </table>
-
-    </form>
+        </form>
+        {%endif%}
+        {% endfor %}
+    </table>
 </body>
 
 </html>

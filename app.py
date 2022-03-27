@@ -188,17 +188,16 @@ def connections():
             ages.append(auo.age)
             locations.append(auo.location)
     print("user count == "+str(getUserCount()))
-    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=getUserCount(), currentUserID=currentUserID)
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=getUserCount(), currentUserID=currentUserID, index=0)
 
 
 @app.route('/friend', methods=['POST', 'GET'])
 def friend():
     currentUserID = int(findUserID(CURRENT_USER))
     if request.method == 'POST':
-        triggeredUsername = request.form['my_uname']
+
+        triggeredUsername = request.form.get("my_uname")
         actionToDo = request.form['friend']
-        print("DEBUGGG 1 -- triggered uname = "+triggeredUsername)
-        print("DEBUGGG 2 -- action to do = "+actionToDo)
         if (actionToDo == 'Add Friend'):
             ALL_USER_OBJECTS[currentUserID -
                              1].sendFriendRequest(triggeredUsername)
