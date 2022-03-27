@@ -1,10 +1,7 @@
-from tkinter import CURRENT
 from flask import Flask, render_template, url_for, request, redirect
 from csv import reader, writer
 import sys
 import os
-
-from numpy import full
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers
