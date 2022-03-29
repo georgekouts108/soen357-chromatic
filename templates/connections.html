@@ -128,7 +128,7 @@
     <table style="width:40%; border:1px solid black;">
         {% for i in range(userCount) %}
         {% if usernames[i] != USERNAME %}
-        <p>usernames[{{i}}] is {{usernames[i]}}, index is {{ loop.index - 1 }}</p>
+
 
         <form method="POST" , action="/friend">
             <input type="hidden" value="{{ usernames[i] }}" name="my_uname" id="uname">

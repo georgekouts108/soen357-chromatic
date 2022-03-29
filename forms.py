@@ -53,7 +53,7 @@ class LoginForm(FlaskForm):
 
 class HomePageButtons(FlaskForm):
     genreManage = SubmitField('Manage Favorite Genres')
-    connections = SubmitField('Your Connections')
+    connections = SubmitField('Find Friends')
     logout = SubmitField('Logout')
 
 

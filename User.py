@@ -190,6 +190,7 @@ class User:
                 break
         return yes
 
+    # this should NOT include existing friends
     def getFriendRecommendations(self):
 
         oneGenreMatches = []
@@ -199,7 +200,7 @@ class User:
         fivePlusGenreMatches = []
 
         for row in getGenreDB()[1::]:
-            if row[0] != self.id:
+            if ((row[0] != self.id) and (not self.userExistsInFriendsList(row[0]))):
                 matchCount = 0
                 genresInCommon = []
                 theirUsername = getGeneralInfoDB()[int(row[0])][10]

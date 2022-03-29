@@ -178,14 +178,17 @@ def connections():
     ages = []
     locations = []
 
+    usersCountToShow = 0
     for auo in ALL_USER_OBJECTS:
-        if (auo.username is not CURRENT_USER):
+        if ((auo.username is not CURRENT_USER) and
+                (not ALL_USER_OBJECTS[currentUserID - 1].userExistsInFriendsList(auo.username))):
+            usersCountToShow = usersCountToShow + 1
             fullNames.append(auo.firstname + " " + auo.lastname)
             usernames.append(auo.username)
             ages.append(auo.age)
             locations.append(auo.location)
     print("user count == "+str(getUserCount()))
-    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=getUserCount(), currentUserID=currentUserID, index=0)
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
 
 
 @app.route('/friend', methods=['POST', 'GET'])
@@ -198,16 +201,16 @@ def friend():
         if (actionToDo == 'Add Friend'):
             ALL_USER_OBJECTS[currentUserID -
                              1].sendFriendRequest(triggeredUsername)
-        if (actionToDo == 'Cancel Friend Request'):
+        elif (actionToDo == 'Cancel Friend Request'):
             ALL_USER_OBJECTS[currentUserID -
                              1].cancelFriendRequest(triggeredUsername)
-        if (actionToDo == 'Accept Friend Request'):
+        elif (actionToDo == 'Accept Friend Request'):
             ALL_USER_OBJECTS[currentUserID -
                              1].acceptFriendRequest(triggeredUsername)
-        if (actionToDo == 'Unfriend'):
+        elif (actionToDo == 'Unfriend'):
             ALL_USER_OBJECTS[currentUserID -
                              1].unfriendUser(triggeredUsername)
-            return redirect(url_for('connections'))
+            # return redirect(url_for('connections'))
 
     return redirect(url_for('connections'))
 
