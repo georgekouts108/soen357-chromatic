@@ -4,7 +4,7 @@ import sys
 import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
-from appLoading import loadAllUsers
+from appLoading import loadAllUsers, setUpFriendshipFiles
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState, retrieveFavGenres
@@ -119,9 +119,11 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
-
-    updateAllUserObjects()
-    setLatestNumberOfUsersAndIDs()
+    updateHPACount()
+    if (HOMEPAGE_ACCESS_COUNT == 1):
+        latestUserCount = setLatestNumberOfUsersAndIDs()
+        setUpFriendshipFiles(latestUserCount)
+        updateAllUserObjects()
 
     form2 = HomePageButtons()
 
@@ -189,6 +191,13 @@ def connections():
             locations.append(auo.location)
     print("user count == "+str(getUserCount()))
     return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
+
+
+@app.route('/my_friends', methods=['POST', 'GET'])
+def my_friends():
+    currentUserID = int(findUserID(CURRENT_USER))
+    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
+    return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
 
 
 @app.route('/friend', methods=['POST', 'GET'])

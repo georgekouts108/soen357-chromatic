@@ -67,3 +67,67 @@ def loadAllUsers():
         all_users.append(nextUser)
 
     return all_users
+
+
+def setUpFriendshipFiles(latestUserCount):
+
+    if (latestUserCount > 0):
+
+        # 1
+        friendships = open('databases/userFriends.csv', 'r')
+        friendships_csv_reader = reader(friendships)
+        friendships_info_rows = list(friendships_csv_reader)
+        friendships.close()
+
+        with open(r"databases/userFriends.csv", 'a') as user_records:
+            csv_writer = writer(user_records)
+            for i in range(1, latestUserCount+1):
+                rowExists = False
+                for fr in friendships_info_rows:
+                    if (fr[0] == str(i)):
+                        rowExists = True
+                        break
+                if not rowExists:
+                    csv_writer.writerow([str(i)])
+        user_records.close()
+        # 1
+
+        # 2
+        sent_friend_reqs = open('databases/userSentFriendRequests.csv', 'r')
+        friendships_csv_reader2 = reader(sent_friend_reqs)
+        sentReqs_info_rows = list(friendships_csv_reader2)
+        sent_friend_reqs.close()
+
+        with open(r"databases/userSentFriendRequests.csv", 'a') as user_records2:
+            csv_writer2 = writer(user_records2)
+            for i in range(1, latestUserCount+1):
+
+                rowExists = False
+                for fr in sentReqs_info_rows:
+                    if (fr[0] == str(i)):
+                        rowExists = True
+                        break
+                if not rowExists:
+                    csv_writer2.writerow([str(i)])
+        user_records2.close()
+        # 2
+
+        # 3
+        rec_friend_reqs = open('databases/userReceivedFriendRequests.csv', 'r')
+        friendships_csv_reader3 = reader(rec_friend_reqs)
+        recReqs_info_rows = list(friendships_csv_reader3)
+        rec_friend_reqs.close()
+
+        with open(r"databases/userReceivedFriendRequests.csv", 'a') as user_records3:
+            csv_writer3 = writer(user_records3)
+            for i in range(1, latestUserCount+1):
+
+                rowExists = False
+                for fr in recReqs_info_rows:
+                    if (fr[0] == str(i)):
+                        rowExists = True
+                        break
+                if not rowExists:
+                    csv_writer3.writerow([str(i)])
+        user_records3.close()
+        # 3

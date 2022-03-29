@@ -27,6 +27,7 @@ def setLatestNumberOfUsersAndIDs():
 
     global NEXT_USER_ID
     NEXT_USER_ID = len(credential_rows)
+    return NUM_OF_ACTIVE_USERS
 
 
 def updateNextUserID():
