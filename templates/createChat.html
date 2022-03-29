@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Chat - {{USERNAME}}</title>
+</head>
+
+<body>
+    <span style="font-weight:bold">{{USERNAME}}</span> is starting a new chat...
+    <hr><br>
+
+    <form method='POST' action='/new_chat'>
+        <div class="form-group">
+            {{newChatForm.recipientOptions.label(class='form-control-label')}}<br>
+            {{newChatForm.recipientOptions}}<br><br>
+        </div>
+
+        <div class="form-group">
+            {{newChatForm.newMessage}}<br><br>
+        </div>
+
+        <div class="form-group">
+            {{newChatForm.send}}<br><br>
+        </div>
+    </form>
+
+    <hr><br>
+
+    <form method='POST' action='/my_messages'>
+        <div class="form-group">
+            {{newChatForm.cancel}}<br><br>
+        </div>
+    </form>
+</body>
+
+</html>

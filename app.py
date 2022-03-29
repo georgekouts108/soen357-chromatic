@@ -5,7 +5,7 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers, setUpFriendshipFiles
-from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls
+from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState, retrieveFavGenres
 
@@ -219,9 +219,34 @@ def friend():
         elif (actionToDo == 'Unfriend'):
             ALL_USER_OBJECTS[currentUserID -
                              1].unfriendUser(triggeredUsername)
-            # return redirect(url_for('connections'))
-
     return redirect(url_for('connections'))
+
+
+@app.route('/my_messages', methods=['POST', 'GET'])
+def messages():
+
+    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons())
+
+
+@app.route('/new_chat_creation', methods=['POST', 'GET'])
+def createChat():
+
+    return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=NewChatForm())
+
+
+@app.route('/new_chat', methods=['POST', 'GET'])
+def newChat():
+    form = NewChatForm()
+    if request.method == 'POST':
+        recipients = form.recipientOptions.data  # list of recipients' usernames
+        message = form.newMessage.data  # the written message
+
+        # TODO: MUST NOW USE THIS DATA TO CREATE AN ACTUAL CHAT LOG
+        # 1) automatically create a brand new CSV file that will store the messages
+        # 1.5) create a new instance of the Chat class
+        # 2) render a new HTML page (return statement below) that will display ONLY this new chat log, which can be added to
+
+    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, RECIPIENTS=recipients, MESSAGE=message)
 
 
 if __name__ == '__main__':

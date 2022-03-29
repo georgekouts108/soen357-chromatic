@@ -1,9 +1,11 @@
+from logging import PlaceHolder
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectMultipleField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, DataRequired, EqualTo, Length
 from Genre import Genre
 from registerAndLogin import usernameIsOK, verifyCredentials
+from messaging import getInfoForFriends, getYourUsername
 genres = [
     ('POP', Genre.POP), ('ELECTRONIC',
                          Genre.ELECTRONIC), ('DANCE', Genre.DANCE), ('RAP', Genre.RAP),
@@ -55,6 +57,7 @@ class HomePageButtons(FlaskForm):
     genreManage = SubmitField('Manage Favorite Genres')
     connections = SubmitField('Find Friends')
     myFriends = SubmitField('My Friends')
+    myMessages = SubmitField('My Messages')
     logout = SubmitField('Logout')
 
 
@@ -70,6 +73,28 @@ class GenreManageControls(FlaskForm):
     favoriteGenres = SelectMultipleField(
         'Select one or more genres, click on \"Add Genre(s)\" or \"Delete Genre(s)\", and then Confirm', choices=genres)
     home = SubmitField('Home')
+
+
+class MessagesPageButtons(FlaskForm):
+    startNewChat = SubmitField("Start New Chat")
+    home = SubmitField('Home')
+
+
+class NewChatForm(FlaskForm):
+    print("YOUR USERNAME == "+str(getYourUsername()))
+    friendsInfo = getInfoForFriends(getYourUsername())
+    print("YOUR FRIENDS INFO LIST == "+str(friendsInfo))
+    friends = []
+
+    for f in friendsInfo:
+        friends.append((f[2], f[1]))
+
+    recipientOptions = SelectMultipleField(
+        'Select one or more friends to create a chat with:', choices=friends)
+    newMessage = TextAreaField(
+        "Write something...", validators=[DataRequired()])
+    send = SubmitField("Send Message")
+    cancel = SubmitField('Cancel')
 
 
 class HomeButton(FlaskForm):
