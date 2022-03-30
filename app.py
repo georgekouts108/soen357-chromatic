@@ -2,16 +2,37 @@ from flask import Flask, render_template, url_for, request, redirect
 from csv import reader, writer
 import sys
 import os
+
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
-from appLoading import loadAllUsers, setUpFriendshipFiles
-from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm
+from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
+from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState, retrieveFavGenres
-
+from Chat import Chat, setLatestNumberOfChatsAndIDs, getNextChatID, updateNextChatID, updateNumOfActiveChats, getChatCount
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key1234567890"
+
+# NEW -- MARCH 29, 2022
+ALL_CHAT_OBJECTS = []
+
+
+def updateAllChatObjects():
+    global ALL_CHAT_OBJECTS
+    ALL_CHAT_OBJECTS = loadAllChats()  # IMPLEMENT THIS!!!
+
+
+def getChatMemberBlueprint(username):
+
+    targetUserID = int(findUserID(username))
+    their_id = str(ALL_USER_OBJECTS[targetUserID - 1].id)
+    their_full_name = str(ALL_USER_OBJECTS[targetUserID - 1].firstname) + " " + str(
+        ALL_USER_OBJECTS[targetUserID - 1].lastname)
+
+    return [their_id, their_full_name, username]
+# NEW -- MARCH 29, 2022
+
 
 HOMEPAGE_ACCESS_COUNT = 0
 ALL_USER_OBJECTS = []
@@ -119,11 +140,14 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
+
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         latestUserCount = setLatestNumberOfUsersAndIDs()
         setUpFriendshipFiles(latestUserCount)
         updateAllUserObjects()
+
+        updateAllChatObjects()  # NEW - MARCH 29
 
     form2 = HomePageButtons()
 
@@ -234,19 +258,52 @@ def createChat():
     return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=NewChatForm())
 
 
-@app.route('/new_chat', methods=['POST', 'GET'])
+@app.route('/chat_host_new_chat', methods=['POST', 'GET'])
 def newChat():
     form = NewChatForm()
     if request.method == 'POST':
         recipients = form.recipientOptions.data  # list of recipients' usernames
         message = form.newMessage.data  # the written message
 
-        # TODO: MUST NOW USE THIS DATA TO CREATE AN ACTUAL CHAT LOG
-        # 1) automatically create a brand new CSV file that will store the messages
-        # 1.5) create a new instance of the Chat class
-        # 2) render a new HTML page (return statement below) that will display ONLY this new chat log, which can be added to
+        currentUserID = int(findUserID(CURRENT_USER))
+        full_name = str(ALL_USER_OBJECTS[currentUserID - 1].firstname) + \
+            " " + str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
 
-    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, RECIPIENTS=recipients, MESSAGE=message)
+        members = [[str(currentUserID), full_name, CURRENT_USER]]
+
+        for r in recipients:
+            members.append(getChatMemberBlueprint(r))
+        print("MEMBERSSSSSSSSSSSSSSSSSSSSSSSSSSSS == "+str(members))
+        # TODO: MUST NOW USE THIS DATA TO CREATE AN ACTUAL CHAT LOG
+
+        # 2) render a new HTML page (return statement below) that will display ONLY this new chat log, which can be added to
+        newChat = Chat(members, CURRENT_USER, currentUserID,
+                       full_name, message, 0, True)
+        chat_log = newChat.retrieveChatLog()
+    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=newChat.id, chatform=ChatViewForm())
+
+
+@app.route('/chat_host', methods=['POST', 'GET'])
+def viewChat():
+    form = ChatViewForm()
+    if request.method == 'POST':
+        chat_id = request.form['chatID']
+        new_message = form.newMessage.data
+
+        currentUserID = int(findUserID(CURRENT_USER))
+        firstname = str(ALL_USER_OBJECTS[currentUserID - 1].firstname)
+        lastname = str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
+        full_name = firstname+" "+lastname
+
+        # must access the Chat object you want to modify...
+        ALL_CHAT_OBJECTS[chat_id - 1].appendMessageToChat(
+            currentUserID, CURRENT_USER, full_name, new_message)
+
+        members = ALL_CHAT_OBJECTS[chat_id - 1].members
+        chat_log = ALL_CHAT_OBJECTS[chat_id - 1].retrieveChatLog()
+
+        return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=newChat.id, chatform=ChatViewForm())
+    return None
 
 
 if __name__ == '__main__':

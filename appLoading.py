@@ -4,6 +4,7 @@ from operator import index
 import sys
 import os
 from User import User
+from Chat import Chat
 
 
 def loadAllUsers():
@@ -131,3 +132,45 @@ def setUpFriendshipFiles(latestUserCount):
                     csv_writer3.writerow([str(i)])
         user_records3.close()
         # 3
+
+
+def loadAllChats():
+    # TODO: IMPLEMENT THIS ***
+    all_chat_logs = []
+
+    listOfChatFilenames = os.listdir("chats/")
+
+    for filename in listOfChatFilenames:
+        chat_log = open("chats/"+str(filename)+"", 'r')
+        csv_reader = reader(chat_log)
+        rows = list(csv_reader)
+        chat_log.close()
+
+        next_chat_log = rows[1::]
+        next_member_set = []
+
+        memberIDs = filename.split('_')
+
+        general = open('databases/userGeneralInfo.csv', 'r')
+        general_csv_reader = reader(general)
+        general_info_rows = list(general_csv_reader)
+        for index in range(1, len(memberIDs)-1):
+            next_member = [str(memberIDs[index])]
+            next_fullname = general_info_rows[int(
+                memberIDs[index])][1]+" "+general_info_rows[int(memberIDs[index])][2]
+            next_username = general_info_rows[int(memberIDs[index])][10]
+            next_member.append(next_fullname)
+            next_member.append(next_username)
+            next_member_set.append(next_member)
+        general.close()
+
+        first_username = rows[1][1]
+        first_fullname = rows[1][2]
+        first_userID = rows[1][0]
+        first_message = rows[1][3]
+        chat_id = int(memberIDs[0][4::])
+        next_chat_log = Chat(next_member_set, first_username,
+                             first_userID, first_fullname, first_message, chat_id, False)
+        all_chat_logs.append(next_chat_log)
+
+    return all_chat_logs

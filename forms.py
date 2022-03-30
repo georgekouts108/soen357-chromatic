@@ -97,5 +97,11 @@ class NewChatForm(FlaskForm):
     cancel = SubmitField('Cancel')
 
 
+class ChatViewForm(FlaskForm):
+    newMessage = TextAreaField(
+        "Write something...", validators=[DataRequired()])
+    send = SubmitField("Send")
+
+
 class HomeButton(FlaskForm):
     home = SubmitField('Home')

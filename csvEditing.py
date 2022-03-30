@@ -95,3 +95,16 @@ def toggleUserLoginState(username, state):
     csv_writer = writer(newList)
     csv_writer.writerows(user_rows)
     newList.close()
+
+# chat-related methods
+
+
+# def appendMessageToChat(log_file_name, senderUserID, senderUsername, senderName, message):
+#     ChatLogWrite = open('chats/' + str(log_file_name) +
+#                         '.csv', 'a', newline='')
+#     csv_writer = writer(ChatLogWrite)
+#     # write the header row
+#     csv_writer.writerow(
+#         [str(senderUserID), str(senderUsername), str(senderName), str(message)])
+#     ChatLogWrite.close()
+#     return True

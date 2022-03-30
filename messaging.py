@@ -9,7 +9,9 @@ def getYourUsername():
     h.close()
 
     for row in user_rows[1::]:
-        if (row[9] == str(True)):
+
+        if (str(row[9]) == str(True)):
+
             uname = row[10]
             break
 
