@@ -17,8 +17,6 @@ def setLatestNumberOfChatsAndIDs():
 
     listOfChatFiles = os.listdir("chats/")
     chatCount = len(listOfChatFiles)
-    print("THE NUMBER OF ACTIVE CHATS == "+str(chatCount))
-
     global NUM_OF_ACTIVE_CHATS
     NUM_OF_ACTIVE_CHATS = int(chatCount)
 
@@ -58,8 +56,6 @@ class Chat:
         if (isNewChat is True):
             self.id = getNextChatID()
             updateNextChatID()
-            # updateNumOfActiveChats()
-            # setLatestNumberOfChatsAndIDs()
         else:
             self.id = manualChatID
 

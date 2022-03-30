@@ -133,6 +133,26 @@ def setUpFriendshipFiles(latestUserCount):
         user_records3.close()
         # 3
 
+        # 4
+        genres = open('databases/userFavGenres.csv', 'r')
+        genre_reader = reader(genres)
+        fav_genres_rows = list(genre_reader)
+        genres.close()
+
+        with open(r"databases/userFavGenres.csv", 'a') as user_records4:
+            csv_writer4 = writer(user_records4)
+            for i in range(1, latestUserCount+1):
+
+                rowExists = False
+                for fr in fav_genres_rows:
+                    if (fr[0] == str(i)):
+                        rowExists = True
+                        break
+                if not rowExists:
+                    csv_writer4.writerow([str(i)])
+        user_records4.close()
+        # 4
+
 
 def loadAllChats():
     all_chat_logs = []

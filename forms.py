@@ -81,9 +81,7 @@ class MessagesPageButtons(FlaskForm):
 
 
 class NewChatForm(FlaskForm):
-    print("YOUR USERNAME == "+str(getYourUsername()))
     friendsInfo = getInfoForFriends(getYourUsername())
-    print("YOUR FRIENDS INFO LIST == "+str(friendsInfo))
     friends = []
 
     for f in friendsInfo:
@@ -91,6 +89,7 @@ class NewChatForm(FlaskForm):
 
     recipientOptions = SelectMultipleField(
         'Select one or more friends to create a chat with:', choices=friends)
+
     newMessage = TextAreaField(
         "Write something...", validators=[DataRequired()])
     send = SubmitField("Send Message")

@@ -66,8 +66,6 @@ class User:
         self.sent_friend_requests = sentFriendReqs
         self.received_friend_requests = receivedFriendRequests
 
-        # later, implement chats
-
         if(newUserID is True):  # is a new user coming in?
             self.id = getNextUserID()
             updateNextUserID()
@@ -456,6 +454,8 @@ class User:
             csv_writer3 = writer(newList3)
             csv_writer3.writerows(receivedFriendRequestRows)
             newList3.close()
+
+            self.friends.append(acceptee)
         except Exception:
             return
 

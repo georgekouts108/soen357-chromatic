@@ -10,6 +10,8 @@ from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, R
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
 from csvEditing import toggleUserLoginState, retrieveFavGenres
 from Chat import Chat, setLatestNumberOfChatsAndIDs, getNextChatID, updateNextChatID, updateNumOfActiveChats, getChatCount
+from messaging import getInfoForFriends, getYourUsername
+from wtforms import SelectMultipleField
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key1234567890"
@@ -148,8 +150,6 @@ def main_page():
         updateAllUserObjects()
 
         updateAllChatObjects()  # NEW - MARCH 29
-        print("NOW RIGHT IN HERE ---- ALL_CHAT_OBJECTS length == " +
-              str(len(ALL_CHAT_OBJECTS)))
     form2 = HomePageButtons()
 
     if getCURRENT_USER() is not None:
@@ -193,7 +193,6 @@ def add_or_del_genre():
 @app.route('/connections', methods=['POST', 'GET'])
 def connections():
     currentUserID = int(findUserID(CURRENT_USER))
-    print("CURRENT_USER ID == "+str(currentUserID))
     recommendations = ALL_USER_OBJECTS[currentUserID -
                                        1].getFriendRecommendations()
     myGenres = ALL_USER_OBJECTS[currentUserID -
@@ -214,13 +213,14 @@ def connections():
             usernames.append(auo.username)
             ages.append(auo.age)
             locations.append(auo.location)
-    print("user count == "+str(getUserCount()))
+
     return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
 
 
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
     currentUserID = int(findUserID(CURRENT_USER))
+
     myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
     return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
 
@@ -249,13 +249,11 @@ def friend():
 
 @app.route('/my_messages', methods=['POST', 'GET'])
 def messages():
-
     return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons())
 
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
 def createChat():
-
     return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=NewChatForm())
 
 
@@ -274,7 +272,6 @@ def newChat():
 
         for r in recipients:
             members.append(getChatMemberBlueprint(r))
-        print("NEXT CHAT ID == "+str(getNextChatID()))
 
         newChat = Chat(members, CURRENT_USER, currentUserID,
                        full_name, message, 0, True)
@@ -292,15 +289,11 @@ def viewChat():
     if request.method == 'POST':
         chat_id = request.form['chatID']
         new_message = form.newMessage.data
-        print("CHAT ID FROM FORM IS "+chat_id)
         currentUserID = int(findUserID(CURRENT_USER))
         firstname = str(ALL_USER_OBJECTS[currentUserID - 1].firstname)
         lastname = str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
         full_name = firstname+" "+lastname
 
-        # must access the Chat object you want to modify...
-        print("NOW IN HERE----- ALL CHAT OBJECTS LENGTH == " +
-              str(len(ALL_CHAT_OBJECTS)))
         ALL_CHAT_OBJECTS[int(chat_id) - 1].appendMessageToChat(
             currentUserID, CURRENT_USER, full_name, new_message)
 

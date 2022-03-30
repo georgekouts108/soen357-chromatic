@@ -7,14 +7,11 @@ def getYourUsername():
     csv_reader3 = reader(h)
     user_rows = list(csv_reader3)
     h.close()
-
     for row in user_rows[1::]:
-
         if (str(row[9]) == str(True)):
-
             uname = row[10]
             break
-
+    print("uname == "+str(uname))
     return uname
 
 
@@ -46,5 +43,5 @@ def getInfoForFriends(yourUsername):
                         u[1])+" "+str(u[2]), str(u[10])]
                     yourFriendsInfo.append(newInfoEntry)
                     break
-
+    print("yourFriendsInfo == "+str(yourFriendsInfo))
     return yourFriendsInfo
