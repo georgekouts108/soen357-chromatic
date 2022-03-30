@@ -135,11 +135,14 @@ def setUpFriendshipFiles(latestUserCount):
 
 
 def loadAllChats():
-    # TODO: IMPLEMENT THIS ***
     all_chat_logs = []
 
     listOfChatFilenames = os.listdir("chats/")
 
+    if listOfChatFilenames is None:
+        print("NONE")
+        return None
+    print("NOT NONE")
     for filename in listOfChatFilenames:
         chat_log = open("chats/"+str(filename)+"", 'r')
         csv_reader = reader(chat_log)

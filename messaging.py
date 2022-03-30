@@ -36,13 +36,15 @@ def getInfoForFriends(yourUsername):
     user_rows2 = list(csv_reader4)
     i.close()
     # a list of your friends' usernames
-    friendsUsernames = user_rows2[yourID][1::]
 
-    for username in friendsUsernames:
-        for u in user_rows[1::]:
-            if (u[10] == username):
-                newInfoEntry = [str(u[0]), str(u[1])+" "+str(u[2]), str(u[10])]
-                yourFriendsInfo.append(newInfoEntry)
-                break
+    if (len(user_rows2) > 1):
+        friendsUsernames = user_rows2[yourID][1::]
+        for username in friendsUsernames:
+            for u in user_rows[1::]:
+                if (u[10] == username):
+                    newInfoEntry = [str(u[0]), str(
+                        u[1])+" "+str(u[2]), str(u[10])]
+                    yourFriendsInfo.append(newInfoEntry)
+                    break
 
     return yourFriendsInfo

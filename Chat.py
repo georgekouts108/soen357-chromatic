@@ -58,8 +58,8 @@ class Chat:
         if (isNewChat is True):
             self.id = getNextChatID()
             updateNextChatID()
-            updateNumOfActiveChats()
-            setLatestNumberOfChatsAndIDs()
+            # updateNumOfActiveChats()
+            # setLatestNumberOfChatsAndIDs()
         else:
             self.id = manualChatID
 
@@ -70,6 +70,10 @@ class Chat:
         self.log_file_name = "chat" + \
             str(self.id)+"_"+'_'.join(participantIDs)+"_"
         self.createAndStartChatLogFile()
+
+        if (isNewChat is True):
+            updateNumOfActiveChats()
+            setLatestNumberOfChatsAndIDs()
 
     def createAndStartChatLogFile(self):
         newChatLogWrite = open(

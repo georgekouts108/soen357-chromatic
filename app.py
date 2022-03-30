@@ -20,7 +20,7 @@ ALL_CHAT_OBJECTS = []
 
 def updateAllChatObjects():
     global ALL_CHAT_OBJECTS
-    ALL_CHAT_OBJECTS = loadAllChats()  # IMPLEMENT THIS!!!
+    ALL_CHAT_OBJECTS = loadAllChats()
 
 
 def getChatMemberBlueprint(username):
@@ -148,7 +148,8 @@ def main_page():
         updateAllUserObjects()
 
         updateAllChatObjects()  # NEW - MARCH 29
-
+        print("NOW RIGHT IN HERE ---- ALL_CHAT_OBJECTS length == " +
+              str(len(ALL_CHAT_OBJECTS)))
     form2 = HomePageButtons()
 
     if getCURRENT_USER() is not None:
@@ -273,13 +274,15 @@ def newChat():
 
         for r in recipients:
             members.append(getChatMemberBlueprint(r))
-        print("MEMBERSSSSSSSSSSSSSSSSSSSSSSSSSSSS == "+str(members))
-        # TODO: MUST NOW USE THIS DATA TO CREATE AN ACTUAL CHAT LOG
+        print("NEXT CHAT ID == "+str(getNextChatID()))
 
-        # 2) render a new HTML page (return statement below) that will display ONLY this new chat log, which can be added to
         newChat = Chat(members, CURRENT_USER, currentUserID,
                        full_name, message, 0, True)
         chat_log = newChat.retrieveChatLog()
+
+        global ALL_CHAT_OBJECTS
+        ALL_CHAT_OBJECTS.append(newChat)
+
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=newChat.id, chatform=ChatViewForm())
 
 
@@ -289,20 +292,22 @@ def viewChat():
     if request.method == 'POST':
         chat_id = request.form['chatID']
         new_message = form.newMessage.data
-
+        print("CHAT ID FROM FORM IS "+chat_id)
         currentUserID = int(findUserID(CURRENT_USER))
         firstname = str(ALL_USER_OBJECTS[currentUserID - 1].firstname)
         lastname = str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
         full_name = firstname+" "+lastname
 
         # must access the Chat object you want to modify...
-        ALL_CHAT_OBJECTS[chat_id - 1].appendMessageToChat(
+        print("NOW IN HERE----- ALL CHAT OBJECTS LENGTH == " +
+              str(len(ALL_CHAT_OBJECTS)))
+        ALL_CHAT_OBJECTS[int(chat_id) - 1].appendMessageToChat(
             currentUserID, CURRENT_USER, full_name, new_message)
 
-        members = ALL_CHAT_OBJECTS[chat_id - 1].members
-        chat_log = ALL_CHAT_OBJECTS[chat_id - 1].retrieveChatLog()
+        members = ALL_CHAT_OBJECTS[int(chat_id)-1].members
+        chat_log = ALL_CHAT_OBJECTS[int(chat_id)-1].retrieveChatLog()
 
-        return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=newChat.id, chatform=ChatViewForm())
+        return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=ALL_CHAT_OBJECTS[int(chat_id)-1].id, chatform=ChatViewForm())
     return None
 
 
