@@ -503,6 +503,8 @@ class User:
             csv_writer2.writerows(friendsLists)
             newList2.close()
 
+            self.friends.pop(unfriendeeID - 1)  # new: MARCH 30
+
         except Exception:
             return
 

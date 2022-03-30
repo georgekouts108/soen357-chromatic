@@ -206,13 +206,21 @@ def connections():
 
     usersCountToShow = 0
     for auo in ALL_USER_OBJECTS:
-        if ((auo.username is not CURRENT_USER) and
-                (not ALL_USER_OBJECTS[currentUserID - 1].userExistsInFriendsList(auo.username))):
+        if (auo.username is not CURRENT_USER):
             usersCountToShow = usersCountToShow + 1
             fullNames.append(auo.firstname + " " + auo.lastname)
-            usernames.append(auo.username)
             ages.append(auo.age)
             locations.append(auo.location)
+
+            isFriend = ALL_USER_OBJECTS[currentUserID -
+                                        1].userExistsInFriendsList(auo.username)
+            isReqSent = ALL_USER_OBJECTS[currentUserID -
+                                         1].userExistsInSentRequestsList(auo.username)
+            isReqReceived = ALL_USER_OBJECTS[currentUserID -
+                                             1].userExistsInReceivedRequests(auo.username)
+
+            username_info = [auo.username, isFriend, isReqSent, isReqReceived]
+            usernames.append(username_info)
 
     return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
 
@@ -220,8 +228,8 @@ def connections():
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
     currentUserID = int(findUserID(CURRENT_USER))
-
     myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
+    print("myFriends = "+str(myFriends))
     return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
 
 
@@ -263,6 +271,9 @@ def messages():
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
 def createChat():
+    currentUserID = int(findUserID(CURRENT_USER))
+    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
+    print("myFriends2222222222 (app.py line 268) = "+str(myFriends))
     return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=NewChatForm())
 
 

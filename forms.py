@@ -82,6 +82,7 @@ class MessagesPageButtons(FlaskForm):
 
 class NewChatForm(FlaskForm):
     friendsInfo = getInfoForFriends(getYourUsername())
+    print("forms.py line 85: friendsInfo = "+str(friendsInfo))
     friends = []
 
     for f in friendsInfo:

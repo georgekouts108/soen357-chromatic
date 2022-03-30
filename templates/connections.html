@@ -127,41 +127,55 @@
     <br>
     <table style="width:40%; border:1px solid black;">
         {% for i in range(userCount) %}
-        {% if usernames[i] != USERNAME %}
-
+        {% if usernames[i][0] != USERNAME %}
 
         <form method="POST" , action="/friend">
-            <input type="hidden" value="{{ usernames[i] }}" name="my_uname" id="uname">
+            <input type="hidden" value="{{ usernames[i][0] }}" name="my_uname" id="uname">
 
             <tr>
                 <th>{{fullnames[i]}}</th>
-                <th>{{usernames[i]}}</th>
+                <th>{{usernames[i][0]}}</th>
                 <th>Age: {{ages[i]}}</th>
                 <th>{{locations[i]}}</th>
-            </tr>
-            <tr>
-                <th><input type="submit" value="Add Friend" name="friend" id="add"></th>
-                <th rowspan="4" colspan="4">
-                    genres
+                <th>
+                    {% if usernames[i][2] == True %}
+                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
+
+                    {% elif usernames[i][3] == True %}
+                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
+
+                    {% elif usernames[i][1] == False %}
+                    <input type="submit" value="Add Friend" name="friend" id="add">
+
+                    {% elif usernames[i][1] == True %}
+                    <p style="color:goldenrod">FRIENDS</p>
+                    {%endif%}
                 </th>
-            </tr>
-            <tr>
-                <th><input type="submit" value="Cancel Friend Request" name="friend" id="cancel"></th>
-            </tr>
-            <tr>
-                <th><input type="submit" value="Accept Friend Request" name="friend" id="accept"></th>
-            </tr>
-            <tr>
-                <th><input type="submit" value="Unfriend" name="friend" id="unfriend"></th>
-            </tr>
-            <tr>
-                <td colspan="5" style="background-color: aquamarine;">
-                    <p> </p>
-                </td>
+                <th>
+                    {% if usernames[i][2] == True %}
+                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel">
+                    {% else %}
+                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel" disabled="disabled">
+                    {%endif%}
+                </th>
+                <th>
+                    {% if usernames[i][3] == True %}
+                    <input type="submit" value="Accept Friend Request" name="friend" id="accept">
+                    {% else %}
+                    <input type="submit" value="Accept Friend Request" name="friend" id="accept" disabled="disabled">
+                    {% endif %}
+                </th>
+                <th>
+                    {% if usernames[i][1] == True %}
+                    <input type="submit" value="Unfriend" name="friend" id="unfriend">
+                    {%else%}
+                    <input type="submit" value="Unfriend" name="friend" id="unfriend" disabled="disabled">
+                    {%endif%}
+                </th>
             </tr>
         </form>
         {%endif%}
-        {% endfor %}
+        {%endfor%}
     </table>
 </body>
 
