@@ -18,6 +18,16 @@
         </div>
     </form>
     <hr><br>
+    Chats that you are part of:
+    <br>
+    {%for chatID in CHAT_IDS%}
+    <form method="POST" action="/prev_chat_host">
+        <input type="submit" name="chat" value="Chat #{{chatID}}">
+    </form>
+    {%endfor%}
+
+
+    <hr><br>
     <form method='POST' action='/'>
         <div class="form-group">
             {{msgForm.home}}<br><br>

@@ -249,7 +249,16 @@ def friend():
 
 @app.route('/my_messages', methods=['POST', 'GET'])
 def messages():
-    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons())
+    chatIDs = []
+    listOfChatFiles = os.listdir("chats/")
+    for filename in listOfChatFiles:
+        splitted = filename.split('_')
+        for s in splitted[1:len(splitted)-1]:
+            if (str(s) == str(findUserID(CURRENT_USER))):
+                chatIDs.append(str(splitted[0][4::]))
+                break
+
+    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs)
 
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
@@ -301,6 +310,12 @@ def viewChat():
         chat_log = ALL_CHAT_OBJECTS[int(chat_id)-1].retrieveChatLog()
 
         return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=ALL_CHAT_OBJECTS[int(chat_id)-1].id, chatform=ChatViewForm())
+    return None
+
+
+@app.route('/prev_chat_host', methods=['POST', 'GET'])
+def prevChat():
+
     return None
 
 
