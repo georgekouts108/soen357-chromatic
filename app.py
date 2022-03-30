@@ -282,7 +282,7 @@ def newChat():
     form = NewChatForm()
     if request.method == 'POST':
         recipients = form.recipientOptions.data  # list of recipients' usernames
-        message = form.newMessage.data  # the written message
+        message = str(form.newMessage.data)  # the written message
 
         currentUserID = int(findUserID(CURRENT_USER))
         full_name = str(ALL_USER_OBJECTS[currentUserID - 1].firstname) + \
