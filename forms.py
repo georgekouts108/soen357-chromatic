@@ -81,20 +81,23 @@ class MessagesPageButtons(FlaskForm):
 
 
 class NewChatForm(FlaskForm):
-    friendsInfo = getInfoForFriends(getYourUsername())
-    print("forms.py line 85: friendsInfo = "+str(friendsInfo))
-    friends = []
+    def __init__(self, friendsInfo):
+        super().__init__(friendsInfo)
+        self.friendsInfo = friendsInfo
+        # friendsInfo = getInfoForFriends(getYourUsername())
+        #print("forms.py line 85: friendsInfo = "+str(friendsInfo))
+        friends = []
 
-    for f in friendsInfo:
-        friends.append((f[2], f[1]))
+        for f in self.friendsInfo:
+            friends.append((f[2], f[1]))
 
-    recipientOptions = SelectMultipleField(
-        'Select one or more friends to create a chat with:', choices=friends)
+        self.recipientOptions = SelectMultipleField(
+            'Select one or more friends to create a chat with:', choices=friends)
 
-    newMessage = TextAreaField(
-        "Write something...", validators=[DataRequired()])
-    send = SubmitField("Send Message")
-    cancel = SubmitField('Cancel')
+        self.newMessage = TextAreaField(
+            "Write something...", validators=[DataRequired()])
+        self.send = SubmitField("Send Message")
+        self.cancel = SubmitField('Cancel')
 
 
 class ChatViewForm(FlaskForm):

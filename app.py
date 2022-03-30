@@ -271,10 +271,17 @@ def messages():
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
 def createChat():
-    currentUserID = int(findUserID(CURRENT_USER))
-    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
-    print("myFriends2222222222 (app.py line 268) = "+str(myFriends))
-    return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=NewChatForm())
+    # currentUserID = int(findUserID(CURRENT_USER))
+    # myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
+    # print("myFriends2222222222 (app.py line 268) = "+str(myFriends))
+
+    friendsInfo = getInfoForFriends(CURRENT_USER)
+    newChatForm = NewChatForm(friendsInfo)
+    rec_opts = newChatForm.recipientOptions
+    new_msg = newChatForm.newMessage
+    send = newChatForm.send
+    cancel = newChatForm.cancel
+    return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=[rec_opts, new_msg, send, cancel])
 
 
 @app.route('/chat_host_new_chat', methods=['POST', 'GET'])

@@ -4,6 +4,8 @@ from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoD
 import csv
 import os
 from datetime import datetime
+# import is only for debugging
+from messaging import getInfoForFriends, getYourUsername
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
@@ -456,6 +458,8 @@ class User:
             newList3.close()
 
             self.friends.append(acceptee)
+            print("TESTINGGGGGGGG 12345: " +
+                  str(getInfoForFriends(getYourUsername())))
         except Exception:
             return
 
