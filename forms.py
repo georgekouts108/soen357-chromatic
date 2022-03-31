@@ -51,6 +51,15 @@ class LoginForm(FlaskForm):
     login = SubmitField('Login', validators=[
                         verifyCredentials(username, password)])
 
+    forgotPwd = SubmitField('Forgot Password')
+
+
+class ForgotPasswordForm(FlaskForm):
+    identity = StringField('Username or Email', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(), Length(min=8, max=15)])
+    confirm = SubmitField('Confirm')
+
 
 class HomePageButtons(FlaskForm):
     genreManage = SubmitField('Manage Favorite Genres')

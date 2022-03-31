@@ -22,10 +22,14 @@
             {{form.password}}<br><br>
 
             {{form.login}}<br><br>
-
-
         </div>
     </form>
+    <form method='POST' action='/forgot_password'>
+        <div class="form-group">
+            {{form.forgotPwd}}<br><br>
+        </div>
+    </form>
+
     <form method='POST' action='/register'>
         <div class="form-group">
             {{form2.register}}<br><br>

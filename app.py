@@ -6,9 +6,9 @@ import os
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from Genre import Genre
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
-from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm
-from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser
-from csvEditing import toggleUserLoginState, retrieveFavGenres
+from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
+from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
+from csvEditing import toggleUserLoginState, retrieveFavGenres, updatePassword
 from Chat import Chat, setLatestNumberOfChatsAndIDs, getNextChatID, updateNextChatID, updateNumOfActiveChats, getChatCount
 from messaging import getInfoForFriends, getYourUsername
 from wtforms import SelectMultipleField
@@ -135,6 +135,44 @@ def logout():
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, False)
         setCURRENT_USER(None)
+    return redirect(url_for('login'))
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    return render_template("forgotPassword.html", form=ForgotPasswordForm())
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    form = ForgotPasswordForm()
+    if request.method == 'POST':
+        identity = form.identity.data
+        new_pwd = form.new_password.data
+
+        print("IDENTITY == "+identity)
+        print("NEW PWD == "+new_pwd)
+
+        print("VERIFY =="+verifyUsernameOrEmail(identity))
+
+        if verifyUsernameOrEmail(identity) != 'n':
+            targetUserID = 0
+            f = open('databases/userGeneralInfo.csv', 'r')
+            csv_reader = reader(f)
+            user_rows = list(csv_reader)
+            f.close()
+            if (verifyUsernameOrEmail(identity) == 'e'):
+                for r in user_rows[1::]:
+                    if [r[3] == identity]:
+                        targetUserID = int(r[0])
+                        break
+            elif (verifyUsernameOrEmail(identity) == 'u'):
+                for r in user_rows[1::]:
+                    if [r[10] == identity]:
+                        targetUserID = int(r[0])
+                        break
+            updatePassword(targetUserID, new_pwd)
+
     return redirect(url_for('login'))
 
 

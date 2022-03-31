@@ -35,6 +35,18 @@ def emailIsOK(email):  # REGISTER -- check if a username is okay
     return yes
 
 
+def verifyUsernameOrEmail(content):
+    email_good = emailIsOK(content)
+    uname_good = usernameIsOK(content)
+
+    if (email_good):
+        return 'e'
+    elif (uname_good):
+        return 'u'
+
+    return 'n'
+
+
 # LOGGING IN -- check if credentials are valid
 def verifyCredentials(username, password):
     okay = False
