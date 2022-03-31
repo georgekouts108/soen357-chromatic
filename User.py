@@ -53,7 +53,7 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.fullname = self.firstname + " " + self.lastname
-        self.email = email
+        self.email = str(email)
         self.birthmonth = birthMonth
         self.birthday = birthDay
         self.birthyear = birthYear

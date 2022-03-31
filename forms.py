@@ -5,6 +5,7 @@ from wtforms.validators import Email, DataRequired, EqualTo, Length
 from Genre import Genre
 from registerAndLogin import usernameIsOK, verifyCredentials
 from messaging import getInfoForFriends, getYourUsername
+
 genres = [
     ('POP', Genre.POP), ('ELECTRONIC',
                          Genre.ELECTRONIC), ('DANCE', Genre.DANCE), ('RAP', Genre.RAP),
@@ -77,6 +78,10 @@ class LoginButton(FlaskForm):
     login = SubmitField('Login to Existing Account')
 
 
+class HomeButton(FlaskForm):
+    home = SubmitField('Home')
+
+
 class GenreManageControls(FlaskForm):
     favoriteGenres = SelectMultipleField(
         'Select one or more genres, click on \"Add Genre(s)\" or \"Delete Genre(s)\", and then Confirm', choices=genres)
@@ -109,7 +114,3 @@ class ChatViewForm(FlaskForm):
     newMessage = TextAreaField(
         "Write something...", validators=[DataRequired()])
     send = SubmitField("Send")
-
-
-class HomeButton(FlaskForm):
-    home = SubmitField('Home')

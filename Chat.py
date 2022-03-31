@@ -1,9 +1,5 @@
-from Genre import Genre
 from csv import reader, writer
-from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoDB
-import csv
 import os
-from datetime import datetime
 
 NEXT_CHAT_ID = 1
 NUM_OF_ACTIVE_CHATS = 0
@@ -78,7 +74,7 @@ class Chat:
         # write the header row
         csv_writer.writerow(
             ["Sender ID", "Sender Username", "Sender Name", "Message"])
-        print("self.log === "+str(self.log))
+
         if self.log is not None:
             for l in self.log:
                 csv_writer.writerow(l)

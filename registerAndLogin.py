@@ -36,8 +36,11 @@ def emailIsOK(email):  # REGISTER -- check if a username is okay
 
 
 def verifyUsernameOrEmail(content):
-    email_good = emailIsOK(content)
-    uname_good = usernameIsOK(content)
+    email_good = emailExists(str(content))
+    uname_good = usernameExists(str(content))
+
+    print("EMAIL IS GOOD == "+str(email_good))
+    print("UNAME IS GOOD == "+str(uname_good))
 
     if (email_good):
         return 'e'
@@ -47,7 +50,32 @@ def verifyUsernameOrEmail(content):
     return 'n'
 
 
-# LOGGING IN -- check if credentials are valid
+def usernameExists(username):
+    yes = False
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+    for row in user_rows:
+        if (row[10] == username):
+            yes = True
+            break
+    return yes
+
+
+def emailExists(email):
+    yes = False
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+    for row in user_rows:
+        if (row[3] == email):
+            yes = True
+            break
+    return yes
+
+
 def verifyCredentials(username, password):
     okay = False
     f = open('databases/userGeneralInfo.csv', 'r')

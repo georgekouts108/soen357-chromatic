@@ -161,19 +161,21 @@ def reset_password():
             csv_reader = reader(f)
             user_rows = list(csv_reader)
             f.close()
+            # did the user give their email?
             if (verifyUsernameOrEmail(identity) == 'e'):
                 for r in user_rows[1::]:
-                    if [r[3] == identity]:
+                    if (r[3] == identity):
                         targetUserID = int(r[0])
                         break
+            # did the user give their username?
             elif (verifyUsernameOrEmail(identity) == 'u'):
                 for r in user_rows[1::]:
-                    if [r[10] == identity]:
+                    if (r[10] == identity):
                         targetUserID = int(r[0])
                         break
             updatePassword(targetUserID, new_pwd)
-
-    return redirect(url_for('login'))
+            return redirect(url_for('login'))
+    return redirect(url_for('forgot_password'))
 
 
 @app.route('/', methods=['GET', 'POST'])
