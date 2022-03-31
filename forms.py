@@ -1,4 +1,3 @@
-from logging import PlaceHolder
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, DateField, SelectMultipleField, TextAreaField
 from wtforms.fields.html5 import EmailField
@@ -81,23 +80,20 @@ class MessagesPageButtons(FlaskForm):
 
 
 class NewChatForm(FlaskForm):
-    def __init__(self, friendsInfo):
-        super().__init__(friendsInfo)
-        self.friendsInfo = friendsInfo
-        # friendsInfo = getInfoForFriends(getYourUsername())
-        #print("forms.py line 85: friendsInfo = "+str(friendsInfo))
-        friends = []
 
-        for f in self.friendsInfo:
-            friends.append((f[2], f[1]))
+    friendsInfo = getInfoForFriends(getYourUsername())
 
-        self.recipientOptions = SelectMultipleField(
-            'Select one or more friends to create a chat with:', choices=friends)
+    friends = []
+    for f in friendsInfo:
+        friends.append((f[2], f[1]))
 
-        self.newMessage = TextAreaField(
-            "Write something...", validators=[DataRequired()])
-        self.send = SubmitField("Send Message")
-        self.cancel = SubmitField('Cancel')
+    recipientOptions = SelectMultipleField(
+        'Select one or more friends to create a chat with:', choices=friends)
+
+    newMessage = TextAreaField(
+        "Write something...", validators=[DataRequired()])
+    send = SubmitField("Send Message")
+    cancel = SubmitField('Cancel')
 
 
 class ChatViewForm(FlaskForm):

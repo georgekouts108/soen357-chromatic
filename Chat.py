@@ -41,7 +41,7 @@ def updateNumOfActiveChats():
 
 
 class Chat:
-    def __init__(self, members, firstUsername, firstUserID, firstFullName, firstMessage=None, manualChatID=0, isNewChat=True):
+    def __init__(self, members, firstUsername, firstUserID, firstFullName, firstMessage=None, manualChatID=0, log=None, isNewChat=True):
 
         self.firstusername = firstUsername
         self.firstuserID = firstUserID
@@ -54,10 +54,14 @@ class Chat:
         self.firstMessage = firstMessage
 
         if (isNewChat is True):
+            updateNumOfActiveChats()
+            setLatestNumberOfChatsAndIDs()
             self.id = getNextChatID()
             updateNextChatID()
+            self.log = None
         else:
             self.id = manualChatID
+            self.log = log
 
         participantIDs = []
         for m in members:
@@ -67,10 +71,6 @@ class Chat:
             str(self.id)+"_"+'_'.join(participantIDs)+"_"
         self.createAndStartChatLogFile()
 
-        if (isNewChat is True):
-            updateNumOfActiveChats()
-            setLatestNumberOfChatsAndIDs()
-
     def createAndStartChatLogFile(self):
         newChatLogWrite = open(
             'chats/' + str(self.log_file_name) + '.csv', 'w', newline='')
@@ -78,10 +78,14 @@ class Chat:
         # write the header row
         csv_writer.writerow(
             ["Sender ID", "Sender Username", "Sender Name", "Message"])
-
-        csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
-            self.firstfullname), self.firstMessage])
-        newChatLogWrite.close()
+        print("self.log === "+str(self.log))
+        if self.log is not None:
+            for l in self.log:
+                csv_writer.writerow(l)
+        else:
+            csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
+                self.firstfullname), self.firstMessage])
+            newChatLogWrite.close()
         return True
 
     def retrieveChatLog(self):

@@ -14,26 +14,27 @@
 
     <form method='POST' action='/chat_host_new_chat'>
         <div class="form-group">
-
-            {{newChatForm[0]}}<br><br>
-        </div>
-
+            <label>Select at least one friend to start a conversation with:</label><br><br>
+            {% for yf in YOUR_FRIENDS %}
+            <input type="checkbox" value="{{yf[2]}}" name="invitee"> {{yf[1]}}<br>
+            {% endfor %}
+        </div><br><br>
+        <label>Write a message...</label>
         <div class="form-group">
-            {{newChatForm[1]}}<br><br>
+            {{newChatForm.newMessage}}
         </div>
-
+        <br><br>
         <div class="form-group">
-            {{newChatForm[2]}}<br><br>
+            {{newChatForm.send}}<br><br>
+        </div>
+    </form>
+    <form method='POST' action='/my_messages'>
+        <div class="form-group">
+            {{newChatForm.cancel}}<br><br>
         </div>
     </form>
 
     <hr><br>
-
-    <form method='POST' action='/my_messages'>
-        <div class="form-group">
-            {{newChatForm[3]}}<br><br>
-        </div>
-    </form>
 </body>
 
 </html>

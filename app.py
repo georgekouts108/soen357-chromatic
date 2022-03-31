@@ -16,7 +16,6 @@ from wtforms import SelectMultipleField
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key1234567890"
 
-# NEW -- MARCH 29, 2022
 ALL_CHAT_OBJECTS = []
 
 
@@ -33,7 +32,6 @@ def getChatMemberBlueprint(username):
         ALL_USER_OBJECTS[targetUserID - 1].lastname)
 
     return [their_id, their_full_name, username]
-# NEW -- MARCH 29, 2022
 
 
 HOMEPAGE_ACCESS_COUNT = 0
@@ -271,43 +269,59 @@ def messages():
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
 def createChat():
-    # currentUserID = int(findUserID(CURRENT_USER))
-    # myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
-    # print("myFriends2222222222 (app.py line 268) = "+str(myFriends))
-
-    friendsInfo = getInfoForFriends(CURRENT_USER)
-    newChatForm = NewChatForm(friendsInfo)
-    rec_opts = newChatForm.recipientOptions
-    new_msg = newChatForm.newMessage
-    send = newChatForm.send
-    cancel = newChatForm.cancel
-    return render_template("createChat.html", USERNAME=CURRENT_USER, newChatForm=[rec_opts, new_msg, send, cancel])
+    yourFriends = getInfoForFriends(CURRENT_USER)
+    return render_template("createChat.html", USERNAME=CURRENT_USER, YOUR_FRIENDS=yourFriends, newChatForm=NewChatForm())
 
 
 @app.route('/chat_host_new_chat', methods=['POST', 'GET'])
 def newChat():
+
     form = NewChatForm()
     if request.method == 'POST':
-        recipients = form.recipientOptions.data  # list of recipients' usernames
-        message = str(form.newMessage.data)  # the written message
 
         currentUserID = int(findUserID(CURRENT_USER))
+
         full_name = str(ALL_USER_OBJECTS[currentUserID - 1].firstname) + \
             " " + str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
+        message = str(form.newMessage.data)
 
         members = [[str(currentUserID), full_name, CURRENT_USER]]
+        invitees = request.form.getlist('invitee')
+        for i in invitees:
+            members.append(getChatMemberBlueprint(i))
 
-        for r in recipients:
-            members.append(getChatMemberBlueprint(r))
+        chatID = 0
+        listOfChatFilenames = os.listdir("chats/")
+        existing_chat_found = False
+        for filename in listOfChatFilenames:
 
-        newChat = Chat(members, CURRENT_USER, currentUserID,
-                       full_name, message, 0, True)
-        chat_log = newChat.retrieveChatLog()
+            memberIDs = filename.split('_')
+            id_count = 0
+            for m_id in memberIDs[1:len(memberIDs)-1]:
+                for mem in members:
+                    if (str(mem[0]) == str(m_id)):
+                        id_count = id_count + 1
+                        break
+
+            if (id_count == len(memberIDs[1:len(memberIDs)-1])) and (id_count == (len(invitees)+1)):
+                chatID = int(filename.split('_')[0][4::])
+                existing_chat_found = True
+                break
 
         global ALL_CHAT_OBJECTS
-        ALL_CHAT_OBJECTS.append(newChat)
+        if existing_chat_found is True:
 
-    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=newChat.id, chatform=ChatViewForm())
+            ALL_CHAT_OBJECTS[int(chatID) - 1].appendMessageToChat(
+                currentUserID, CURRENT_USER, full_name, message)
+        else:
+            newChat = Chat(members, CURRENT_USER, currentUserID,
+                           full_name, message, 0, True)
+
+            ALL_CHAT_OBJECTS.append(newChat)
+
+        chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
+
+    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=chatID, chatform=ChatViewForm())
 
 
 @app.route('/chat_host', methods=['POST', 'GET'])
@@ -333,8 +347,12 @@ def viewChat():
 
 @app.route('/prev_chat_host', methods=['POST', 'GET'])
 def prevChat():
+    if request.method == 'POST':
+        visited_chat_id = int(request.form['chat'][6::])
+        members = ALL_CHAT_OBJECTS[int(visited_chat_id) - 1].members
+        chat_log = ALL_CHAT_OBJECTS[int(visited_chat_id)-1].retrieveChatLog()
 
-    return None
+    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, chatform=ChatViewForm(), homeButton=HomeButton(), ID=visited_chat_id, MEMBERS=members, LOG=chat_log)
 
 
 if __name__ == '__main__':

@@ -155,7 +155,7 @@ def setUpFriendshipFiles(latestUserCount):
 
 
 def loadAllChats():
-    all_chat_logs = []
+    all_chats = []
 
     listOfChatFilenames = os.listdir("chats/")
 
@@ -192,8 +192,8 @@ def loadAllChats():
         first_userID = rows[1][0]
         first_message = rows[1][3]
         chat_id = int(memberIDs[0][4::])
-        next_chat_log = Chat(next_member_set, first_username,
-                             first_userID, first_fullname, first_message, chat_id, False)
-        all_chat_logs.append(next_chat_log)
+        next_chat = Chat(next_member_set, first_username,
+                         first_userID, first_fullname, first_message, chat_id, next_chat_log, False)
+        all_chats.append(next_chat)
 
-    return all_chat_logs
+    return all_chats
