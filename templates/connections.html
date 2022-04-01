@@ -114,12 +114,7 @@
             {% endfor %}
         </li>
         {% endfor %}
-    </ul><br>
-    <hr>
-    <br>
-    <br>
-    <hr>
-    <br>
+    </ul><br><br>
     <table style="width:40%; border:1px solid black;">
         {% for i in range(userCount) %}
         {% if usernames[i][0] != USERNAME %}
@@ -134,41 +129,6 @@
                 <th>{{locations[i]}}</th>
                 <th>
                     <input type="submit" value="View Profile" name="friend" id="profile">
-                </th>
-                <th>
-                    {% if usernames[i][2] == True %}
-                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
-
-                    {% elif usernames[i][3] == True %}
-                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
-
-                    {% elif usernames[i][1] == False %}
-                    <input type="submit" value="Add Friend" name="friend" id="add">
-
-                    {% elif usernames[i][1] == True %}
-                    <p style="color:goldenrod">FRIENDS</p>
-                    {%endif%}
-                </th>
-                <th>
-                    {% if usernames[i][2] == True %}
-                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel">
-                    {% else %}
-                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel" disabled="disabled">
-                    {%endif%}
-                </th>
-                <th>
-                    {% if usernames[i][3] == True %}
-                    <input type="submit" value="Accept Friend Request" name="friend" id="accept">
-                    {% else %}
-                    <input type="submit" value="Accept Friend Request" name="friend" id="accept" disabled="disabled">
-                    {% endif %}
-                </th>
-                <th>
-                    {% if usernames[i][1] == True %}
-                    <input type="submit" value="Unfriend" name="friend" id="unfriend">
-                    {%else%}
-                    <input type="submit" value="Unfriend" name="friend" id="unfriend" disabled="disabled">
-                    {%endif%}
                 </th>
             </tr>
         </form>
