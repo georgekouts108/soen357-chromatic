@@ -1,17 +1,19 @@
+from crypt import methods
 from flask import Flask, render_template, url_for, request, redirect
-from csv import reader, writer
+from csv import reader
 import sys
 import os
 
+from numpy import tri
+
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
-from Genre import Genre
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
-from csvEditing import toggleUserLoginState, retrieveFavGenres, updatePassword
-from Chat import Chat, setLatestNumberOfChatsAndIDs, getNextChatID, updateNextChatID, updateNumOfActiveChats, getChatCount
-from messaging import getInfoForFriends, getYourUsername
-from wtforms import SelectMultipleField
+from csvEditing import toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo
+from Chat import Chat
+from messaging import getInfoForFriends
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key1234567890"
@@ -79,11 +81,10 @@ def register():
 
 @app.route('/createuser', methods=['POST', 'GET'])
 def createNewUser():
-    # args of User() need to be tweaked later...
+
     form = RegisterForm()
     if request.method == 'POST':
 
-        # must parse the birthday fields and compute age
         birthday = request.form['birth_day']
         birth_year = birthday[0:4]
         birth_month = birthday[5:7]
@@ -96,10 +97,9 @@ def createNewUser():
                 if (email_is_ok and usernameIsNew and passwordsMatch):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day, birth_year, form.location.data,
                                           form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False, None, None, None)
-                    # may not need this
+
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
-                    # may not need this
                 else:
                     raise Exception()
             except Exception:
@@ -150,11 +150,6 @@ def reset_password():
         identity = form.identity.data
         new_pwd = form.new_password.data
 
-        print("IDENTITY == "+identity)
-        print("NEW PWD == "+new_pwd)
-
-        print("VERIFY =="+verifyUsernameOrEmail(identity))
-
         if verifyUsernameOrEmail(identity) != 'n':
             targetUserID = 0
             f = open('databases/userGeneralInfo.csv', 'r')
@@ -181,13 +176,14 @@ def reset_password():
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
+    # may need to start a thread here??
+
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         latestUserCount = setLatestNumberOfUsersAndIDs()
         setUpFriendshipFiles(latestUserCount)
         updateAllUserObjects()
-
-        updateAllChatObjects()  # NEW - MARCH 29
+        updateAllChatObjects()
     form2 = HomePageButtons()
 
     if getCURRENT_USER() is not None:
@@ -290,6 +286,48 @@ def friend():
         elif (actionToDo == 'Unfriend'):
             ALL_USER_OBJECTS[currentUserID -
                              1].unfriendUser(triggeredUsername)
+        elif (actionToDo == 'View Profile'):
+
+            their_general_info = retrieveGeneralInfo(triggeredUsername)
+            their_full_name = their_general_info[1]+" "+their_general_info[2]
+            their_birthday = ALL_USER_OBJECTS[int(
+                findUserID(triggeredUsername)) - 1].getBirthdayString()
+            their_age = their_general_info[7]
+            their_location = their_general_info[8]
+            their_status = their_general_info[9]
+            their_genres = retrieveFavGenres(triggeredUsername)
+
+            mutual_genres = []
+            your_genres = retrieveFavGenres(CURRENT_USER)
+            for tg in their_genres:
+                for yg in your_genres:
+                    if (yg == tg):
+                        mutual_genres.append(tg)
+                        break
+
+            their_friends = ALL_USER_OBJECTS[int(
+                findUserID(triggeredUsername)) - 1].friends
+
+            mutual_friends = []
+            your_friends = ALL_USER_OBJECTS[int(
+                findUserID(CURRENT_USER)) - 1].friends
+            for tf in their_friends:
+                for yf in your_friends:
+                    if (yf == tf):
+                        mutual_friends.append(tf)
+                        break
+
+            isFriend = ALL_USER_OBJECTS[currentUserID -
+                                        1].userExistsInFriendsList(triggeredUsername)
+            isReqSent = ALL_USER_OBJECTS[currentUserID -
+                                         1].userExistsInSentRequestsList(triggeredUsername)
+            isReqReceived = ALL_USER_OBJECTS[currentUserID -
+                                             1].userExistsInReceivedRequests(triggeredUsername)
+
+            friendship_status_info = [
+                triggeredUsername, isFriend, isReqSent, isReqReceived]
+
+            return render_template("userProfile.html", FULLNAME=their_full_name, USERNAME=triggeredUsername, BIRTHDAY=their_birthday, AGE=their_age, LOCATION=their_location, STATUS=their_status, ALL_GENRES=their_genres, MUT_GENRES=mutual_genres, ALL_FRIENDS=their_friends, MUT_FRIENDS=mutual_friends, FRIEND_STATUS_INFO=friendship_status_info)
     return redirect(url_for('connections'))
 
 
@@ -311,6 +349,54 @@ def messages():
 def createChat():
     yourFriends = getInfoForFriends(CURRENT_USER)
     return render_template("createChat.html", USERNAME=CURRENT_USER, YOUR_FRIENDS=yourFriends, newChatForm=NewChatForm())
+
+
+@app.route('/direct_message', methods=['POST', 'GET'])
+def directMessage():
+
+    if request.method == 'POST':
+        currentUserID = int(findUserID(CURRENT_USER))
+
+        full_name = str(ALL_USER_OBJECTS[currentUserID - 1].firstname) + \
+            " " + str(ALL_USER_OBJECTS[currentUserID - 1].lastname)
+
+        members = [[str(currentUserID), full_name, CURRENT_USER]]
+        recipient_gen_info = retrieveGeneralInfo(request.form.get("dm"))
+
+        recipient_user_id = recipient_gen_info[0]
+        recipient_full_name = recipient_gen_info[1]+" "+recipient_gen_info[2]
+        members.append(
+            [recipient_user_id, recipient_full_name, request.form.get("dm")])
+
+        chatID = 0
+        listOfChatFilenames = os.listdir("chats/")
+        existing_chat_found = False
+        for filename in listOfChatFilenames:
+
+            memberIDs = filename.split('_')
+            id_count = 0
+            for m_id in memberIDs[1:len(memberIDs)-1]:
+                for mem in members:
+                    if (str(mem[0]) == str(m_id)):
+                        id_count = id_count + 1
+                        break
+
+            if (id_count == len(memberIDs[1:len(memberIDs)-1])) and (id_count == 2):
+                chatID = int(filename.split('_')[0][4::])
+                existing_chat_found = True
+                break
+
+        global ALL_CHAT_OBJECTS
+        if not existing_chat_found:
+
+            newChat = Chat(members, CURRENT_USER, currentUserID,
+                           full_name, None, 0, True)
+
+            ALL_CHAT_OBJECTS.append(newChat)
+
+        chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
+
+    return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=chatID, chatform=ChatViewForm())
 
 
 @app.route('/chat_host_new_chat', methods=['POST', 'GET'])

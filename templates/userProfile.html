@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{FULLNAME}}'s Profile</title>
+</head>
+
+<body>
+    <h1>{{FULLNAME}}</h1>
+    <h3>{{AGE}} year(s) old</h3>
+    <h3>Birthday: {{BIRTHDAY}}</h3>
+    <h4>Lives in {{LOCATION}}</h4>
+
+    {% if STATUS == True %}
+    <h5>Status: <span style="color:green">ONLINE</span></h5>
+    {%else%}
+    <h5>Status: <span style="color:red">OFFLINE</span></h5>
+    {%endif%}
+    <br><br>
+    <table style="width:40%; border:1px solid black;">
+        <form method="POST" , action="/friend">
+            <input type="hidden" value="{{ FRIEND_STATUS_INFO[0] }}" name="my_uname" id="uname">
+
+            <tr>
+                <th>
+                    {% if FRIEND_STATUS_INFO[2] == True %}
+                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
+
+                    {% elif FRIEND_STATUS_INFO[3] == True %}
+                    <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
+
+                    {% elif FRIEND_STATUS_INFO[1] == False %}
+                    <input type="submit" value="Add Friend" name="friend" id="add">
+
+                    {% elif FRIEND_STATUS_INFO[1] == True %}
+                    <p style="color:goldenrod">FRIENDS</p>
+                    {%endif%}
+                </th>
+                <th>
+                    {% if FRIEND_STATUS_INFO[2] == True %}
+                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel">
+                    {% else %}
+                    <input type="submit" value="Cancel Friend Request" name="friend" id="cancel" disabled="disabled">
+                    {%endif%}
+                </th>
+                <th>
+                    {% if FRIEND_STATUS_INFO[3] == True %}
+                    <input type="submit" value="Accept Friend Request" name="friend" id="accept">
+                    {% else %}
+                    <input type="submit" value="Accept Friend Request" name="friend" id="accept" disabled="disabled">
+                    {% endif %}
+                </th>
+                <th>
+                    {% if FRIEND_STATUS_INFO[1] == True %}
+                    <input type="submit" value="Unfriend" name="friend" id="unfriend">
+                    {%else%}
+                    <input type="submit" value="Unfriend" name="friend" id="unfriend" disabled="disabled">
+                    {%endif%}
+                </th>
+        </form>
+
+        <th>
+            <form method="POST" action="/direct_message">
+                <input type="hidden" value="{{USERNAME}}" name="dm">
+                <input type="submit" value="Direct Message">
+            </form>
+        </th>
+        </tr>
+    </table>
+
+    <br><br>
+    <label>MUTUAL FRIENDS</label>
+    <ul style="color: blueviolet;">
+        {%for mf in MUT_FRIENDS %}
+        <li>{{mf}}</li>
+        {% endfor %}
+    </ul><br>
+    <label>COMMON GENRES [{{MUT_GENRES|length}} of them]</label>
+    <ul style="color: rgb(226, 43, 144);">
+        {%for mg in MUT_GENRES %}
+        <li>{{mg}}</li>
+        {% endfor %}
+    </ul><br>
+
+
+
+    <hr>
+    <form method='POST' action='/connections'>
+        <div class="form-group">
+            <input type="submit" value="Back to Find Friends">
+        </div>
+    </form>
+</body>
+
+</html>

@@ -79,8 +79,9 @@ class Chat:
             for l in self.log:
                 csv_writer.writerow(l)
         else:
-            csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
-                self.firstfullname), self.firstMessage])
+            if (self.firstMessage is not None):
+                csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
+                    self.firstfullname), self.firstMessage])
             newChatLogWrite.close()
         return True
 

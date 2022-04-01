@@ -20,6 +20,23 @@ def getGenreDB():
     f.close()
     return favorite_genres_rows  # including the header
 
+# new -- for profile page
+
+
+def retrieveGeneralInfo(username):
+    row = None
+    g = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader1 = reader(g)
+    general_info_rows = list(csv_reader1)
+    g.close()
+    for general in general_info_rows:
+        if (general[10] == username):
+            row = general
+            break
+    return row
+
+# new -- for profile page
+
 
 def retrieveFavGenres(username):
     currentUserID = 0

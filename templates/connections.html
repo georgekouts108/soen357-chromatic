@@ -117,11 +117,6 @@
     </ul><br>
     <hr>
     <br>
-    <form method='POST' action='/'>
-        <div class="form-group">
-            {{homeButton.home}}<br><br>
-        </div>
-    </form>
     <br>
     <hr>
     <br>
@@ -137,6 +132,9 @@
                 <th>{{usernames[i][0]}}</th>
                 <th>Age: {{ages[i]}}</th>
                 <th>{{locations[i]}}</th>
+                <th>
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </th>
                 <th>
                     {% if usernames[i][2] == True %}
                     <input type="submit" value="Add Friend" name="friend" id="add" disabled="disabled">
@@ -177,6 +175,12 @@
         {%endif%}
         {%endfor%}
     </table>
+    <br>
+    <form method='POST' action='/'>
+        <div class="form-group">
+            {{homeButton.home}}<br><br>
+        </div>
+    </form>
 </body>
 
 </html>

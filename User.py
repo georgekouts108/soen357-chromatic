@@ -255,6 +255,42 @@ class User:
 
         return (int(presentYear) - int(self.birthyear) - 1)
 
+    def getBirthdayString(self):
+        month = None
+        day = None
+
+        if (self.birthmonth == '01'):
+            month = 'January'
+        elif (self.birthmonth == '02'):
+            month = 'February'
+        elif (self.birthmonth == '03'):
+            month = 'March'
+        elif (self.birthmonth == '04'):
+            month = 'April'
+        elif (self.birthmonth == '05'):
+            month = 'May'
+        elif (self.birthmonth == '06'):
+            month = 'June'
+        elif (self.birthmonth == '07'):
+            month = 'July'
+        elif (self.birthmonth == '08'):
+            month = 'August'
+        elif (self.birthmonth == '09'):
+            month = 'September'
+        elif (self.birthmonth == '10'):
+            month = 'October'
+        elif (self.birthmonth == '11'):
+            month = 'November'
+        elif (self.birthmonth == '12'):
+            month = 'December'
+
+        if (self.birthday[0] == '0'):
+            day = self.birthday[1::]
+        else:
+            day = self.birthday
+
+        return month+" "+day+", "+self.birthyear
+
     def sendFriendRequest(self, recipient):
         try:
             cond1 = not self.userExistsInFriendsList(recipient)
