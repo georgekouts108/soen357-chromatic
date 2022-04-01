@@ -13,10 +13,10 @@
     <br><br>
     <hr>
     <ul>
-        {% for user in range(MY_FRIENDS|length) %}
-        {%if user != 0 %}
-        <li><span style="color: red; font-weight:bold">{{MY_FRIENDS[user]}}</span></li>
-        {%endif%}
+        {% for user in MY_FRIENDS %}
+
+        <li><span style="color: red; font-weight:bold">{{user}}</span></li>
+
         {% endfor %}
 
     </ul><br>

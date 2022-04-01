@@ -543,7 +543,7 @@ class User:
             csv_writer2.writerows(friendsLists)
             newList2.close()
 
-            self.friends.pop(unfriendeeID - 1)  # new: MARCH 30
+            self.friends.pop(unfriendeeID - 1)
 
         except Exception:
             return

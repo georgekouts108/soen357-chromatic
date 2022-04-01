@@ -262,7 +262,7 @@ def connections():
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
     currentUserID = int(findUserID(CURRENT_USER))
-    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends
+    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends[1::]
     print("myFriends = "+str(myFriends))
     return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
 
@@ -345,6 +345,9 @@ def messages():
     currentUserID = int(findUserID(CURRENT_USER))
 
     numberOfFriends = 0
+    print("DEBUGGING HERE: ALL_USER_OBJECTS[currentUserID - 1].friends == "+str(
+        ALL_USER_OBJECTS[currentUserID - 1].friends))
+
     if ALL_USER_OBJECTS[currentUserID - 1].friends is not None:
         numberOfFriends = len(ALL_USER_OBJECTS[currentUserID - 1].friends[1::])
     print("numberOfFriends == "+str(numberOfFriends))
