@@ -161,7 +161,7 @@ def loadAllChats():
 
     if listOfChatFilenames is None:
         return None
-  
+
     for filename in listOfChatFilenames:
         chat_log = open("chats/"+str(filename)+"", 'r')
         csv_reader = reader(chat_log)

@@ -191,7 +191,6 @@ class User:
                 break
         return yes
 
-    # this should NOT include existing friends
     def getFriendRecommendations(self):
 
         oneGenreMatches = []

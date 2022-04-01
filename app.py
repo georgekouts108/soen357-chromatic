@@ -1,12 +1,10 @@
-from crypt import methods
 from flask import Flask, render_template, url_for, request, redirect
 from csv import reader
 import sys
 import os
+from datetime import datetime
 
-from numpy import tri
-
-from User import User, setLatestNumberOfUsersAndIDs, getUserCount
+from User import User, setLatestNumberOfUsersAndIDs, getUserCount, updateNumOfActiveUsers
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
@@ -89,18 +87,59 @@ def createNewUser():
         birth_year = birthday[0:4]
         birth_month = birthday[5:7]
         birth_day = birthday[8:]
+
+        # NEW: age restriction
+        age = 0
+        presentTime = datetime.now()
+        presentDay = presentTime.strftime("%d")
+        presentMonth = presentTime.strftime("%m")
+        presentYear = presentTime.strftime("%Y")
+
+        if (presentDay[0] == '0'):  # single digit day? 01-09?
+            presentDay = presentDay[1]
+        if (presentMonth[0] == '0'):  # single digit month? 01-09?
+            presentMonth = presentMonth[1]
+
+        birthDay = 0
+        birthMonth = 0
+
+        if (birth_day[0] == '0'):  # single digit birth day? 01-09?
+            birthDay = int(birth_day[1])
+
+        if (birth_month[0] == '0'):  # single digit birth month? 01-09?
+            birthMonth = int(birth_month[1])
+
+        isBirthdayToday = ((birthMonth == int(presentMonth))
+                           and (birthDay == int(presentDay)))
+
+        if (isBirthdayToday):
+            age = (int(presentYear) - int(birth_year))
+        else:
+            age = (int(presentYear) - int(birth_year) - 1)
+
+        # NEW: age restriction
+
         if form.validate_on_submit:
             try:
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)
                 email_is_ok = emailIsOK(form.email.data)
-                if (email_is_ok and usernameIsNew and passwordsMatch):
-                    registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day, birth_year, form.location.data,
-                                          form.favoriteGenres.data, form.username.data, form.password.data, 0, True, False, None, None, None)
+                if (email_is_ok and usernameIsNew and passwordsMatch and (age >= 13)):
+                    registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day,
+                                          birth_year, form.location.data, form.favoriteGenres.data, form.username.data, form.password.data, 0)
 
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
                 else:
+                    if not usernameIsNew:
+                        print("REGISTRATION ERROR: That username already exists!")
+                    elif not email_is_ok:
+                        print("REGISTRATION ERROR: That email already exists!")
+                    elif not passwordsMatch:
+                        print("REGISTRATION ERROR: The passwords don't match!")
+                    elif not (age >= 13):
+                        print("REGISTRATION ERROR: User must be 13 or older!")
+
                     raise Exception()
             except Exception:
                 return redirect(url_for('register'))
@@ -176,11 +215,10 @@ def reset_password():
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
-    # may need to start a thread here??
-
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         latestUserCount = setLatestNumberOfUsersAndIDs()
+        print('LATEST USER COUNT == '+str(latestUserCount))
         setUpFriendshipFiles(latestUserCount)
         updateAllUserObjects()
         updateAllChatObjects()
@@ -311,11 +349,12 @@ def friend():
             mutual_friends = []
             your_friends = ALL_USER_OBJECTS[int(
                 findUserID(CURRENT_USER)) - 1].friends
-            for tf in their_friends:
-                for yf in your_friends:
-                    if (yf == tf):
-                        mutual_friends.append(tf)
-                        break
+            if your_friends is not None:
+                for tf in their_friends:
+                    for yf in your_friends:
+                        if (yf == tf):
+                            mutual_friends.append(tf)
+                            break
 
             isFriend = ALL_USER_OBJECTS[currentUserID -
                                         1].userExistsInFriendsList(triggeredUsername)
