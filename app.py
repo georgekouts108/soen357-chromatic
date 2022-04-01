@@ -342,7 +342,13 @@ def messages():
                 chatIDs.append(str(splitted[0][4::]))
                 break
 
-    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs)
+    currentUserID = int(findUserID(CURRENT_USER))
+
+    numberOfFriends = 0
+    if ALL_USER_OBJECTS[currentUserID - 1].friends is not None:
+        numberOfFriends = len(ALL_USER_OBJECTS[currentUserID - 1].friends[1::])
+    print("numberOfFriends == "+str(numberOfFriends))
+    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs, FRIEND_COUNT=numberOfFriends)
 
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])

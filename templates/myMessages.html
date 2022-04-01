@@ -14,7 +14,13 @@
     <br>
     <form method='POST' action='/new_chat_creation'>
         <div class="form-group">
-            {{msgForm.startNewChat}}<br><br>
+            {%if FRIEND_COUNT > 0 %}
+            <input type="submit" value="Start New Chat">
+            {%else%}
+            <input type="submit" value="Start New Chat" disabled="disabled">
+            {%endif%}
+
+            <br><br>
         </div>
     </form>
     <hr><br>
