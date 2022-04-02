@@ -278,7 +278,11 @@ def connections():
 
     usersCountToShow = 0
     for auo in ALL_USER_OBJECTS:
-        if (auo.username is not CURRENT_USER):
+        if ((auo.username is not CURRENT_USER)
+            and (
+            (int(auo.age) >= 18 and int(
+                ALL_USER_OBJECTS[currentUserID - 1].age) >= 18)
+                or (int(auo.age) < 18 and int(ALL_USER_OBJECTS[currentUserID - 1].age) < 18))):
             usersCountToShow = usersCountToShow + 1
             fullNames.append(auo.firstname + " " + auo.lastname)
             ages.append(auo.age)

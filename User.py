@@ -200,7 +200,9 @@ class User:
         fivePlusGenreMatches = []
 
         for row in getGenreDB()[1::]:
-            if ((row[0] != self.id) and (not self.userExistsInFriendsList(row[0]))):
+            their_age = int(getGeneralInfoDB()[int(row[0])][7])
+            if ((row[0] != self.id) and (not self.userExistsInFriendsList(row[0]))
+                    and (((their_age < 18) and (int(self.age) < 18)) or ((their_age >= 18) and (int(self.age) >= 18)))):
                 matchCount = 0
                 genresInCommon = []
                 theirUsername = getGeneralInfoDB()[int(row[0])][10]
