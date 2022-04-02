@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromatic - Error {{ERRCODE}}</title>
+</head>
+
+<body style="text-align:center">
+    <H1>Error</H1><br><br>
+    {% if ERRCODE == 100 %}
+    <p>It seems like you have entered a username that already exists.</p>
+    {% elif ERRCODE == 200 %}
+    <p>An account has already been created with the email you entered.</p>
+    {% elif ERRCODE == 300 %}
+    <p>The passwords you have entered do not match.</p>
+    {% elif ERRCODE == 400 %}
+    <p>You must be 13 years of age or older to register for <i>Chromatic</i>.</p>
+    {%endif%}
+
+    <form action="/register">
+        <input type="submit" value="EXIT">
+    </form>
+</body>
+
+</html>

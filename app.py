@@ -4,7 +4,7 @@ import sys
 import os
 from datetime import datetime
 
-from User import User, setLatestNumberOfUsersAndIDs, getUserCount, updateNumOfActiveUsers
+from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
@@ -79,7 +79,7 @@ def register():
 
 @app.route('/createuser', methods=['POST', 'GET'])
 def createNewUser():
-
+    error_code = 0
     form = RegisterForm()
     if request.method == 'POST':
 
@@ -132,17 +132,17 @@ def createNewUser():
                     ALL_USER_OBJECTS.append(registeredUser)
                 else:
                     if not usernameIsNew:
-                        print("REGISTRATION ERROR: That username already exists!")
+                        error_code = 100
                     elif not email_is_ok:
-                        print("REGISTRATION ERROR: That email already exists!")
+                        error_code = 200
                     elif not passwordsMatch:
-                        print("REGISTRATION ERROR: The passwords don't match!")
+                        error_code = 300
                     elif not (age >= 13):
-                        print("REGISTRATION ERROR: User must be 13 or older!")
+                        error_code = 400
 
                     raise Exception()
             except Exception:
-                return redirect(url_for('register'))
+                return render_template("errorReport.html", ERRCODE=error_code)
 
     return redirect(url_for('login'))
 
