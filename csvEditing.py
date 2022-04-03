@@ -20,8 +20,6 @@ def getGenreDB():
     f.close()
     return favorite_genres_rows  # including the header
 
-# new -- for profile page
-
 
 def retrieveGeneralInfo(username):
     row = None
@@ -34,8 +32,6 @@ def retrieveGeneralInfo(username):
             row = general
             break
     return row
-
-# new -- for profile page
 
 
 def retrieveFavGenres(username):

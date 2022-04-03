@@ -16,122 +16,98 @@
 </head>
 
 <body>
+    <h2>Find Friends</h2>
 
-
-    Friend recommentations for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>
-    <br><br>
-    <label>Your Favorite Genres</label>
-    <ul>
-
-        {% for genre in GENRES%}
-        <li><span style="color: green; font-weight:bold">{{genre}}</span></li>
-        {% endfor %}
-    </ul>
-    <hr><br>
+    <h4>Friend recommentations for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>, based on
+        the number of common genres:</h4>
+    <br>
 
     <label style="font-weight:bold">Users with 1 common genre:</label>
-    <ul>
-        {% for user in RECOMMENDATIONS[0] %}
-        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
 
-            {% for g in range(user[1]|length) %}
-
-
-            {%if g == 0 %}
-            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-
-            {%else%}
-            , <span style="color: green; font-weight:bold"> {{user[1][g]}}</span>
-
-            {%endif%}
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul><br>
-    <label style="font-weight:bold">Users with 2 common genres:</label>
-    <ul>
-        {% for user in RECOMMENDATIONS[1] %}
-        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
-
-            {% for g in range(user[1]|length) %}
-
-            {%if g == 0 %}
-            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-
-            {%else%}
-            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-
-            {%endif%}
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul><br>
-    <label style="font-weight:bold">Users with 3 common genres:</label>
-    <ul>
-        {% for user in RECOMMENDATIONS[2] %}
-        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
-
-            {% for g in range(user[1]|length) %}
-
-            {%if g == 0 %}
-            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-            {%else%}
-            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-
-            {%endif%}
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul><br>
-    <label style="font-weight:bold">Users with 4 common genres:</label>
-    <ul>
-        {% for user in RECOMMENDATIONS[3] %}
-        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
-
-            {% for g in range(user[1]|length) %}
-
-            {%if g == 0 %}
-            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-            {%else%}
-            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-            {%endif%}
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul><br>
-    <label style="font-weight:bold">Users with 5 common genres or more:</label>
-    <ul>
-        {% for user in RECOMMENDATIONS[4] %}
-        <li><span style="color: blue; font-weight:bold">{{user[0]}}</span> likes
-
-            {% for g in range(user[1]|length) %}
-
-            {%if g == 0 %}
-            <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-            {%else%}
-            , <span style="color: green; font-weight:bold">{{user[1][g]}}</span>
-            {%endif%}
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul><br><br>
     <table style="width:40%; border:1px solid black;">
-        {% for i in range(userCount) %}
-        {% if usernames[i][0] != USERNAME %}
-
-        <form method="POST" , action="/friend">
-            <input type="hidden" value="{{ usernames[i][0] }}" name="my_uname" id="uname">
-
-            <tr>
-                <th>{{fullnames[i]}}</th>
-                <th>{{usernames[i][0]}}</th>
-                <th>Age: {{ages[i]}}</th>
-                <th>{{locations[i]}}</th>
-                <th>
+        {% for user in RECOMMENDATIONS[0] %}
+        {% if user != USERNAME %}
+        <tr>
+            <th style="color:red">{{user[0]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
-                </th>
-            </tr>
-        </form>
+                </form>
+            </th>
+        </tr>
+        {%endif%}
+        {%endfor%}
+    </table>
+
+    <br>
+    <label style="font-weight:bold">Users with 2 common genres:</label>
+    <table style="width:40%; border:1px solid black;">
+        {% for user in RECOMMENDATIONS[1] %}
+        {% if user != USERNAME %}
+        <tr>
+            <th style="color:orange">{{user[0]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </form>
+            </th>
+        </tr>
+        {%endif%}
+        {%endfor%}
+    </table>
+
+    <br>
+    <label style="font-weight:bold">Users with 3 common genres:</label>
+    <table style="width:40%; border:1px solid black;">
+        {% for user in RECOMMENDATIONS[2] %}
+        {% if user != USERNAME %}
+        <tr>
+            <th style="color:green">{{user[0]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </form>
+            </th>
+        </tr>
+        {%endif%}
+        {%endfor%}
+    </table>
+    <br>
+    <label style="font-weight:bold">Users with 4 common genres:</label>
+    <table style="width:40%; border:1px solid black;">
+        {% for user in RECOMMENDATIONS[3] %}
+        {% if user != USERNAME %}
+        <tr>
+            <th style="color:rgba(12, 158, 171, 0.876)">{{user[0]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </form>
+            </th>
+        </tr>
+        {%endif%}
+        {%endfor%}
+    </table>
+
+    <br>
+    <label style="font-weight:bold">Users with 5 common genres or more:</label>
+
+    <table style="width:40%; border:1px solid black;">
+        {% for user in RECOMMENDATIONS[4] %}
+        {% if user != USERNAME %}
+        <tr>
+            <th style="color:rgb(125, 4, 155)">{{user[0]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </form>
+            </th>
+        </tr>
         {%endif%}
         {%endfor%}
     </table>

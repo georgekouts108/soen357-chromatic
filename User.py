@@ -260,23 +260,23 @@ class User:
         month = None
         day = None
 
-        if (self.birthmonth == '01'):
+        if (self.birthmonth == '01' or self.birthmonth == '1'):
             month = 'January'
-        elif (self.birthmonth == '02'):
+        elif (self.birthmonth == '02' or self.birthmonth == '2'):
             month = 'February'
-        elif (self.birthmonth == '03'):
+        elif (self.birthmonth == '03' or self.birthmonth == '3'):
             month = 'March'
-        elif (self.birthmonth == '04'):
+        elif (self.birthmonth == '04' or self.birthmonth == '4'):
             month = 'April'
-        elif (self.birthmonth == '05'):
+        elif (self.birthmonth == '05' or self.birthmonth == '5'):
             month = 'May'
-        elif (self.birthmonth == '06'):
+        elif (self.birthmonth == '06' or self.birthmonth == '6'):
             month = 'June'
-        elif (self.birthmonth == '07'):
+        elif (self.birthmonth == '07' or self.birthmonth == '7'):
             month = 'July'
-        elif (self.birthmonth == '08'):
+        elif (self.birthmonth == '08' or self.birthmonth == '8'):
             month = 'August'
-        elif (self.birthmonth == '09'):
+        elif (self.birthmonth == '09' or self.birthmonth == '9'):
             month = 'September'
         elif (self.birthmonth == '10'):
             month = 'October'
@@ -290,7 +290,7 @@ class User:
         else:
             day = self.birthday
 
-        return month+" "+day+", "+self.birthyear
+        return str(month)+" "+str(day)+", "+str(self.birthyear)
 
     def sendFriendRequest(self, recipient):
         try:

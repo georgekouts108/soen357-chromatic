@@ -331,6 +331,9 @@ def friend():
         elif (actionToDo == 'View Profile'):
 
             their_general_info = retrieveGeneralInfo(triggeredUsername)
+
+            print("DEBUG LINE 335: general info == "+str(their_general_info))
+
             their_full_name = their_general_info[1]+" "+their_general_info[2]
             their_birthday = ALL_USER_OBJECTS[int(
                 findUserID(triggeredUsername)) - 1].getBirthdayString()
