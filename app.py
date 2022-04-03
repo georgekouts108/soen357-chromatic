@@ -3,7 +3,7 @@ from csv import reader
 import sys
 import os
 from datetime import datetime
-
+from Genre import Genre, getListOfGenres
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
@@ -74,7 +74,12 @@ def setCURRENT_USER(new_current_user):
 def register():
     form = RegisterForm()
     form2 = LoginButton()
-    return render_template("register.html", form=form, form2=form2)
+
+    all_genres = getListOfGenres()
+    for a in range(len(all_genres)):
+        all_genres[a] = all_genres[a][6::]
+
+    return render_template("register.html", form=form, form2=form2, GENRES=all_genres)
 
 
 @app.route('/createuser', methods=['POST', 'GET'])
@@ -117,7 +122,10 @@ def createNewUser():
             age = (int(presentYear) - int(birth_year) - 1)
 
         if form.validate_on_submit:
+
             try:
+                listofgenres = request.form.getlist('genre')
+
                 genderIsChosen = False
                 chosen_gender = request.form['gender']
                 print("CHOSEN GENDER = "+str(chosen_gender))
@@ -133,7 +141,7 @@ def createNewUser():
                 email_is_ok = emailIsOK(form.email.data)
                 if (email_is_ok and usernameIsNew and passwordsMatch and (age >= 13) and genderIsChosen):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day,
-                                          birth_year, form.location.data, form.favoriteGenres.data, form.username.data, form.password.data, chosen_gender, 0)
+                                          birth_year, form.location.data, listofgenres, form.username.data, form.password.data, chosen_gender, 0)
 
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
@@ -243,7 +251,11 @@ def main_page():
 @app.route('/manage_genres')
 def manageGenres():
     my_genres = retrieveFavGenres(CURRENT_USER)
-    return render_template("genreManage.html", USERNAME=CURRENT_USER, GENRES=my_genres, form2=GenreManageControls())
+
+    all_genres = getListOfGenres()
+    for a in range(len(all_genres)):
+        all_genres[a] = all_genres[a][6::]
+    return render_template("genreManage.html", USERNAME=CURRENT_USER, GENRES=my_genres, ALL_GENRES=all_genres, form2=GenreManageControls())
 
 
 @app.route('/addordelgenre', methods=['POST', 'GET'])
@@ -254,15 +266,17 @@ def add_or_del_genre():
 
     if request.method == 'POST':
         addOrDel = request.form['addordel']
+        if (str(addOrDel) is None):
+            raise Exception()
         print("addOrDel == "+str(addOrDel))
         try:
             if (str(addOrDel) == 'add'):
-                if form2.favoriteGenres.data is not None:
-                    for i in form2.favoriteGenres.data:
+                if request.form.getlist('genre') is not None:
+                    for i in request.form.getlist('genre'):
                         ALL_USER_OBJECTS[currentUserID - 1].addGenre(i)
             elif (str(addOrDel) == 'del'):
-                if form2.favoriteGenres.data is not None:
-                    for i in form2.favoriteGenres.data:
+                if request.form.getlist('genre') is not None:
+                    for i in request.form.getlist('genre'):
                         ALL_USER_OBJECTS[currentUserID - 1].deleteGenre(i)
             else:
                 raise Exception()

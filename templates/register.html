@@ -6,6 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chromatic - Register</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,7 +46,20 @@
                     {{form.location}}<br><br>
 
                     {{form.favoriteGenres.label(class='form-control-label')}}<br>
-                    {{form.favoriteGenres}}<br><br>
+
+                    <table>
+                        {%for i in range(GENRES|length) %}
+                        {%if i%6 == 0 %}
+                        <tr>
+                            {%endif%}
+                            <td><input type="checkbox" value="{{GENRES[i]}}" name="genre">{{GENRES[i]}}</td>
+                            {%if (i+1)%6 == 0 %}
+                        </tr>
+                        {%endif%}
+                        {%endfor%}
+                    </table>
+
+                    <br><br>
 
                     {{form.username.label(class='form-control-label')}}<br>
                     {{form.username}}<br><br>

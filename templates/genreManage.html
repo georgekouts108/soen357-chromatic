@@ -6,6 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Genres - {{USERNAME}}</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,10 +30,22 @@
 
     <form name="genre" method="POST" action="/addordelgenre">
         {{form2.favoriteGenres.label(class='form-control-label')}}<br>
-        {{form2.favoriteGenres}}<br><br>
+        <table>
+            {%for i in range(ALL_GENRES|length) %}
+            {%if i%6 == 0 %}
+            <tr>
+                {%endif%}
+                <td><input type="checkbox" value="{{ALL_GENRES[i]}}" name="genre">{{ALL_GENRES[i]}}</td>
+                {%if (i+1)%6 == 0 %}
+            </tr>
+            {%endif%}
+            {%endfor%}
+        </table>
 
-        <input type="radio" name="addordel" id="add" value="add"> Add Selected Genre <br>
-        <input type="radio" name="addordel" id="del" value="del"> Delete Selected Genre <br>
+
+
+        <input type="radio" name="addordel" id="add" value="add"> Add Selected Genre(s) <br>
+        <input type="radio" name="addordel" id="del" value="del"> Delete Selected Genre(s) <br>
 
         <input type="submit" value="Confirm">
     </form>

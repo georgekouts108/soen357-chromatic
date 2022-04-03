@@ -26,3 +26,7 @@ class Genre(enum.Enum):
     RETRO = 'RETRO',
     MEDITATION = 'MEDITATION',
     FAITH = 'FAITH'
+
+
+def getListOfGenres():
+    return [str(Genre.POP), str(Genre.ELECTRONIC), str(Genre.DANCE), str(Genre.RAP), str(Genre.HIPHOP), str(Genre.ROCK), str(Genre.METAL), str(Genre.SOUL), str(Genre.JAZZ), str(Genre.DISCO), str(Genre.FUNK), str(Genre.CLASSICAL), str(Genre.SOUNDTRACK), str(Genre.WORLD), str(Genre.FOLK), str(Genre.INDIE), str(Genre.BROADWAY), str(Genre.THEATER), str(Genre.MUSICAL), str(Genre.VINTAGE), str(Genre.BALLAD), str(Genre.RETRO), str(Genre.MEDITATION), str(Genre.FAITH)]
