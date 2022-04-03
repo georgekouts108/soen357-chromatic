@@ -8,7 +8,7 @@ from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
-from csvEditing import toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo
+from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo
 from Chat import Chat
 from messaging import getInfoForFriends
 
@@ -88,7 +88,6 @@ def createNewUser():
         birth_month = birthday[5:7]
         birth_day = birthday[8:]
 
-        # NEW: age restriction
         age = 0
         presentTime = datetime.now()
         presentDay = presentTime.strftime("%d")
@@ -116,8 +115,6 @@ def createNewUser():
             age = (int(presentYear) - int(birth_year))
         else:
             age = (int(presentYear) - int(birth_year) - 1)
-
-        # NEW: age restriction
 
         if form.validate_on_submit:
             try:
@@ -301,6 +298,30 @@ def connections():
     return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
 
 
+@app.route('/find_friends', methods=['GET', 'POST'])
+def find_friends():
+
+    currentUserID = int(findUserID(CURRENT_USER))
+    if request.method == 'POST':
+        query = str(request.form.get('search'))
+        print("QUERY == "+str(query))
+        general_info_db = getGeneralInfoDB()[1::]
+        filtered_db = []
+        for gen in general_info_db:
+            is_not_me = (int(gen[0]) != currentUserID)
+            is_potential_fullname = (query in (gen[1]+" "+gen[2]))
+            is_potential_username = (query in gen[10])
+            is_age_appropriate = (
+                (int(str(gen[7])) >= 18 and int(
+                    ALL_USER_OBJECTS[currentUserID - 1].age) >= 18)
+                or (int(str(gen[7])) < 18 and int(ALL_USER_OBJECTS[currentUserID - 1].age) < 18)
+            )
+            if (is_age_appropriate and is_not_me and (is_potential_fullname or is_potential_username)):
+                filtered_db.append(gen)
+            print("filtered db="+str(filtered_db))
+    return render_template("findFriends.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
+
+
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
     currentUserID = int(findUserID(CURRENT_USER))
@@ -331,8 +352,6 @@ def friend():
         elif (actionToDo == 'View Profile'):
 
             their_general_info = retrieveGeneralInfo(triggeredUsername)
-
-            print("DEBUG LINE 335: general info == "+str(their_general_info))
 
             their_full_name = their_general_info[1]+" "+their_general_info[2]
             their_birthday = ALL_USER_OBJECTS[int(

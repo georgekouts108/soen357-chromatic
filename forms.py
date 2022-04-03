@@ -64,7 +64,8 @@ class ForgotPasswordForm(FlaskForm):
 
 class HomePageButtons(FlaskForm):
     genreManage = SubmitField('Manage Favorite Genres')
-    connections = SubmitField('Find Friends')
+    findFriends = SubmitField('Find Friends')
+    connections = SubmitField('See Friend Suggestions')
     myFriends = SubmitField('My Friends')
     myMessages = SubmitField('My Messages')
     logout = SubmitField('Logout')

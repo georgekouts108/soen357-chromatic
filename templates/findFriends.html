@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Friends - {{USERNAME}}</title>
+</head>
+
+<body>
+    <form method='POST' action='/'>
+        <div class="form-group">
+            {{homeButton.home}}
+        </div>
+    </form>
+    <br>
+    <h2>Find Friends</h2>
+
+    <h4>Type a username or full name to filter results of users</h4>
+    <br>
+
+    <form method="POST" action="/find_friends">
+        <input type="search" name="search"> <input type="submit" value="Search Users">
+    </form>
+    <br><br>
+    <h3>Search results:</h3><br>
+    {%if FILTER|length > 0 %}
+    <table style="width:40%; border:1px solid black;">
+        {% for fil in FILTER %}
+        <tr>
+            <th>{{fil[1]}} {{fil[2]}}</th>
+            <th>{{fil[10]}}</th>
+            <th>Age: {{fil[7]}}</th>
+            <th>{{fil[8]}}</th>
+            <th>
+                <form method="POST" action="/friend">
+                    <input type="hidden" value="{{ fil[10] }}" name="my_uname" id="uname">
+                    <input type="submit" value="View Profile" name="friend" id="profile">
+                </form>
+            </th>
+        </tr>
+        {%endfor%}
+    </table>
+    {%endif%}
+
+</body>
+
+</html>

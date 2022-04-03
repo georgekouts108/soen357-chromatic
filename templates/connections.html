@@ -16,9 +16,9 @@
 </head>
 
 <body>
-    <h2>Find Friends</h2>
+    <h2>Friend Suggestions</h2>
 
-    <h4>Friend recommentations for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>, based on
+    <h4>Friend Suggestions for <span style="color:rgb(154, 74, 230); font-weight:bold">{{USERNAME}}</span>, based on
         the number of common genres:</h4>
     <br>
 
@@ -112,9 +112,14 @@
         {%endfor%}
     </table>
     <br>
+    <form method='POST' action='/connections'>
+        <div class="form-group">
+            <input type="submit" value="Refresh Suggestions">
+        </div>
+    </form><br>
     <form method='POST' action='/'>
         <div class="form-group">
-            {{homeButton.home}}<br><br>
+            {{homeButton.home}}
         </div>
     </form>
 </body>

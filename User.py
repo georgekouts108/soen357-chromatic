@@ -1,10 +1,11 @@
+from random import randint
 from Genre import Genre
 from csv import reader, writer
 from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoDB
 import csv
 import os
 from datetime import datetime
-# import is only for debugging
+
 from messaging import getInfoForFriends, getYourUsername
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -226,7 +227,32 @@ class User:
                     fivePlusGenreMatches.append(
                         [theirUsername, genresInCommon])
 
-        return [oneGenreMatches, twoGenreMatches, threeGenreMatches, fourGenreMatches, fivePlusGenreMatches]
+        # NEW: allow users to see up to 5 friend recommendations for each common genre count
+        limited = [[], [], [], [], []]
+        matcharray = [oneGenreMatches, twoGenreMatches,
+                      threeGenreMatches, fourGenreMatches, fivePlusGenreMatches]
+
+        for i in range(len(matcharray)):
+            temp_array = matcharray[i]
+            if (len(temp_array) <= 5):
+                limited[i] = temp_array
+            else:
+                count = 5
+                while (count >= 1):
+                    random_index = randint(0, len(temp_array) - 1)
+                    exists = False
+                    if limited[i] is not None:
+                        for j in limited[i]:
+                            if j == temp_array[random_index]:
+                                exists = True
+                                break
+                    if not exists:
+                        limited[i].append(temp_array[random_index])
+                        count = count - 1
+
+        # NEW: allow users to see up to 5 friend recommendations for each common genre count
+
+        return limited
 
     def getCurrentAge(self):
         presentTime = datetime.now()
