@@ -46,7 +46,7 @@ def updateNumOfActiveUsers():
 class User:
 
     # initially, users have no friends and are not logged in once they create an account
-    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, manualUserID, newUserID=True, loggedOn=False,
+    def __init__(self, firstname, lastname, email, birthMonth, birthDay, birthYear, location, favGenres, username, password, gender, manualUserID, newUserID=True, loggedOn=False,
                  friends=None, sentFriendReqs=None, receivedFriendRequests=None):
 
         # all parameters are assumed to be valid
@@ -68,6 +68,8 @@ class User:
         self.friends = friends
         self.sent_friend_requests = sentFriendReqs
         self.received_friend_requests = receivedFriendRequests
+
+        self.gender = gender
 
         if(newUserID is True):  # is a new user coming in?
             self.id = getNextUserID()
@@ -135,7 +137,7 @@ class User:
         with open(r"databases/userGeneralInfo.csv", 'a') as user_records:
             csv_writer = writer(user_records)
             newRow = [self.id, self.firstname, self.lastname, self.email, self.birthmonth, self.birthday,
-                      self.birthyear, self.age, self.location, self.loggedOn, self.username, self.password]
+                      self.birthyear, self.age, self.location, self.loggedOn, self.username, self.password, self.gender]
             csv_writer.writerow(newRow)
         return True
 

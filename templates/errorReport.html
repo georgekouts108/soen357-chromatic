@@ -10,7 +10,9 @@
 
 <body style="text-align:center">
     <H1>Error</H1><br><br>
-    {% if ERRCODE == 100 %}
+    {% if ERRCODE == 0 %}
+    <p>An unknown error has occurred.</p>
+    {% elif ERRCODE == 100 %}
     <p>It seems like you have entered a username that already exists.</p>
     {% elif ERRCODE == 200 %}
     <p>An account has already been created with the email you entered.</p>
@@ -18,6 +20,8 @@
     <p>The passwords you have entered do not match.</p>
     {% elif ERRCODE == 400 %}
     <p>You must be 13 years of age or older to register for <i>Chromatic</i>.</p>
+    {% elif ERRCODE == 500 %}
+    <p>You must indicate your gender in order to register.</p>
     {%endif%}
 
     <form action="/register">

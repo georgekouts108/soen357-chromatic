@@ -11,6 +11,15 @@
 <body>
     <h1>{{FULLNAME}}</h1>
     <h3>{{AGE}} year(s) old</h3>
+    <h3>Gender:
+        {%if GENDER == 'Male' %}
+        <span style="color:rgb(50, 0, 252)">Male</span>
+        {%elif GENDER == 'Female' %}
+        <span style="color:rgb(230, 105, 126)">Female</span>
+        {%elif GENDER == 'Unspecified' %}
+        <span style="color:blueviolet">Unspecified Gender</span>
+        {%endif%}
+    </h3>
     <h3>Birthday: {{BIRTHDAY}}</h3>
     <h4>Lives in {{LOCATION}}</h4>
 

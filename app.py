@@ -118,12 +118,22 @@ def createNewUser():
 
         if form.validate_on_submit:
             try:
+                genderIsChosen = False
+                chosen_gender = request.form['gender']
+                print("CHOSEN GENDER = "+str(chosen_gender))
+                if (str(chosen_gender) == 'Male'):
+                    genderIsChosen = True
+                elif (str(chosen_gender) == 'Female'):
+                    genderIsChosen = True
+                elif (str(chosen_gender) == 'Unspecified'):
+                    genderIsChosen = True
+
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)
                 email_is_ok = emailIsOK(form.email.data)
-                if (email_is_ok and usernameIsNew and passwordsMatch and (age >= 13)):
+                if (email_is_ok and usernameIsNew and passwordsMatch and (age >= 13) and genderIsChosen):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day,
-                                          birth_year, form.location.data, form.favoriteGenres.data, form.username.data, form.password.data, 0)
+                                          birth_year, form.location.data, form.favoriteGenres.data, form.username.data, form.password.data, chosen_gender, 0)
 
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
@@ -136,6 +146,8 @@ def createNewUser():
                         error_code = 300
                     elif not (age >= 13):
                         error_code = 400
+                    elif not genderIsChosen:
+                        error_code = 500
 
                     raise Exception()
             except Exception:
@@ -295,7 +307,7 @@ def connections():
             username_info = [auo.username, isFriend, isReqSent, isReqReceived]
             usernames.append(username_info)
 
-    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID)
+    return render_template("connections.html", USERNAME=CURRENT_USER, RECOMMENDATIONS=recommendations, GENRES=myGenres, homeButton=HomeButton(), usernames=usernames, fullnames=fullNames, ages=ages, locations=locations, userCount=usersCountToShow, currentUserID=currentUserID, GENERAL_INFO_DB=getGeneralInfoDB())
 
 
 @app.route('/find_friends', methods=['GET', 'POST'])
@@ -309,15 +321,28 @@ def find_friends():
         filtered_db = []
         for gen in general_info_db:
             is_not_me = (int(gen[0]) != currentUserID)
-            is_potential_fullname = (query in (gen[1]+" "+gen[2]))
-            is_potential_username = (query in gen[10])
+            is_potential_fullname = (
+                query.lower() in (gen[1]+" "+gen[2]).lower())
+            is_potential_username = (query.lower() in gen[10].lower())
             is_age_appropriate = (
                 (int(str(gen[7])) >= 18 and int(
                     ALL_USER_OBJECTS[currentUserID - 1].age) >= 18)
                 or (int(str(gen[7])) < 18 and int(ALL_USER_OBJECTS[currentUserID - 1].age) < 18)
             )
             if (is_age_appropriate and is_not_me and (is_potential_fullname or is_potential_username)):
-                filtered_db.append(gen)
+                # filtered_db.append(gen)
+
+                # new
+                isFriend = ALL_USER_OBJECTS[currentUserID -
+                                            1].userExistsInFriendsList(gen[10])
+                isReqSent = ALL_USER_OBJECTS[currentUserID -
+                                             1].userExistsInSentRequestsList(gen[10])
+                isReqReceived = ALL_USER_OBJECTS[currentUserID -
+                                                 1].userExistsInReceivedRequests(gen[10])
+
+                #####
+                filtered_db.append([gen, isFriend, isReqSent, isReqReceived])
+
             print("filtered db="+str(filtered_db))
     return render_template("findFriends.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
 
@@ -392,7 +417,10 @@ def friend():
             friendship_status_info = [
                 triggeredUsername, isFriend, isReqSent, isReqReceived]
 
-            return render_template("userProfile.html", FULLNAME=their_full_name, USERNAME=triggeredUsername, BIRTHDAY=their_birthday, AGE=their_age, LOCATION=their_location, STATUS=their_status, ALL_GENRES=their_genres, MUT_GENRES=mutual_genres, ALL_FRIENDS=their_friends, MUT_FRIENDS=mutual_friends, FRIEND_STATUS_INFO=friendship_status_info)
+            their_gender = ALL_USER_OBJECTS[int(
+                findUserID(triggeredUsername)) - 1].gender
+
+            return render_template("userProfile.html", FULLNAME=their_full_name, USERNAME=triggeredUsername, BIRTHDAY=their_birthday, AGE=their_age, LOCATION=their_location, STATUS=their_status, ALL_GENRES=their_genres, MUT_GENRES=mutual_genres, ALL_FRIENDS=their_friends, MUT_FRIENDS=mutual_friends, FRIEND_STATUS_INFO=friendship_status_info, GENDER=their_gender)
     return redirect(url_for('connections'))
 
 

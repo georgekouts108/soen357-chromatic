@@ -28,13 +28,44 @@
         {% for user in RECOMMENDATIONS[0] %}
         {% if user != USERNAME %}
         <tr>
+            {%for g in GENERAL_INFO_DB %}
+            {% if g[10] == user[0] %}
+            <th>{{g[1]}} {{g[2]}}</th>
             <th style="color:red">{{user[0]}}</th>
+            <th>Age: {{g[7]}}</th>
+            <th>Gender:
+                {%if g[12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif g[12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif g[12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
+            <th>Location: {{g[8]}}</th>
             <th>
                 <form method="POST" action="/friend">
                     <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% for u in usernames %}
+            {%if u[0] == user[0]%}
+            {% if u[1] == True %}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {% elif u[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {% elif u[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
+        </tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+
+
+        {%endif%}
+        {%endfor%}
         </tr>
         {%endif%}
         {%endfor%}
@@ -46,13 +77,42 @@
         {% for user in RECOMMENDATIONS[1] %}
         {% if user != USERNAME %}
         <tr>
-            <th style="color:orange">{{user[0]}}</th>
+            {%for g in GENERAL_INFO_DB %}
+            {% if g[10] == user[0] %}
+            <th>{{g[1]}} {{g[2]}}</th>
+            <th style="color:red">{{user[0]}}</th>
+            <th>Age: {{g[7]}}</th>
+            <th>Gender:
+                {%if g[12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif g[12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif g[12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
+            <th>Location: {{g[8]}}</th>
             <th>
                 <form method="POST" action="/friend">
                     <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% for u in usernames %}
+            {%if u[0] == user[0]%}
+            {% if u[1] == True %}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {% elif u[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {% elif u[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
+        </tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+        {%endif%}
+        {%endfor%}
         </tr>
         {%endif%}
         {%endfor%}
@@ -64,13 +124,42 @@
         {% for user in RECOMMENDATIONS[2] %}
         {% if user != USERNAME %}
         <tr>
-            <th style="color:green">{{user[0]}}</th>
+            {%for g in GENERAL_INFO_DB %}
+            {% if g[10] == user[0] %}
+            <th>{{g[1]}} {{g[2]}}</th>
+            <th style="color:red">{{user[0]}}</th>
+            <th>Age: {{g[7]}}</th>
+            <th>Gender:
+                {%if g[12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif g[12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif g[12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
+            <th>Location: {{g[8]}}</th>
             <th>
                 <form method="POST" action="/friend">
                     <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% for u in usernames %}
+            {%if u[0] == user[0]%}
+            {% if u[1] == True %}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {% elif u[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {% elif u[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
+        </tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+        {%endif%}
+        {%endfor%}
         </tr>
         {%endif%}
         {%endfor%}
@@ -81,13 +170,42 @@
         {% for user in RECOMMENDATIONS[3] %}
         {% if user != USERNAME %}
         <tr>
-            <th style="color:rgba(12, 158, 171, 0.876)">{{user[0]}}</th>
+            {%for g in GENERAL_INFO_DB %}
+            {% if g[10] == user[0] %}
+            <th>{{g[1]}} {{g[2]}}</th>
+            <th style="color:red">{{user[0]}}</th>
+            <th>Age: {{g[7]}}</th>
+            <th>Gender:
+                {%if g[12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif g[12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif g[12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
+            <th>Location: {{g[8]}}</th>
             <th>
                 <form method="POST" action="/friend">
                     <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% for u in usernames %}
+            {%if u[0] == user[0]%}
+            {% if u[1] == True %}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {% elif u[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {% elif u[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
+        </tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+        {%endif%}
+        {%endfor%}
         </tr>
         {%endif%}
         {%endfor%}
@@ -100,13 +218,42 @@
         {% for user in RECOMMENDATIONS[4] %}
         {% if user != USERNAME %}
         <tr>
-            <th style="color:rgb(125, 4, 155)">{{user[0]}}</th>
+            {%for g in GENERAL_INFO_DB %}
+            {% if g[10] == user[0] %}
+            <th>{{g[1]}} {{g[2]}}</th>
+            <th style="color:red">{{user[0]}}</th>
+            <th>Age: {{g[7]}}</th>
+            <th>Gender:
+                {%if g[12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif g[12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif g[12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
+            <th>Location: {{g[8]}}</th>
             <th>
                 <form method="POST" action="/friend">
                     <input type="hidden" value="{{ user[0] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% for u in usernames %}
+            {%if u[0] == user[0]%}
+            {% if u[1] == True %}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {% elif u[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {% elif u[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
+        </tr>
+        {%endif%}
+        {%endif%}
+        {%endfor%}
+        {%endif%}
+        {%endfor%}
         </tr>
         {%endif%}
         {%endfor%}

@@ -59,11 +59,11 @@ def loadAllUsers():
         loggedIn = nextGeneralInfoArray[9]
         username = nextGeneralInfoArray[10]
         password = nextGeneralInfoArray[11]
-
+        gender = nextGeneralInfoArray[12]
         # FRIENDSHIP INFO PARAMETERS
 
         nextUser = User(firstname, lastname, email, birthMonth, birthDay, birthYear,
-                        location, nextFavGenresArray, username, password, id, False, loggedIn, nextFriendshipArray, nextSentFriendReqsArray, nextReceivedFriendReqsArray)
+                        location, nextFavGenresArray, username, password, gender, id, False, loggedIn, nextFriendshipArray, nextSentFriendReqsArray, nextReceivedFriendReqsArray)
 
         all_users.append(nextUser)
 

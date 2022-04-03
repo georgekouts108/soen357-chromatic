@@ -6,6 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Friends - {{USERNAME}}</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,19 +36,38 @@
     <table style="width:40%; border:1px solid black;">
         {% for fil in FILTER %}
         <tr>
-            <th>{{fil[1]}} {{fil[2]}}</th>
-            <th>{{fil[10]}}</th>
-            <th>Age: {{fil[7]}}</th>
-            <th>{{fil[8]}}</th>
+            <th>{{fil[0][1]}} {{fil[0][2]}}</th>
+            <th>{{fil[0][10]}}</th>
+            <th>Age: {{fil[0][7]}}</th>
+            <th>{{fil[0][8]}}</th>
+            <th>
+                {%if fil[0][12] == 'Male' %}
+                <span style="color:rgb(50, 0, 252)">Male</span>
+                {%elif fil[0][12] == 'Female' %}
+                <span style="color:rgb(230, 105, 126)">Female</span>
+                {%elif fil[0][12] == 'Unspecified' %}
+                <span style="color:blueviolet">Unspecified Gender</span>
+                {%endif%}
+            </th>
             <th>
                 <form method="POST" action="/friend">
-                    <input type="hidden" value="{{ fil[10] }}" name="my_uname" id="uname">
+                    <input type="hidden" value="{{ fil[0][10] }}" name="my_uname" id="uname">
                     <input type="submit" value="View Profile" name="friend" id="profile">
                 </form>
             </th>
+            {% if fil[1] == True%}
+            <th><span style="color:rgb(0, 255, 13)">FRIENDS</span></th>
+            {%elif fil[2] == True %}
+            <th><span style="color:rgb(0, 200, 255)">Friend request sent</span></th>
+            {%elif fil[3] == True %}
+            <th><span style="color:darkorange">Friend request received</span></th>
+            {%else%}
         </tr>
+        {%endif%}
         {%endfor%}
     </table>
+    {%else%}
+    No results found
     {%endif%}
 
 </body>

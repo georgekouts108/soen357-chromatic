@@ -25,9 +25,15 @@
                     {{form.email.label(class='form-control-label')}}<br>
                     {{form.email}}<br><br>
 
+
                     {{form.dateOfBirth.label(class='form-control-label')}}<br>
                     <input type="date" id="birth_day" name="birth_day"><br><br>
 
+                    <label>Gender:</label>
+                    <input type="radio" name="gender" id="male" value="Male"> Male
+                    <input type="radio" name="gender" id="female" value="Female"> Female
+                    <input type="radio" name="gender" id="unsp" value="Unspecified"> I prefer not to specify
+                    <br><br>
 
                     {{form.location.label(class='form-control-label')}}<br>
                     {{form.location}}<br><br>

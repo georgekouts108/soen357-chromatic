@@ -1,1 +1,1 @@
-UserID,FirstName,LastName,Email,BirthMonth,BirthDay,BirthYear,Age,Location,IsLoggedIn,Username,Password
+UserID,FirstName,LastName,Email,BirthMonth,BirthDay,BirthYear,Age,Location,IsLoggedIn,Username,Password,Gender
