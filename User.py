@@ -1,11 +1,11 @@
 from random import randint
 from Genre import Genre
 from csv import reader, writer
-from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoDB
+from csvEditing import updatePassword, updateGenres, getGenreDB, getGeneralInfoDB, updateAge
 import csv
 import os
-from datetime import datetime
-
+from datetime import datetime, date
+import math
 from messaging import getInfoForFriends, getYourUsername
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
@@ -59,6 +59,7 @@ class User:
         self.birthday = birthDay
         self.birthyear = birthYear
         self.age = self.getCurrentAge()
+
         self.location = location
         self.favGenres = favGenres
         self.username = username
@@ -85,6 +86,7 @@ class User:
 
         else:  # or is an existing user coming in?
             self.id = manualUserID
+        self.updateUserAge()
 
     def updateGenreList(self):
         # this method assumes that self.favGenres has been updated
@@ -229,7 +231,6 @@ class User:
                     fivePlusGenreMatches.append(
                         [theirUsername, genresInCommon])
 
-        # NEW: allow users to see up to 5 friend recommendations for each common genre count
         limited = [[], [], [], [], []]
         matcharray = [oneGenreMatches, twoGenreMatches,
                       threeGenreMatches, fourGenreMatches, fivePlusGenreMatches]
@@ -251,12 +252,10 @@ class User:
                     if not exists:
                         limited[i].append(temp_array[random_index])
                         count = count - 1
-
-        # NEW: allow users to see up to 5 friend recommendations for each common genre count
-
         return limited
 
     def getCurrentAge(self):
+
         presentTime = datetime.now()
         presentDay = presentTime.strftime("%d")
         presentMonth = presentTime.strftime("%m")
@@ -273,16 +272,25 @@ class User:
         if (self.birthday[0] == '0'):  # single digit birth day? 01-09?
             birth_day = int(self.birthday[1])
 
+        elif (len(self.birthday) == 1 or len(self.birthday) == 2):
+            birth_day = int(self.birthday)
+
         if (self.birthmonth[0] == '0'):  # single digit birth month? 01-09?
             birth_month = int(self.birthmonth[1])
 
-        isBirthdayToday = ((birth_month == int(presentMonth))
-                           and (birth_day == int(presentDay)))
+        elif (len(self.birthmonth) == 1 or len(self.birthmonth) == 2):
+            birth_month = int(self.birthmonth)
 
-        if (isBirthdayToday):
-            return (int(presentYear) - int(self.birthyear))
+        birth = date(int(self.birthyear), birth_month, birth_day)
+        present = date(int(presentYear), int(presentMonth), int(presentDay))
+        days_passed = present - birth
 
-        return (int(presentYear) - int(self.birthyear) - 1)
+        return math.floor(days_passed.days / 365)
+
+    def updateUserAge(self):
+        self.age = self.getCurrentAge()
+        updateAge(self.id, self.age)
+        return True
 
     def getBirthdayString(self):
         month = None

@@ -3,7 +3,7 @@ from csv import reader
 import sys
 import os
 from datetime import datetime
-from Genre import Genre, getListOfGenres
+from Genre import getListOfGenres
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
 from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
@@ -36,6 +36,13 @@ def getChatMemberBlueprint(username):
 
 HOMEPAGE_ACCESS_COUNT = 0
 ALL_USER_OBJECTS = []
+
+
+def updateAllUserAges():
+    global ALL_USER_OBJECTS
+    if (ALL_USER_OBJECTS is not None):
+        for i in range(len(ALL_USER_OBJECTS)):
+            ALL_USER_OBJECTS[i].updateUserAge()
 
 
 def updateAllUserObjects():
@@ -72,6 +79,8 @@ def setCURRENT_USER(new_current_user):
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+    updateAllUserAges()
+
     form = RegisterForm()
     form2 = LoginButton()
 
@@ -84,6 +93,8 @@ def register():
 
 @app.route('/createuser', methods=['POST', 'GET'])
 def createNewUser():
+    updateAllUserAges()
+
     error_code = 0
     form = RegisterForm()
     if request.method == 'POST':
@@ -166,6 +177,8 @@ def createNewUser():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    updateAllUserAges()
+
     USERNAME = None
 
     activeUser = findActiveUser()
@@ -188,6 +201,8 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    updateAllUserAges()
+
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, False)
         setCURRENT_USER(None)
@@ -196,11 +211,15 @@ def logout():
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
+    updateAllUserAges()
+
     return render_template("forgotPassword.html", form=ForgotPasswordForm())
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
+    updateAllUserAges()
+
     form = ForgotPasswordForm()
     if request.method == 'POST':
         identity = form.identity.data
@@ -239,7 +258,10 @@ def main_page():
         setUpFriendshipFiles(latestUserCount)
         updateAllUserObjects()
         updateAllChatObjects()
+        updateAllUserAges()
     form2 = HomePageButtons()
+
+    updateAllUserAges()
 
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, True)
@@ -250,6 +272,8 @@ def main_page():
 
 @app.route('/manage_genres')
 def manageGenres():
+    updateAllUserAges()
+
     my_genres = retrieveFavGenres(CURRENT_USER)
 
     all_genres = getListOfGenres()
@@ -260,6 +284,7 @@ def manageGenres():
 
 @app.route('/addordelgenre', methods=['POST', 'GET'])
 def add_or_del_genre():
+    updateAllUserAges()
 
     form2 = GenreManageControls()
     currentUserID = int(findUserID(CURRENT_USER))
@@ -287,6 +312,8 @@ def add_or_del_genre():
 
 @app.route('/connections', methods=['POST', 'GET'])
 def connections():
+    updateAllUserAges()
+
     currentUserID = int(findUserID(CURRENT_USER))
     recommendations = ALL_USER_OBJECTS[currentUserID -
                                        1].getFriendRecommendations()
@@ -326,11 +353,13 @@ def connections():
 
 @app.route('/find_friends', methods=['GET', 'POST'])
 def find_friends():
+    updateAllUserAges()
 
     currentUserID = int(findUserID(CURRENT_USER))
     if request.method == 'POST':
+        updateAllUserAges()
         query = str(request.form.get('search'))
-        print("QUERY == "+str(query))
+
         general_info_db = getGeneralInfoDB()[1::]
         filtered_db = []
         for gen in general_info_db:
@@ -344,9 +373,7 @@ def find_friends():
                 or (int(str(gen[7])) < 18 and int(ALL_USER_OBJECTS[currentUserID - 1].age) < 18)
             )
             if (is_age_appropriate and is_not_me and (is_potential_fullname or is_potential_username)):
-                # filtered_db.append(gen)
 
-                # new
                 isFriend = ALL_USER_OBJECTS[currentUserID -
                                             1].userExistsInFriendsList(gen[10])
                 isReqSent = ALL_USER_OBJECTS[currentUserID -
@@ -354,7 +381,6 @@ def find_friends():
                 isReqReceived = ALL_USER_OBJECTS[currentUserID -
                                                  1].userExistsInReceivedRequests(gen[10])
 
-                #####
                 filtered_db.append([gen, isFriend, isReqSent, isReqReceived])
 
             print("filtered db="+str(filtered_db))
@@ -363,6 +389,8 @@ def find_friends():
 
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
+    updateAllUserAges()
+
     currentUserID = int(findUserID(CURRENT_USER))
     myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends[1::]
     print("myFriends = "+str(myFriends))
@@ -371,6 +399,8 @@ def my_friends():
 
 @app.route('/friend', methods=['POST', 'GET'])
 def friend():
+    updateAllUserAges()
+
     currentUserID = int(findUserID(CURRENT_USER))
     if request.method == 'POST':
 
@@ -440,6 +470,8 @@ def friend():
 
 @app.route('/my_messages', methods=['POST', 'GET'])
 def messages():
+    updateAllUserAges()
+
     chatIDs = []
     listOfChatFiles = os.listdir("chats/")
     for filename in listOfChatFiles:
@@ -463,12 +495,15 @@ def messages():
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
 def createChat():
+    updateAllUserAges()
+
     yourFriends = getInfoForFriends(CURRENT_USER)
     return render_template("createChat.html", USERNAME=CURRENT_USER, YOUR_FRIENDS=yourFriends, newChatForm=NewChatForm())
 
 
 @app.route('/direct_message', methods=['POST', 'GET'])
 def directMessage():
+    updateAllUserAges()
 
     if request.method == 'POST':
         currentUserID = int(findUserID(CURRENT_USER))
@@ -517,6 +552,7 @@ def directMessage():
 
 @app.route('/chat_host_new_chat', methods=['POST', 'GET'])
 def newChat():
+    updateAllUserAges()
 
     form = NewChatForm()
     if request.method == 'POST':
@@ -568,6 +604,8 @@ def newChat():
 
 @app.route('/chat_host', methods=['POST', 'GET'])
 def viewChat():
+    updateAllUserAges()
+
     form = ChatViewForm()
     if request.method == 'POST':
         chat_id = request.form['chatID']
@@ -589,6 +627,8 @@ def viewChat():
 
 @app.route('/prev_chat_host', methods=['POST', 'GET'])
 def prevChat():
+    updateAllUserAges()
+
     if request.method == 'POST':
         visited_chat_id = int(request.form['chat'][6::])
         members = ALL_CHAT_OBJECTS[int(visited_chat_id) - 1].members

@@ -59,6 +59,19 @@ def retrieveFavGenres(username):
     return my_genres
 
 
+def updateAge(userID, updatedAge):
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+    user_rows[int(userID)][7] = updatedAge
+    print("AGE DEBUGGING: NEW AGE == "+str(user_rows[int(userID)][7]))
+    newList = open('databases/userGeneralInfo.csv', 'w', newline='')
+    csv_writer = writer(newList)
+    csv_writer.writerows(user_rows)
+    return True
+
+
 def updateGenres(userID, newGenreArray):
     f = open('databases/userFavGenres.csv', 'r')
     csv_reader = reader(f)
