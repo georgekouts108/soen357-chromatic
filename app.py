@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
 from csv import reader
-import sys
 import os
 from datetime import datetime
 from Genre import getListOfGenres
@@ -158,7 +157,7 @@ def createNewUser():
 
                 # implement later...
                 chosen_picture = request.form['photo']
-                print("DEBUGGING OVER HERE: chosen_picture== "+str(chosen_picture))
+
                 # implement later...
 
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
@@ -272,7 +271,6 @@ def main_page():
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         latestUserCount = setLatestNumberOfUsersAndIDs()
-        print('LATEST USER COUNT == '+str(latestUserCount))
         setUpFriendshipFiles(latestUserCount)
         updateAllUserObjects()
         updateAllChatObjects()
@@ -311,7 +309,6 @@ def add_or_del_genre():
         addOrDel = request.form['addordel']
         if (str(addOrDel) is None):
             raise Exception()
-        print("addOrDel == "+str(addOrDel))
         try:
             if (str(addOrDel) == 'add'):
                 if request.form.getlist('genre') is not None:
@@ -401,7 +398,6 @@ def find_friends():
 
                 filtered_db.append([gen, isFriend, isReqSent, isReqReceived])
 
-            print("filtered db="+str(filtered_db))
     return render_template("findFriends.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
 
 
@@ -411,7 +407,6 @@ def my_friends():
 
     currentUserID = int(findUserID(CURRENT_USER))
     myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends[1::]
-    print("myFriends = "+str(myFriends))
     return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
 
 
@@ -505,12 +500,9 @@ def messages():
     currentUserID = int(findUserID(CURRENT_USER))
 
     numberOfFriends = 0
-    print("DEBUGGING HERE: ALL_USER_OBJECTS[currentUserID - 1].friends == "+str(
-        ALL_USER_OBJECTS[currentUserID - 1].friends))
 
     if ALL_USER_OBJECTS[currentUserID - 1].friends is not None:
         numberOfFriends = len(ALL_USER_OBJECTS[currentUserID - 1].friends[1::])
-    print("numberOfFriends == "+str(numberOfFriends))
     return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs, FRIEND_COUNT=numberOfFriends)
 
 

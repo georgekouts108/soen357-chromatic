@@ -1,11 +1,7 @@
-from csv import reader, writer
-import csv
-from operator import index
-import sys
-import os
+from csv import reader
 
 
-def usernameIsOK(username):  # REGISTER -- check if a username is okay
+def usernameIsOK(username):
     yes = True
     if (username == 'Username'):
         return False
@@ -20,7 +16,7 @@ def usernameIsOK(username):  # REGISTER -- check if a username is okay
     return yes
 
 
-def emailIsOK(email):  # REGISTER -- check if a username is okay
+def emailIsOK(email):
     yes = True
     if (email == 'Email'):
         return False
@@ -38,9 +34,6 @@ def emailIsOK(email):  # REGISTER -- check if a username is okay
 def verifyUsernameOrEmail(content):
     email_good = emailExists(str(content))
     uname_good = usernameExists(str(content))
-
-    print("EMAIL IS GOOD == "+str(email_good))
-    print("UNAME IS GOOD == "+str(uname_good))
 
     if (email_good):
         return 'e'
@@ -101,5 +94,4 @@ def findActiveUser():
         if (row[9] == str(True)):
             active_username = row[10]
             break
-    print("currently logged in: "+str(active_username))
     return active_username

@@ -12,7 +12,6 @@ def getYourUsername():
         if (str(row[9]) == str(True)):
             uname = row[10]
             break
-    print("uname == "+str(uname))
     return uname
 
 
@@ -44,7 +43,6 @@ def getInfoForFriends(yourUsername):
                         u[1])+" "+str(u[2]), str(u[10])]
                     yourFriendsInfo.append(newInfoEntry)
                     break
-    print("yourFriendsInfo == "+str(yourFriendsInfo))
     return yourFriendsInfo
 
 

@@ -1,7 +1,4 @@
 from csv import reader, writer
-import csv
-from operator import index
-import sys
 import os
 from User import User
 from Chat import Chat

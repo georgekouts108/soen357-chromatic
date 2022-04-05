@@ -65,7 +65,6 @@ def updateAge(userID, updatedAge):
     user_rows = list(csv_reader)
     f.close()
     user_rows[int(userID)][7] = updatedAge
-    print("AGE DEBUGGING: NEW AGE == "+str(user_rows[int(userID)][7]))
     newList = open('databases/userGeneralInfo.csv', 'w', newline='')
     csv_writer = writer(newList)
     csv_writer.writerows(user_rows)
