@@ -1,4 +1,5 @@
 from csv import reader
+import os
 
 
 def getYourUsername():
@@ -45,3 +46,14 @@ def getInfoForFriends(yourUsername):
                     break
     print("yourFriendsInfo == "+str(yourFriendsInfo))
     return yourFriendsInfo
+
+
+def removeEmptyChatFiles():
+    listOfChatFiles = os.listdir("chats/")
+    for filename in listOfChatFiles:
+        ChatLogRead = open('chats/' + filename, 'r')
+        csv_reader = reader(ChatLogRead)
+        log_rows = list(csv_reader)
+        ChatLogRead.close()
+        if len(log_rows) == 1:
+            os.remove("chats/"+filename)

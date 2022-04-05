@@ -5,6 +5,7 @@ import sys
 import os
 from User import User
 from Chat import Chat
+from messaging import removeEmptyChatFiles
 
 
 def loadAllUsers():
@@ -167,7 +168,7 @@ def loadAllChats():
         rows = list(csv_reader)
         chat_log.close()
 
-        # TODO: if a chat file has no messages, delete it from the 'chats' directory
+        removeEmptyChatFiles()
 
         next_chat_log = rows[1::]
         next_member_set = []

@@ -10,7 +10,7 @@ from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, R
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
 from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo
 from Chat import Chat
-from messaging import getInfoForFriends
+from messaging import getInfoForFriends, removeEmptyChatFiles
 
 
 app = Flask(__name__)
@@ -267,7 +267,7 @@ def reset_password():
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
-    # TODO: if a chat file has no messages, delete it from the 'chats' directory
+    removeEmptyChatFiles()
 
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
