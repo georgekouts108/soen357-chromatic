@@ -37,7 +37,7 @@
         {% for fil in FILTER %}
         <tr>
             <th>{{fil[0][1]}} {{fil[0][2]}}</th>
-            <th>{{fil[0][10]}}</th>
+            <th style="color:red">{{fil[0][10]}}</th>
             <th>Age: {{fil[0][7]}}</th>
             <th>{{fil[0][8]}}</th>
             <th>
@@ -48,6 +48,9 @@
                 {%elif fil[0][12] == 'Unspecified' %}
                 <span style="color:blueviolet">Unspecified Gender</span>
                 {%endif%}
+            </th>
+            <th>
+                <span style="color:gray">{{fil[0][13]}}</span>
             </th>
             <th>
                 <form method="POST" action="/friend">

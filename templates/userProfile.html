@@ -10,7 +10,7 @@
 
 <body>
     <h1>{{FULLNAME}}</h1>
-    <h3>{{AGE}} year(s) old</h3>
+    <h3>Age: {{AGE}} year(s) old</h3>
     <h3>Gender:
         {%if GENDER == 'Male' %}
         <span style="color:rgb(50, 0, 252)">Male</span>
@@ -19,6 +19,9 @@
         {%elif GENDER == 'Unspecified' %}
         <span style="color:blueviolet">Unspecified Gender</span>
         {%endif%}
+    </h3>
+    <h3>
+        Pronoun: {{PRONOUN}}
     </h3>
     <h3>Birthday: {{BIRTHDAY}}</h3>
     <h4>Lives in {{LOCATION}}</h4>
@@ -48,6 +51,7 @@
                     <p style="color:goldenrod">FRIENDS</p>
                     {%endif%}
                 </th>
+
                 <th>
                     {% if FRIEND_STATUS_INFO[2] == True %}
                     <input type="submit" value="Cancel Friend Request" name="friend" id="cancel">
@@ -55,6 +59,7 @@
                     <input type="submit" value="Cancel Friend Request" name="friend" id="cancel" disabled="disabled">
                     {%endif%}
                 </th>
+
                 <th>
                     {% if FRIEND_STATUS_INFO[3] == True %}
                     <input type="submit" value="Accept Friend Request" name="friend" id="accept">
@@ -62,6 +67,7 @@
                     <input type="submit" value="Accept Friend Request" name="friend" id="accept" disabled="disabled">
                     {% endif %}
                 </th>
+
                 <th>
                     {% if FRIEND_STATUS_INFO[1] == True %}
                     <input type="submit" value="Unfriend" name="friend" id="unfriend">
@@ -69,6 +75,7 @@
                     <input type="submit" value="Unfriend" name="friend" id="unfriend" disabled="disabled">
                     {%endif%}
                 </th>
+
         </form>
 
         <th>

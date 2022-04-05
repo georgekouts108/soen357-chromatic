@@ -22,6 +22,8 @@
     <p>You must be 13 years of age or older to register for <i>Chromatic</i>.</p>
     {% elif ERRCODE == 500 %}
     <p>You must indicate your gender in order to register.</p>
+    {% elif ERRCODE == 600 %}
+    <p>You must indicate which pronoun you identify yourself as.</p>
     {%endif%}
 
     <form action="/register">

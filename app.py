@@ -139,7 +139,6 @@ def createNewUser():
 
                 genderIsChosen = False
                 chosen_gender = request.form['gender']
-                print("CHOSEN GENDER = "+str(chosen_gender))
                 if (str(chosen_gender) == 'Male'):
                     genderIsChosen = True
                 elif (str(chosen_gender) == 'Female'):
@@ -147,12 +146,22 @@ def createNewUser():
                 elif (str(chosen_gender) == 'Unspecified'):
                     genderIsChosen = True
 
+                pronounIsChosen = False
+                chosen_pronoun = request.form['pronoun']
+
+                if (str(chosen_pronoun) == 'He/Him'):
+                    pronounIsChosen = True
+                elif (str(chosen_pronoun) == 'She/Her'):
+                    pronounIsChosen = True
+                elif (str(chosen_pronoun) == 'They/Them'):
+                    pronounIsChosen = True
+
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)
                 email_is_ok = emailIsOK(form.email.data)
                 if (email_is_ok and usernameIsNew and passwordsMatch and (age >= 13) and genderIsChosen):
                     registeredUser = User(form.firstName.data, form.lastName.data, form.email.data, birth_month, birth_day,
-                                          birth_year, form.location.data, listofgenres, form.username.data, form.password.data, chosen_gender, 0)
+                                          birth_year, form.location.data, listofgenres, form.username.data, form.password.data, chosen_gender, chosen_pronoun, 0)
 
                     global ALL_USER_OBJECTS
                     ALL_USER_OBJECTS.append(registeredUser)
@@ -167,6 +176,8 @@ def createNewUser():
                         error_code = 400
                     elif not genderIsChosen:
                         error_code = 500
+                    elif not pronounIsChosen:
+                        error_code = 600
 
                     raise Exception()
             except Exception:
@@ -444,7 +455,7 @@ def friend():
             mutual_friends = []
             your_friends = ALL_USER_OBJECTS[int(
                 findUserID(CURRENT_USER)) - 1].friends
-            if your_friends is not None:
+            if your_friends is not None and their_friends is not None:
                 for tf in their_friends:
                     for yf in your_friends:
                         if (yf == tf):
@@ -464,7 +475,10 @@ def friend():
             their_gender = ALL_USER_OBJECTS[int(
                 findUserID(triggeredUsername)) - 1].gender
 
-            return render_template("userProfile.html", FULLNAME=their_full_name, USERNAME=triggeredUsername, BIRTHDAY=their_birthday, AGE=their_age, LOCATION=their_location, STATUS=their_status, ALL_GENRES=their_genres, MUT_GENRES=mutual_genres, ALL_FRIENDS=their_friends, MUT_FRIENDS=mutual_friends, FRIEND_STATUS_INFO=friendship_status_info, GENDER=their_gender)
+            their_pronoun = ALL_USER_OBJECTS[int(
+                findUserID(triggeredUsername)) - 1].pronoun
+
+            return render_template("userProfile.html", FULLNAME=their_full_name, USERNAME=triggeredUsername, BIRTHDAY=their_birthday, AGE=their_age, LOCATION=their_location, STATUS=their_status, ALL_GENRES=their_genres, MUT_GENRES=mutual_genres, ALL_FRIENDS=their_friends, MUT_FRIENDS=mutual_friends, FRIEND_STATUS_INFO=friendship_status_info, GENDER=their_gender, PRONOUN=their_pronoun)
     return redirect(url_for('connections'))
 
 
