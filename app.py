@@ -267,6 +267,8 @@ def reset_password():
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
 
+    # TODO: if a chat file has no messages, delete it from the 'chats' directory
+
     updateHPACount()
     if (HOMEPAGE_ACCESS_COUNT == 1):
         latestUserCount = setLatestNumberOfUsersAndIDs()
@@ -619,6 +621,8 @@ def newChat():
         chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=chatID, chatform=ChatViewForm())
+
+# below is the route where you append a new message to a chat
 
 
 @app.route('/chat_host', methods=['POST', 'GET'])

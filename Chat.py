@@ -1,6 +1,8 @@
 from csv import reader, writer
 import os
 
+from datetime import datetime
+
 NEXT_CHAT_ID = 1
 NUM_OF_ACTIVE_CHATS = 0
 
@@ -73,7 +75,7 @@ class Chat:
         csv_writer = writer(newChatLogWrite)
         # write the header row
         csv_writer.writerow(
-            ["Sender ID", "Sender Username", "Sender Name", "Message"])
+            ["Sender ID", "Sender Username", "Sender Name", "Message", "Time"])
 
         if self.log is not None:
             for l in self.log:
@@ -81,7 +83,7 @@ class Chat:
         else:
             if (self.firstMessage is not None):
                 csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
-                    self.firstfullname), self.firstMessage])
+                    self.firstfullname), self.firstMessage, str(datetime.now())[0:19]])
             newChatLogWrite.close()
         return True
 
@@ -90,6 +92,7 @@ class Chat:
         csv_reader = reader(ChatLogRead)
         log_rows = list(csv_reader)
         ChatLogRead.close()
+
         return log_rows[1::]
 
     def appendMessageToChat(self, senderUserID, senderUsername, senderName, message):
@@ -98,6 +101,6 @@ class Chat:
         csv_writer = writer(ChatLogWrite)
 
         csv_writer.writerow([str(senderUserID), str(
-            senderUsername), str(senderName), str(message)])
+            senderUsername), str(senderName), str(message), str(datetime.now())[0:19]])
         ChatLogWrite.close()
         return True

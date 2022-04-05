@@ -167,6 +167,8 @@ def loadAllChats():
         rows = list(csv_reader)
         chat_log.close()
 
+        # TODO: if a chat file has no messages, delete it from the 'chats' directory
+
         next_chat_log = rows[1::]
         next_member_set = []
 

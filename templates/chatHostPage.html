@@ -20,9 +20,11 @@
     <ul>
         {% for message in LOG %}
         {% if message[1] == USERNAME %}
-        <li><span style="color:rgb(42, 219, 42);font-weight:bold">[{{message[2]}}]</span> {{message[3]}} </li>
+        <li><span style="color:rgb(42, 219, 42);font-weight:bold">[{{message[2]}}]</span> {{message[3]}} <span
+                style="color:red">{{message[4]}}</span></li>
         {% else %}
-        <li><span style="color:darkmagenta; font-weight:bold">[{{message[2]}}]</span> {{message[3]}} </li>
+        <li><span style="color:darkmagenta; font-weight:bold">[{{message[2]}}]</span> {{message[3]}} <span
+                style="color:red">{{message[4]}}</span></li>
         {% endif %}
         {% endfor %}
     </ul>
