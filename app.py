@@ -156,6 +156,11 @@ def createNewUser():
                 elif (str(chosen_pronoun) == 'They/Them'):
                     pronounIsChosen = True
 
+                # implement later...
+                chosen_picture = request.form['photo']
+                print("DEBUGGING OVER HERE: chosen_picture== "+str(chosen_picture))
+                # implement later...
+
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)
                 email_is_ok = emailIsOK(form.email.data)
