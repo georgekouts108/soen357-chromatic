@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - {{USERNAME}}</title>
+</head>
+
+<body>
+    <div class="container w-50">
+        <form method="POST" action="/settings_post">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend>MANAGE SETTINGS</legend>
+                <div class="form-group">
+
+                    {{form.new_firstName.label(class='form-control-label')}}<br>
+                    {{form.new_firstName}}<br><br>
+
+                    {{form.new_lastName.label(class='form-control-label')}}<br>
+                    {{form.new_lastName}}<br><br>
+
+                    {{form.new_username.label(class='form-control-label')}}<br>
+                    {{form.new_username}}<br><br>
+
+                    {{form.new_email.label(class='form-control-label')}}<br>
+                    {{form.new_email}}<br><br>
+
+                    <label>New Gender: (please select 'Skip' if you are not changing this)</label><br>
+                    <input type="radio" name="new_gender" id="male" value="Male"> Male
+                    <input type="radio" name="new_gender" id="female" value="Female"> Female
+                    <input type="radio" name="new_gender" id="unsp" value="Unspecified"> I prefer not to specify
+                    <input type="radio" name="new_gender" id="skip" value="Skip"> Skip
+                    <br><br>
+
+                    <label>New Pronoun: (please select 'Skip' if you are not changing this)</label><br>
+                    <input type="radio" name="new_pronoun" id="hehim" value="He/Him"> He/Him
+                    <input type="radio" name="new_pronoun" id="sheher" value="She/Her"> She/Her
+                    <input type="radio" name="new_pronoun" id="theythem" value="They/Them"> They/Them
+                    <input type="radio" name="new_pronoun" id="skip" value="Skip"> Skip
+                    <br><br>
+
+                    {{form.new_location.label(class='form-control-label')}}<br>
+                    {{form.new_location}}<br><br>
+
+                    {{form.submit}}
+                </div>
+            </fieldset>
+        </form>
+        <form method='POST' action='/'>
+            <div class="form-group">
+                {{homebutton.home}}
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

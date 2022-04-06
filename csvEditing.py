@@ -120,3 +120,15 @@ def toggleUserLoginState(username, state):
     csv_writer = writer(newList)
     csv_writer.writerows(user_rows)
     newList.close()
+
+
+def updateField(userID, fieldIndex, newContent):
+    f = open('databases/userGeneralInfo.csv', 'r')
+    csv_reader = reader(f)
+    user_rows = list(csv_reader)
+    f.close()
+    user_rows[int(userID)][fieldIndex] = newContent
+    newList = open('databases/userGeneralInfo.csv', 'w', newline='')
+    csv_writer = writer(newList)
+    csv_writer.writerows(user_rows)
+    newList.close()

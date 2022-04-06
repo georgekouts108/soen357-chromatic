@@ -5,9 +5,9 @@ from datetime import datetime
 from Genre import getListOfGenres
 from User import User, setLatestNumberOfUsersAndIDs, getUserCount
 from appLoading import loadAllUsers, setUpFriendshipFiles, loadAllChats
-from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm
+from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, RegisterForm, LoginButton, RegisterButton, GenreManageControls, MessagesPageButtons, NewChatForm, ChatViewForm, ForgotPasswordForm, SettingsForm
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
-from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo
+from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo, updateField
 from Chat import Chat
 from messaging import getInfoForFriends, removeEmptyChatFiles
 
@@ -650,6 +650,59 @@ def prevChat():
         chat_log = ALL_CHAT_OBJECTS[int(visited_chat_id)-1].retrieveChatLog()
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, chatform=ChatViewForm(), homeButton=HomeButton(), ID=visited_chat_id, MEMBERS=members, LOG=chat_log)
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    return render_template("settings.html", USERNAME=CURRENT_USER, form=SettingsForm(), homebutton=HomeButton())
+
+
+@app.route('/settings_post', methods=['GET', 'POST'])
+def settings_post():
+    form = SettingsForm()
+    if request.method == 'POST':
+        global ALL_USER_OBJECTS
+        currentUserID = int(findUserID(CURRENT_USER))
+
+        try:
+            if form.new_firstName.data != "":
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].firstname = form.new_firstName.data
+                updateField(int(currentUserID), 1, form.new_firstName.data)
+
+            if form.new_lastName.data != "":
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].lastname = form.new_lastName.data
+                updateField(int(currentUserID), 2, form.new_lastName.data)
+
+            if form.new_username.data != "":
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].username = form.new_username.data
+                updateField(int(currentUserID), 10, form.new_username.data)
+
+            if form.new_email.data != "":
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].email = form.new_email.data
+                updateField(int(currentUserID), 3, form.new_email.data)
+
+            if form.new_location.data != "":
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].location = form.new_location.data
+                updateField(int(currentUserID), 8, form.new_location.data)
+
+            if request.form['new_gender'] != 'Skip':
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].gender = request.form['new_gender']
+                updateField(int(currentUserID), 12, request.form['new_gender'])
+            if request.form['new_pronoun'] != 'Skip':
+                ALL_USER_OBJECTS[currentUserID -
+                                 1].pronoun = request.form['new_pronoun']
+                updateField(int(currentUserID), 13,
+                            request.form['new_pronoun'])
+
+            return redirect(url_for('settings'))
+        except Exception:
+            return redirect(url_for('settings'))
 
 
 if __name__ == '__main__':

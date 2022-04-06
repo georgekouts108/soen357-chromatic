@@ -44,6 +44,25 @@ class RegisterForm(FlaskForm):
                          usernameIsOK(username)])
 
 
+class SettingsForm(FlaskForm):
+
+    new_firstName = StringField(
+        'If you want to change your display First name, enter a new one here:')
+    new_lastName = StringField(
+        'If you want to change your display Last name, enter a new one here:')
+
+    new_username = StringField(
+        'If you want to change your username, enter a new one here:', validators=[Length(min=8, max=15)])
+    new_email = EmailField(
+        'If you want to change your email, enter a new one here:')
+    new_location = StringField(
+        'If you want to change your location, enter a new one here:')
+
+    # gender and pronoun setting will be written in HTML directly
+
+    submit = SubmitField('Confirm Changes')
+
+
 class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
