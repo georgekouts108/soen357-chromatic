@@ -2,6 +2,7 @@ from csv import reader, writer
 import os
 
 from datetime import datetime
+from re import T
 
 NEXT_CHAT_ID = 1
 NUM_OF_ACTIVE_CHATS = 0
@@ -56,6 +57,7 @@ class Chat:
             setLatestNumberOfChatsAndIDs()
             self.id = getNextChatID()
             updateNextChatID()
+            self.joinUnreadMessageRecords()
             self.log = None
         else:
             self.id = manualChatID
@@ -69,13 +71,27 @@ class Chat:
             str(self.id)+"_"+'_'.join(participantIDs)+"_"
         self.createAndStartChatLogFile()
 
+    def joinUnreadMessageRecords(self):
+        csvfile = open('databases/unreadMessages.csv', 'r')
+        csv_reader = reader(csvfile)
+        rows = list(csv_reader)
+        csvfile.close()
+        rows[0].append("Chat"+str(self.id))
+        for r in rows[1::]:
+            r.append(0)
+        csvfileWrite = open('databases/unreadMessages.csv', 'w', newline='')
+        csv_writer = writer(csvfileWrite)
+        csv_writer.writerows(rows)
+        csvfileWrite.close()
+        return True
+
     def createAndStartChatLogFile(self):
         newChatLogWrite = open(
             'chats/' + str(self.log_file_name) + '.csv', 'w', newline='')
         csv_writer = writer(newChatLogWrite)
         # write the header row
         csv_writer.writerow(
-            ["Sender ID", "Sender Username", "Sender Name", "Message", "Time"])
+            ["Sender ID", "Sender Username", "Sender Name", "Message", "Time", "Viewers"])
 
         if self.log is not None:
             for l in self.log:
@@ -83,7 +99,7 @@ class Chat:
         else:
             if (self.firstMessage is not None):
                 csv_writer.writerow([str(self.firstuserID), str(self.firstusername), str(
-                    self.firstfullname), self.firstMessage, str(datetime.now())[0:19]])
+                    self.firstfullname), self.firstMessage, str(datetime.now())[0:19], str(self.firstusername)])
             newChatLogWrite.close()
         return True
 
@@ -101,6 +117,30 @@ class Chat:
         csv_writer = writer(ChatLogWrite)
 
         csv_writer.writerow([str(senderUserID), str(
-            senderUsername), str(senderName), str(message), str(datetime.now())[0:19]])
+            senderUsername), str(senderName), str(message), str(datetime.now())[0:19], str(senderUsername)])
         ChatLogWrite.close()
         return True
+
+    def markLatestMessagesAsRead(self, viewer_username):
+        filename = self.log_file_name
+        ChatLogRead = open('chats/' + filename+".csv", 'r')
+        csv_reader = reader(ChatLogRead)
+        log_rows = list(csv_reader)
+        for message in log_rows[1::]:
+            already_read = False
+            for temp_viewer_uname in message[4::]:
+                if (temp_viewer_uname == viewer_username):
+                    already_read = True
+                    break
+            if not already_read:
+                message.append(viewer_username)
+
+        newChatLogWrite = open(
+            'chats/' + str(self.log_file_name) + '.csv', 'w', newline='')
+        csv_writer = writer(newChatLogWrite)
+        csv_writer.writerows(log_rows)
+        newChatLogWrite.close()
+        ChatLogRead.close()
+
+        # TODO: update all unread messages (code method first)
+        return None

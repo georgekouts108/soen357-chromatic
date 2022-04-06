@@ -81,13 +81,21 @@ class User:
             self.writeFriendsData()
             self.writeSentFriendRequestsData()
             self.writeRecievedFriendRequestsData()
-
+            self.joinUnreadMessagesRecords()
             updateNumOfActiveUsers()
             setLatestNumberOfUsersAndIDs()
 
         else:  # or is an existing user coming in?
             self.id = manualUserID
         self.updateUserAge()
+
+    def joinUnreadMessagesRecords(self):
+        with open(r'databases/unreadMessages.csv', 'a') as CSVFile:
+            csv_writer = writer(CSVFile)
+            # write the new row for a user
+            csv_writer.writerow([self.id, 0])
+            CSVFile.close()
+        return True
 
     def updateGenreList(self):
         # this method assumes that self.favGenres has been updated

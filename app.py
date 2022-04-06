@@ -9,7 +9,7 @@ from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, R
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
 from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo, updateField
 from Chat import Chat
-from messaging import getInfoForFriends, removeEmptyChatFiles
+from messaging import getInfoForFriends, removeEmptyChatFiles, initUnreadMessagesCSVFile, deleteChatFromURrecords, deleteNonexistingChatsFromURrecords
 
 
 app = Flask(__name__)
@@ -155,11 +155,6 @@ def createNewUser():
                 elif (str(chosen_pronoun) == 'They/Them'):
                     pronounIsChosen = True
 
-                # implement later...
-                chosen_picture = request.form['photo']
-
-                # implement later...
-
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)
                 email_is_ok = emailIsOK(form.email.data)
@@ -275,6 +270,9 @@ def main_page():
         updateAllUserObjects()
         updateAllChatObjects()
         updateAllUserAges()
+        initUnreadMessagesCSVFile(latestUserCount)  # make the file
+        initUnreadMessagesCSVFile(latestUserCount)  # write the chats
+        deleteNonexistingChatsFromURrecords()
     form2 = HomePageButtons()
 
     updateAllUserAges()
@@ -611,6 +609,9 @@ def newChat():
             ALL_CHAT_OBJECTS.append(newChat)
 
         chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
+        # new - issue 30
+        ALL_CHAT_OBJECTS[int(
+            chatID) - 1].markLatestMessagesAsRead(CURRENT_USER)
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=chatID, chatform=ChatViewForm())
 
@@ -648,6 +649,10 @@ def prevChat():
         visited_chat_id = int(request.form['chat'][6::])
         members = ALL_CHAT_OBJECTS[int(visited_chat_id) - 1].members
         chat_log = ALL_CHAT_OBJECTS[int(visited_chat_id)-1].retrieveChatLog()
+
+        # new - issue 30
+        ALL_CHAT_OBJECTS[int(
+            visited_chat_id) - 1].markLatestMessagesAsRead(CURRENT_USER)
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, chatform=ChatViewForm(), homeButton=HomeButton(), ID=visited_chat_id, MEMBERS=members, LOG=chat_log)
 
