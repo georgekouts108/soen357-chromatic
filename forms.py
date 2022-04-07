@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, SelectMultipleField, TextAreaField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectMultipleField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, DataRequired, EqualTo, Length
 from Genre import Genre
@@ -86,6 +86,7 @@ class HomePageButtons(FlaskForm):
     findFriends = SubmitField('Find Friends')
     connections = SubmitField('See Friend Suggestions')
     myFriends = SubmitField('My Friends')
+    myIncomingReqs = SubmitField('My Incoming Friend Requests')
     myMessages = SubmitField('My Messages')
     logout = SubmitField('Logout')
 

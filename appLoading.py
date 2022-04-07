@@ -8,31 +8,26 @@ from messaging import removeEmptyChatFiles
 def loadAllUsers():
     all_users = []
 
-    # save all the existing general information about users
     general = open('databases/userGeneralInfo.csv', 'r')
     general_csv_reader = reader(general)
     general_info_rows = list(general_csv_reader)
     general.close()
 
-    # save all the existing genre preferences of users
     genres = open('databases/userFavGenres.csv', 'r')
     genres_csv_reader = reader(genres)
     genres_info_rows = list(genres_csv_reader)
     genres.close()
 
-    # [NEW] save all the existing friendships of users
     friendships = open('databases/userFriends.csv', 'r')
     friendships_csv_reader = reader(friendships)
     friendships_info_rows = list(friendships_csv_reader)
     friendships.close()
 
-    # [NEW] save all the sent friend requests of users
     sent_friend_reqs = open('databases/userSentFriendRequests.csv', 'r')
     friendships_csv_reader2 = reader(sent_friend_reqs)
     sentReqs_info_rows = list(friendships_csv_reader2)
     sent_friend_reqs.close()
 
-    # [NEW] save all the received friend requests of users
     rec_friend_reqs = open('databases/userReceivedFriendRequests.csv', 'r')
     friendships_csv_reader3 = reader(rec_friend_reqs)
     recReqs_info_rows = list(friendships_csv_reader3)

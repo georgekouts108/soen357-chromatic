@@ -89,6 +89,19 @@ class User:
             self.id = manualUserID
         self.updateUserAge()
 
+    def getNumberOfIncomingReqs(self):
+        count = 0
+        rec_friend_reqs = open('databases/userReceivedFriendRequests.csv', 'r')
+        friendships_csv_reader3 = reader(rec_friend_reqs)
+        recReqs_info_rows = list(friendships_csv_reader3)
+        rec_friend_reqs.close()
+
+        for r in recReqs_info_rows[1::]:
+            if r[0] == str(self.id):
+                count = len(r[1::])
+                break
+        return count
+
     def updateAllUnreadMessages(self):
         total_unread_msgs_count = 0
         listOfChatFiles = os.listdir("chats/")
@@ -487,7 +500,7 @@ class User:
             csv_writer2 = writer(newList2)
             csv_writer2.writerows(receivedFriendRequestRows)
             newList2.close()
-
+            self.sent_friend_requests.remove(recipient)  # new - issue 29
         except Exception:
             return
 
@@ -575,8 +588,7 @@ class User:
             newList3.close()
 
             self.friends.append(acceptee)
-            print("TESTINGGGGGGGG 12345: " +
-                  str(getInfoForFriends(getYourUsername())))
+            self.received_friend_requests.remove(acceptee)  # new - issue 29
         except Exception:
             return
 

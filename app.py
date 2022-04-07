@@ -197,9 +197,12 @@ def login():
 
     if getCURRENT_USER() is not None:
         USERNAME = CURRENT_USER
+        friendReqCount = ALL_USER_OBJECTS[int(
+            findUserID(CURRENT_USER))-1].getNumberOfIncomingReqs()
+
         total_unread_msg_count = retrieveTotalUnreadMessageCount(
             int(findUserID(CURRENT_USER)))
-        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=HomePageButtons(), TOTAL_URM_COUNT=total_unread_msg_count)
+        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=HomePageButtons(), TOTAL_URM_COUNT=total_unread_msg_count, FRIEND_REQ_COUNT=friendReqCount)
 
     form = LoginForm()
     form2 = RegisterButton()
@@ -282,11 +285,12 @@ def main_page():
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, True)
 
-        # TODO issue 30: RETRIEVE THE TOTAL NUMBER OF UNREAD MESSAGES FOR 'CURRENT_USER'
+        friendReqCount = ALL_USER_OBJECTS[int(
+            findUserID(CURRENT_USER))-1].getNumberOfIncomingReqs()
 
         total_unread_msg_count = retrieveTotalUnreadMessageCount(
             int(findUserID(CURRENT_USER)))
-        return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2, TOTAL_URM_COUNT=total_unread_msg_count)
+        return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2, TOTAL_URM_COUNT=total_unread_msg_count, FRIEND_REQ_COUNT=friendReqCount)
 
     return redirect(url_for('login'))
 
@@ -419,6 +423,21 @@ def my_friends():
             filtered_db.append(gen)
 
     return render_template("myFriends.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
+
+
+@app.route('/incoming_reqs', methods=['POST', 'GET'])
+def incoming_requests():
+    updateAllUserAges()
+    global ALL_USER_OBJECTS
+    currentUserID = int(findUserID(CURRENT_USER))
+
+    general_info_db = getGeneralInfoDB()[1::]
+    filtered_db = []
+    for gen in general_info_db:
+        if ALL_USER_OBJECTS[currentUserID - 1].userExistsInReceivedRequests(gen[10]):
+            filtered_db.append(gen)
+
+    return render_template("incomingRequests.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
 
 
 @app.route('/friend', methods=['POST', 'GET'])

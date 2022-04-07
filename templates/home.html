@@ -33,6 +33,17 @@
             {{form2.myFriends}}<br><br>
         </div>
     </form><br>
+    <form method='POST' action='/incoming_reqs'>
+        <div class="form-group">
+            {{form2.myIncomingReqs}}
+            {%if FRIEND_REQ_COUNT == 0 %}
+            <span style="color:gray">No new incoming requests</span>
+            {%else%}
+            <span style="color:red">{{FRIEND_REQ_COUNT}} new incoming request(s)</span>
+            {%endif%}
+            <br><br>
+        </div>
+    </form><br>
     <form method='POST' action='/my_messages'>
         <div class="form-group">
             {{form2.myMessages}}
