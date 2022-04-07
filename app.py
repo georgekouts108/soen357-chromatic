@@ -409,10 +409,16 @@ def find_friends():
 @app.route('/my_friends', methods=['POST', 'GET'])
 def my_friends():
     updateAllUserAges()
-
+    global ALL_USER_OBJECTS
     currentUserID = int(findUserID(CURRENT_USER))
-    myFriends = ALL_USER_OBJECTS[currentUserID - 1].friends[1::]
-    return render_template("myFriends.html", USERNAME=CURRENT_USER, MY_FRIENDS=myFriends, homeButton=HomeButton())
+
+    general_info_db = getGeneralInfoDB()[1::]
+    filtered_db = []
+    for gen in general_info_db:
+        if ALL_USER_OBJECTS[currentUserID - 1].userExistsInFriendsList(gen[10]):
+            filtered_db.append(gen)
+
+    return render_template("myFriends.html", USERNAME=CURRENT_USER, FILTER=filtered_db, homeButton=HomeButton())
 
 
 @app.route('/friend', methods=['POST', 'GET'])
