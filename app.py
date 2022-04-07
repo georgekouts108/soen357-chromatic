@@ -9,7 +9,7 @@ from forms import GenreManageControls, HomeButton, HomePageButtons, LoginForm, R
 from registerAndLogin import verifyCredentials, usernameIsOK, emailIsOK, findActiveUser, verifyUsernameOrEmail
 from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres, updatePassword, retrieveGeneralInfo, updateField
 from Chat import Chat
-from messaging import getInfoForFriends, removeEmptyChatFiles, initUnreadMessagesCSVFile, deleteChatFromURrecords, deleteNonexistingChatsFromURrecords
+from messaging import getInfoForFriends, removeEmptyChatFiles, initUnreadMessagesCSVFile, deleteNonexistingChatsFromURrecords, retrieveTotalUnreadMessageCount, getIndividualChatUnreadMessageCountsForSpecificUser
 
 
 app = Flask(__name__)
@@ -197,7 +197,9 @@ def login():
 
     if getCURRENT_USER() is not None:
         USERNAME = CURRENT_USER
-        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=HomePageButtons())
+        total_unread_msg_count = retrieveTotalUnreadMessageCount(
+            int(findUserID(CURRENT_USER)))
+        return render_template("home.html", USERNAME=USERNAME, userCount=getUserCount(), form2=HomePageButtons(), TOTAL_URM_COUNT=total_unread_msg_count)
 
     form = LoginForm()
     form2 = RegisterButton()
@@ -279,7 +281,12 @@ def main_page():
 
     if getCURRENT_USER() is not None:
         toggleUserLoginState(CURRENT_USER, True)
-        return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2)
+
+        # TODO issue 30: RETRIEVE THE TOTAL NUMBER OF UNREAD MESSAGES FOR 'CURRENT_USER'
+
+        total_unread_msg_count = retrieveTotalUnreadMessageCount(
+            int(findUserID(CURRENT_USER)))
+        return render_template("home.html", USERNAME=CURRENT_USER, userCount=getUserCount(), form2=form2, TOTAL_URM_COUNT=total_unread_msg_count)
 
     return redirect(url_for('login'))
 
@@ -490,10 +497,17 @@ def messages():
     listOfChatFiles = os.listdir("chats/")
     for filename in listOfChatFiles:
         splitted = filename.split('_')
+
+        user_is_member = False
         for s in splitted[1:len(splitted)-1]:
             if (str(s) == str(findUserID(CURRENT_USER))):
-                chatIDs.append(str(splitted[0][4::]))
+                user_is_member = True
+                # chatIDs.append(str(splitted[0][4::]))
                 break
+        if user_is_member:
+            chatIDs.append(str(splitted[0][4::]))
+        else:
+            chatIDs.append(str(-1))
 
     currentUserID = int(findUserID(CURRENT_USER))
 
@@ -501,7 +515,13 @@ def messages():
 
     if ALL_USER_OBJECTS[currentUserID - 1].friends is not None:
         numberOfFriends = len(ALL_USER_OBJECTS[currentUserID - 1].friends[1::])
-    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs, FRIEND_COUNT=numberOfFriends)
+
+    # TODO issue 30: RETRIEVE THE NUMBER OF UNREAD MESSAGES FOR ALL CHATS THAT 'CURRENT_USER' IS PART OF
+    unread_msg_count_array = getIndividualChatUnreadMessageCountsForSpecificUser(
+        currentUserID)
+    print("NEW IN DEBUGZZZ: unread_msg_count_array=="+str(unread_msg_count_array))
+    print("NEW IN DEBUGZZZ 2: chatIDs=="+str(chatIDs))
+    return render_template("myMessages.html", USERNAME=CURRENT_USER, msgForm=MessagesPageButtons(), CHAT_IDS=chatIDs, FRIEND_COUNT=numberOfFriends, UMCA=unread_msg_count_array)
 
 
 @app.route('/new_chat_creation', methods=['POST', 'GET'])
@@ -555,6 +575,13 @@ def directMessage():
                            full_name, None, 0, True)
 
             ALL_CHAT_OBJECTS.append(newChat)
+        else:
+            # new - issue 30
+            ALL_CHAT_OBJECTS[int(
+                chatID) - 1].markLatestMessagesAsRead(CURRENT_USER)
+            # brand new - issue 30
+            for m in members:
+                ALL_USER_OBJECTS[int(m[0]) - 1].updateAllUnreadMessages()
 
         chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
 
@@ -602,16 +629,26 @@ def newChat():
 
             ALL_CHAT_OBJECTS[int(chatID) - 1].appendMessageToChat(
                 currentUserID, CURRENT_USER, full_name, message)
+            # new - issue 30
+            ALL_CHAT_OBJECTS[int(
+                chatID) - 1].markLatestMessagesAsRead(CURRENT_USER)
+            # brand new - issue 30
+            for m in members:
+                ALL_USER_OBJECTS[int(m[0]) - 1].updateAllUnreadMessages()
         else:
             newChat = Chat(members, CURRENT_USER, currentUserID,
                            full_name, message, 0, True)
 
             ALL_CHAT_OBJECTS.append(newChat)
 
+            # new - issue 30
+            ALL_CHAT_OBJECTS[int(
+                chatID) - 1].markLatestMessagesAsRead(CURRENT_USER)
+            # brand new - issue 30
+            for m in members:
+                ALL_USER_OBJECTS[int(m[0]) - 1].updateAllUnreadMessages()
+
         chat_log = ALL_CHAT_OBJECTS[int(chatID) - 1].retrieveChatLog()
-        # new - issue 30
-        ALL_CHAT_OBJECTS[int(
-            chatID) - 1].markLatestMessagesAsRead(CURRENT_USER)
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=chatID, chatform=ChatViewForm())
 
@@ -637,6 +674,13 @@ def viewChat():
         members = ALL_CHAT_OBJECTS[int(chat_id)-1].members
         chat_log = ALL_CHAT_OBJECTS[int(chat_id)-1].retrieveChatLog()
 
+        # new - issue 30
+        ALL_CHAT_OBJECTS[int(
+            chat_id) - 1].markLatestMessagesAsRead(CURRENT_USER)
+        # brand new - issue 30
+        for m in members:
+            ALL_USER_OBJECTS[int(m[0]) - 1].updateAllUnreadMessages()
+
         return render_template("chatHostPage.html", USERNAME=CURRENT_USER, MEMBERS=members, LOG=chat_log, homeButton=HomeButton(), ID=ALL_CHAT_OBJECTS[int(chat_id)-1].id, chatform=ChatViewForm())
     return None
 
@@ -653,6 +697,9 @@ def prevChat():
         # new - issue 30
         ALL_CHAT_OBJECTS[int(
             visited_chat_id) - 1].markLatestMessagesAsRead(CURRENT_USER)
+        # brand new - issue 30
+        for m in members:
+            ALL_USER_OBJECTS[int(m[0]) - 1].updateAllUnreadMessages()
 
     return render_template("chatHostPage.html", USERNAME=CURRENT_USER, chatform=ChatViewForm(), homeButton=HomeButton(), ID=visited_chat_id, MEMBERS=members, LOG=chat_log)
 

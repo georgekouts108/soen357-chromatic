@@ -24,10 +24,17 @@
     <hr><br>
     Chats that you are part of:
     <br>
-    {%for chatID in CHAT_IDS%}
+    {%for chatID in range(CHAT_IDS|length)%}
+    {%if CHAT_IDS[chatID] != '-1' %}
     <form method="POST" action="/prev_chat_host">
-        <input type="submit" name="chat" value="Chat #{{chatID}}">
-    </form>
+        <input type="submit" name="chat" value="Chat #{{CHAT_IDS[chatID]}}">
+        {%if UMCA[chatID] == 0 %}
+        <span style="color:gray">No new messages</span>
+        {%else%}
+        <span style="color:red">{{UMCA[chatID]}} new message(s)</span>
+        {%endif%}
+    </form><br>
+    {%endif%}
     {%endfor%}
 
 

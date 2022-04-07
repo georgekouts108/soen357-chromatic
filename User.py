@@ -6,7 +6,7 @@ import csv
 import os
 from datetime import datetime, date
 import math
-from messaging import getInfoForFriends, getYourUsername
+from messaging import getInfoForFriends, getYourUsername, updateUnreadMessageCountForSpecificChat, updateTotalUnreadMessageCount
 NUM_OF_ACTIVE_USERS = 0
 NEXT_USER_ID = 1
 
@@ -88,6 +88,41 @@ class User:
         else:  # or is an existing user coming in?
             self.id = manualUserID
         self.updateUserAge()
+
+    def updateAllUnreadMessages(self):
+        total_unread_msgs_count = 0
+        listOfChatFiles = os.listdir("chats/")
+
+        for filename in listOfChatFiles:
+            indiv_unread_msgs_count = 0
+            my_id_found = False
+            for u_id in filename.split('_')[1:(len(filename.split('_')))]:
+                if u_id == self.id:
+                    my_id_found = True
+                    break
+            if not my_id_found:
+                continue
+
+            CSVFile = open('chats/'+filename, 'r')
+            csv_reader = reader(CSVFile)
+            chat_log = list(csv_reader)
+            for msg in chat_log[1::]:
+                i_saw_it = False
+                for viewer in msg[5::]:
+                    if viewer == self.username:
+                        i_saw_it = True
+                        break
+                if not i_saw_it:
+                    indiv_unread_msgs_count = indiv_unread_msgs_count+1
+            CSVFile.close()
+
+            updateUnreadMessageCountForSpecificChat(
+                int(filename.split('_')[0][4::]), int(self.id), indiv_unread_msgs_count)
+
+            total_unread_msgs_count = total_unread_msgs_count + indiv_unread_msgs_count
+
+        updateTotalUnreadMessageCount(self.id, total_unread_msgs_count)
+        return True
 
     def joinUnreadMessagesRecords(self):
         with open(r'databases/unreadMessages.csv', 'a') as CSVFile:

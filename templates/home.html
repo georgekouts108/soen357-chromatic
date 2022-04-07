@@ -35,7 +35,14 @@
     </form><br>
     <form method='POST' action='/my_messages'>
         <div class="form-group">
-            {{form2.myMessages}}<br><br>
+            {{form2.myMessages}}
+            {%if TOTAL_URM_COUNT == 0 %}
+            <span style="color:gray">No new messages</span>
+            {%else%}
+            <span style="color:red">{{TOTAL_URM_COUNT}} new message(s)</span>
+            {%endif%}
+
+            <br><br>
         </div>
     </form><br>
     <form method='POST' action='/settings'>

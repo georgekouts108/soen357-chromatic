@@ -146,3 +146,95 @@ def deleteChatFromURrecords(chatID):
     csv_writer.writerows(updated_rows)
     csvfileWrite.close()
     return True
+
+
+def updateUnreadMessageCountForSpecificChat(chatID, userID, new_ur_count):
+    csvfile = open('databases/unreadMessages.csv', 'r')
+    csv_reader = reader(csvfile)
+    rows = list(csv_reader)
+    csvfile.close()
+    column_index = 0
+    for header in rows[0]:
+        if header == ('Chat'+str(chatID)):
+            break
+        else:
+            column_index = column_index + 1
+    for r in rows[1::]:
+        if str(r[0]) == str(userID):
+            r[column_index] = new_ur_count
+            break
+    csvfileWrite = open('databases/unreadMessages.csv', 'w', newline='')
+    csv_writer = writer(csvfileWrite)
+    csv_writer.writerows(rows)
+    csvfileWrite.close()
+    return True
+
+
+def updateTotalUnreadMessageCount(userID, new_total_ur_count):
+    csvfile = open('databases/unreadMessages.csv', 'r')
+    csv_reader = reader(csvfile)
+    rows = list(csv_reader)
+    csvfile.close()
+    for r in rows[1::]:
+        if r[0] == str(userID):
+            r[1] = new_total_ur_count
+            break
+    csvfileWrite = open('databases/unreadMessages.csv', 'w', newline='')
+    csv_writer = writer(csvfileWrite)
+    csv_writer.writerows(rows)
+    csvfileWrite.close()
+    return True
+
+
+def retrieveUnreadMessageCountForSpecificChat(chatID, userID):
+    unread_count = 0
+    csvfile = open('databases/unreadMessages.csv', 'r')
+    csv_reader = reader(csvfile)
+    rows = list(csv_reader)
+    csvfile.close()
+    column_index = 0
+    for header in rows[0]:
+        if header == ('Chat'+str(chatID)):
+            break
+        else:
+            column_index = column_index + 1
+    for r in rows[1::]:
+        if str(r[0]) == str(userID):
+            unread_count = int(r[column_index])
+            break
+    return unread_count
+
+
+def getIndividualChatUnreadMessageCountsForSpecificUser(userID):
+    counts = []
+
+    listOfChatFiles = os.listdir("chats/")
+    for filename in listOfChatFiles:
+        next_chat_id = int(filename.split('_')[0][4::])
+        i_am_member = False
+
+        for u_id in filename.split('_')[1:(len(filename.split('_'))-1)]:
+            if u_id == str(userID):
+                i_am_member = True
+                break
+        if i_am_member:
+            x = retrieveUnreadMessageCountForSpecificChat(next_chat_id, userID)
+            print("COUNTS == "+str(x))
+            counts.append(x)
+        else:
+            counts.append(0)
+
+    return counts
+
+
+def retrieveTotalUnreadMessageCount(userID):
+    total_count = 0
+    csvfile = open('databases/unreadMessages.csv', 'r')
+    csv_reader = reader(csvfile)
+    rows = list(csv_reader)
+    csvfile.close()
+    for r in rows[1::]:
+        if r[0] == str(userID):
+            total_count = int(r[1])
+            break
+    return total_count
