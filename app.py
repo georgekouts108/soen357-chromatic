@@ -11,9 +11,14 @@ from csvEditing import getGeneralInfoDB, toggleUserLoginState, retrieveFavGenres
 from Chat import Chat
 from messaging import getInfoForFriends, removeEmptyChatFiles, initUnreadMessagesCSVFile, deleteNonexistingChatsFromURrecords, retrieveTotalUnreadMessageCount, getIndividualChatUnreadMessageCountsForSpecificUser
 
+from werkzeug.utils import secure_filename
+
+PROFILE_PICTURES = 'profilePictures/'
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key1234567890"
+app.config['PROFILE_PICTURES'] = PROFILE_PICTURES  # NEW - ISSUE 26
+
 
 ALL_CHAT_OBJECTS = []
 
@@ -154,6 +159,20 @@ def createNewUser():
                     pronounIsChosen = True
                 elif (str(chosen_pronoun) == 'They/Them'):
                     pronounIsChosen = True
+
+                # issue 26 - profile pic (MUST DEBUG)
+                my_file = request.form['profile_pic']
+                if my_file == '':
+                    error_code = 700
+                    raise Exception()
+
+                my_filename = secure_filename(my_file)
+                my_file.save(os.path.join(
+                    app.config['PROFILE_PICTURES'], my_filename))
+
+                profilePic = secure_filename(profilePic)
+                profilePic.save(os.path.join('profilePictures/', profilePic))
+                # issue 26 - profile pic (MUST DEBUG)
 
                 passwordsMatch = (form.password.data == form.confirm_pwd.data)
                 usernameIsNew = usernameIsOK(form.username.data)

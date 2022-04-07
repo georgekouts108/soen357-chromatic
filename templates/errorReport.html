@@ -24,6 +24,8 @@
     <p>You must indicate your gender in order to register.</p>
     {% elif ERRCODE == 600 %}
     <p>You must indicate which pronoun you identify yourself as.</p>
+    {% elif ERRCODE == 700 %}
+    <p>You must upload a profile picture.</p>
     {%endif%}
 
     <form action="/register">
