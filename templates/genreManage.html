@@ -19,7 +19,7 @@
     Genre Management for {{USERNAME}}
     <br><br>
 
-    <label>Your Favorite Genres</label>
+    <h4><label>Your Favorite Genres:</label></h4>
     <ul>
         {% for genre in GENRES%}
         <li>{{genre}}</li>
@@ -29,7 +29,8 @@
     <br>
 
     <form name="genre" method="POST" action="/addordelgenre">
-        {{form2.favoriteGenres.label(class='form-control-label')}}<br>
+        <h3>Select one or more genres, then choose to either Add or Delete them to/from your favorite genre list, and
+            click Confirm</h3><br>
         <table>
             {%for i in range(ALL_GENRES|length) %}
             {%if i%6 == 0 %}
