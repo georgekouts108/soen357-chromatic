@@ -7,21 +7,39 @@ ________________________________________________________________________________
 
 Additionally, you must make sure that you have Python and Flask installed:
 
-If you’re using MAC:
+**If you’re using MAC:**
 
 1) Open “Terminal”
-2) Run the command python3 —version to check if python 3.0 or later is installed. If not yet installed, follow these steps to install the lastest version of Python:
-	2.2) navigate to https://www.python.org/
-	2.3) in the navigation bar, click on “Downloads”
-	2.4) under the “Download Python <version #> button, click on the “macOS” hyperlink
-	2.5) look for “Python 3.8.0 - Oct. 14, 2019” and click on macOS 64-bit installer
-	2.6) after the install package downloads, open it up and run the installation wizard
-	2.7) close the installation wizard once the installation is complete
-	2.8) open “Terminal” and rerun the command python3 —version to verify the installation success
-	2.9) run the command pip3 —version to check if the python package manager is installed (you should see “pip 	<version #> from <path to pip>”
-	2.10) if pip3 is installed, run the command “pip3 install flask” to install the Flack package (if it is already installed, you should see reports reading “Requirement already satisfied”, but if not previously installed 	beforehand, you should see “Successfully installed flask-<version #>”)
+2) Run the command python3 —-version to check if python 3.0 or later is installed. If not yet installed, follow these steps to install the lastest version of Python:
+	- navigate to https://www.python.org/
+	- in the navigation bar, click on “Downloads”
+	- under the “Download Python <version #> button, click on the “macOS” hyperlink
+	- look for “Python 3.8.0 - Oct. 14, 2019” and click on macOS 64-bit installer
+	- after the install package downloads, open it up and run the installation wizard
+	- close the installation wizard once the installation is complete
+	- open “Terminal” and rerun the command python3 —version to verify the installation success
+	- run the command pip3 --version to check if the python package manager is installed
+	- if pip3 is installed, run the command “pip3 install flask” to install the Flack package (if it is already installed, you should see reports reading “Requirement already satisfied”, but if not previously installed 	beforehand, you should see “Successfully installed flask-<version #>”)
 
-  
+**If you’re using WINDOWS 10:**
+
+1) Open the Command Prompt
+2) Run the command python —V to check if python is installed. If not yet installed, follow these steps to install the lastest version of Python 3.0:
+	- navigate to https://www.python.org/
+	- in the navigation bar, click on “Downloads”
+	- under the “Download Python <version #> button, click on the “Windows” hyperlink
+	- look for “Python 3.8.0 - Oct. 14, 2019” and click on its hyperlink
+	- scroll down to the "Files" section and click and download the one that reads "Windows x86-64 executable installer", save it to a convenient location
+	- in the installation wizard, check the box "Add Python 3.8 to PATH"
+	- click on "Customize installation" and ensure that "pip" is selected, along with all other boxes, and click "Next"
+	- check the box "Install for all users"
+	- OPTIONAL: You may change the installation location by clicking on "Browse" and configuring the location
+	- click on "Install"
+	- once the installation was successful, close the wizard
+	- verify the installation by opening the command prompt and running the command 'python --version' to check the version (should be Python 3.8.0)
+	- run the command 'pip —version' to check if the python package manager is installed
+	- to install flask, run the command: 'py -m pip install flask'
+	- check the flask version by running the command: 'py -m flask --version'
 ____________________________________________________________________________________
   
 After installing Visual Studio Code, Python 3 and Flask, follow these steps to run the project:
@@ -32,4 +50,15 @@ After installing Visual Studio Code, Python 3 and Flask, follow these steps to r
 4) Run the project by entering the command “flask-run”
 5) Open your browser, and route to “localhost:5000”. If you see a simple Login Page, you have done this correctly
 
-You can now use the application in your browser. When you want to exit the application, do “CTRL-C” in the terminal. To run again, type “flask run”
+____________________________________________________________________________________
+
+You can now use the application in your browser. When you want to exit the application, do “CTRL-C” in the terminal. To run again, type “flask run”.
+____________________________________________________________________________________
+
+**References**
+
+- https://www.w3schools.com/html/html_table_borders.asp
+- https://www.youtube.com/watch?v=irvyVylgPRc&t=8s
+- https://www.youtube.com/watch?v=rVuHKypjDMw
+- https://www.youtube.com/watch?v=yIbS0fcUvVg
+- https://www.youtube.com/watch?v=uxZuFm5tmhM
